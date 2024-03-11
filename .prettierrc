@@ -1,0 +1,19 @@
+{
+  "plugins": ["@ianvs/prettier-plugin-sort-imports"],
+  "printWidth": 80,
+  "singleQuote": true,
+  "semi": true,
+  "useTabs": false,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "importOrder": [
+    "<BUILTIN_MODULES>",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^@/(.*)/domain(.*)$",
+    "^@/([^/]+)((?!/domain).)*$",
+    "",
+    "^(\\.\\.?/)+domain*$",
+    "^[.]"
+  ]
+}
