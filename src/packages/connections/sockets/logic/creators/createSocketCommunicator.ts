@@ -77,11 +77,11 @@ export default function createSocketCommunicator(): Communicator {
       }
 
       function handleEnqueue() {
-        selfQueue.removeEventListener('enqueue', handleEnqueue);
+        selfQueue.removeListener('enqueue', handleEnqueue);
         resolve(selfQueue.dequeue());
       }
 
-      selfQueue.addEventListener('enqueue', handleEnqueue);
+      selfQueue.addListener('enqueue', handleEnqueue);
     });
   }
 
