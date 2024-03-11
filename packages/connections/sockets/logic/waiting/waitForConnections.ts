@@ -1,6 +1,6 @@
 import type { Device } from '../../../domain';
 import { type SocketConnection, type ServerSocket, Event } from '../../domain';
-import createSocketConnection from '../createSocketConnection';
+import { createSocketConnection } from '../creators';
 
 export type WaitForConnectionsCallback = (
   connections: SocketConnection[],

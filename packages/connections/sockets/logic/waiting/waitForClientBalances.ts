@@ -2,8 +2,7 @@ import type { Balance } from '@/balancing/domain';
 
 import type { Device } from '../../../domain';
 import { type SocketConnection, Event } from '../../domain';
-import createSocketClient from '../createSocketClient';
-import createSocketConnection from '../createSocketConnection';
+import { createSocketClient, createSocketConnection } from '../creators';
 
 export type WaitForClientBalancesCallback = (
   connections: SocketConnection[],
