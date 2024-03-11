@@ -1,5 +1,9 @@
 import type { Process } from '@/core/domain';
-import { createDevice, createURI } from '@/connections/logic';
+import {
+  createDevice,
+  createURI,
+  getConnectionByProcess,
+} from '@/connections/logic';
 import { createProcess } from '@/core/logic';
 import { createQueue } from '@/utils/logic';
 
