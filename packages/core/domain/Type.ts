@@ -1,8 +1,8 @@
 enum Type {
-  BOOLEAN,
-  NUMBER,
-  STRING,
-  OBJECT,
+  BOOLEAN = 'boolean',
+  NUMBER = 'number',
+  STRING = 'string',
+  OBJECT = 'object',
 }
 
 export default Type;
