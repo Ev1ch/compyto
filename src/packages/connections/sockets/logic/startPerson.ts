@@ -32,6 +32,7 @@ export default function startPerson(
   }
 
   io.once(Event.IDENTIFICATION, (device: Device) => {
+    console.log('Received identification from master', device);
     connections.push(createSocketConnection(io, device));
   });
 
@@ -44,15 +45,7 @@ export default function startPerson(
 
     if (clientBalances.length) {
       waitForClientBalances(clientBalances, selfDevice, (c) => {
-        console.log('waitForClientBalances callback');
-
         connections.push(...c);
-
-        console.log(
-          'connections length',
-          connections.length,
-          allBalances.length,
-        );
 
         if (connections.length - 1 === allBalances.length) {
           ready();
@@ -62,14 +55,7 @@ export default function startPerson(
 
     if (serverBalances.length) {
       waitForServerBalances(serverBalances, selfDevice, (c) => {
-        console.log('waitForServerBalances callback');
         connections.push(...c);
-
-        console.log(
-          'connections length',
-          connections.length,
-          allBalances.length,
-        );
 
         if (connections.length - 1 === allBalances.length) {
           ready();
@@ -80,6 +66,10 @@ export default function startPerson(
     if (!allBalances.length) {
       ready();
     }
+  });
+
+  io.on('error', (error) => {
+    throw error;
   });
 
   io.connect();

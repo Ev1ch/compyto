@@ -1,14 +1,15 @@
+import type { Communicator } from '@/connections/domain';
 import type { Process } from '@/core/domain';
 import {
   createDevice,
   createURI,
   getConnectionByProcess,
 } from '@/connections/logic';
-import { createProcess } from '@/core/logic';
+import { createGroup, createProcess } from '@/core/logic';
 import { createQueue } from '@/utils/logic';
 
 import { Event, type SocketConnection } from '../../domain';
-import startCommunication from '../startCommunication';
+import setCommunicationHandlers from '../setCommunicationHandlers';
 import startMainPerson from '../startMainPerson';
 import startPerson from '../startPerson';
 
@@ -18,28 +19,34 @@ const code = i !== -1 ? process.argv[i + 1] : 'master';
 const j = process.argv.indexOf('--port');
 const port = j !== -1 ? Number(process.argv[j + 1]) : 3000;
 
-export default function createSocketCommunicator() {
+export default function createSocketCommunicator(): Communicator {
   const selfProcess = createProcess(code);
   const selfUri = createURI('http://localhost', port);
   const selfDevice = createDevice(selfUri, selfProcess);
+  const selfGroup = createGroup();
   const selfConnections: SocketConnection[] = [];
   const selfQueue = createQueue();
 
+  function setConnections(connections: SocketConnection[]) {
+    const processes = connections.map(({ device: { process } }) => process);
+    selfConnections.push(...connections);
+    selfGroup.add(...processes);
+    setCommunicationHandlers(selfConnections, selfQueue);
+  }
+
   function start() {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       if (isMaster) {
-        startMainPerson(port, (io, connections) => {
-          selfConnections.push(...connections);
-          startCommunication(selfConnections, selfQueue);
+        startMainPerson(port, selfDevice, (io, connections) => {
+          setConnections(connections);
           io.emit(Event.CONFIRMATION_RECEIVED);
           resolve(undefined);
         });
       } else {
         startPerson(selfDevice, (io, connections) => {
-          selfConnections.push(...connections);
-          startCommunication(selfConnections, selfQueue);
+          setConnections(connections);
           io.emit(Event.CONFIRMATION);
-          io.on(Event.CONFIRMATION_RECEIVED, resolve);
+          io.on(Event.CONFIRMATION_RECEIVED, () => resolve(undefined));
         });
       }
     });
@@ -57,39 +64,34 @@ export default function createSocketCommunicator() {
     });
   }
 
+  function broadcast(data: unknown) {
+    const processes = selfConnections.map(({ device: { process } }) => process);
+
+    return send(data, processes);
+  }
+
   function receive() {
     return new Promise((resolve) => {
       if (selfQueue.length) {
         return resolve(selfQueue.dequeue());
       }
 
-      selfQueue.onEnqueue(resolve);
+      function handleEnqueue() {
+        selfQueue.removeEventListener('enqueue', handleEnqueue);
+        resolve(selfQueue.dequeue());
+      }
+
+      selfQueue.addEventListener('enqueue', handleEnqueue);
     });
   }
 
   return {
     isMaster,
-    get processes() {
-      return selfConnections.map(({ device: { process } }) => process);
-    },
+    process: selfProcess,
+    group: selfGroup,
     start,
     send,
     receive,
+    broadcast,
   };
 }
-
-(async () => {
-  const communicator = createSocketCommunicator();
-  await communicator.start();
-
-  console.log('Started');
-
-  if (communicator.isMaster) {
-    await communicator.send('Hello, world!', [communicator.processes[0]]);
-    await communicator.send('Hello, world!', [communicator.processes[1]]);
-    console.log('Data sent');
-  } else {
-    const data = await communicator.receive();
-    console.log('Received data', data);
-  }
-})();

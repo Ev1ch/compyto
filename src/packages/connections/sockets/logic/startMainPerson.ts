@@ -1,4 +1,4 @@
-import { State } from '@/connections/domain';
+import { State, type Device } from '@/connections/domain';
 import { createBalances, getBalancesByDevice } from '@/balancing/logic';
 
 import { Event, type ServerSocket, type SocketConnection } from '../domain';
@@ -12,18 +12,20 @@ export type StartMainPersonCallback = (
 
 export default function startMainPerson(
   port: number,
+  selfDevice: Device,
   callback: StartMainPersonCallback,
 ) {
   const io = createSocketServer();
 
-  waitForConnections(io, ['pass1', 'pass2'], (connections) => {
+  waitForConnections(io, ['pass2', 'pass1'], (connections) => {
     const devices = connections.map(({ device }) => device);
     const balances = createBalances(devices);
 
     connections.forEach((connection) => {
       const { socket, device } = connection;
-      socket.emit(Event.IDENTIFICATION, device);
+      socket.emit(Event.IDENTIFICATION, selfDevice);
       console.log('Sent identification to', device);
+
       const deviceBalances = getBalancesByDevice(balances, device);
       socket.emit(Event.BALANCES, deviceBalances);
       console.log(

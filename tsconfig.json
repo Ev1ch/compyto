@@ -2,11 +2,14 @@
   "compilerOptions": {
     "strict": true,
     "lib": ["esnext"],
-    "baseUrl": ".",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "baseUrl": "./src",
+    "downlevelIteration": true,
     "paths": {
       "@/*": ["packages/*"]
     },
     "outDir": "dist"
   },
-  "include": ["packages/**/*"]
+  "include": ["src/**/*"]
 }
