@@ -5,6 +5,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["packages/*"]
-    }
-  }
+    },
+    "outDir": "dist"
+  },
+  "include": ["packages/**/*"]
 }
