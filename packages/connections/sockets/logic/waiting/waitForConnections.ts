@@ -1,5 +1,6 @@
-import type { Device } from '../../../domain';
-import { type SocketConnection, type ServerSocket, Event } from '../../domain';
+import type { Device } from '@/connections/domain';
+
+import { Event, type ServerSocket, type SocketConnection } from '../../domain';
 import { createSocketConnection } from '../creators';
 
 export type WaitForConnectionsCallback = (

@@ -1,7 +1,7 @@
 import type { Balance } from '@/balancing/domain';
+import type { Device } from '@/connections/domain';
 
-import type { Device } from '../../../domain';
-import { type SocketConnection, Event } from '../../domain';
+import { Event, type SocketConnection } from '../../domain';
 import { createSocketClient, createSocketConnection } from '../creators';
 
 export type WaitForClientBalancesCallback = (

@@ -1,6 +1,6 @@
 import type { Queue } from '@/utils/domain';
 
-import { SocketConnection, Event } from '../domain';
+import { Event, type SocketConnection } from '../domain';
 
 export default function startCommunication(
   selfConnections: SocketConnection[],

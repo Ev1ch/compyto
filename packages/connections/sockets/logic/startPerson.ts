@@ -1,11 +1,11 @@
 import type { Balance } from '@/balancing/domain';
+import type { Device } from '@/connections/domain';
 import {
   getClientBalancesByDevice,
   getServerBalancesByDevice,
 } from '@/balancing/logic';
 
-import { Device } from '../../domain';
-import { type SocketConnection, Event, type ClientSocket } from '../domain';
+import { Event, type ClientSocket, type SocketConnection } from '../domain';
 import { createSocketClient, createSocketConnection } from './creators';
 import { waitForClientBalances, waitForServerBalances } from './waiting';
 

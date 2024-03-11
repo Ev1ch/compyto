@@ -1,15 +1,12 @@
-import { createProcess } from '@/core/logic';
-
 import type { Process } from '@/core/domain';
+import { createDevice, createURI } from '@/connections/logic';
+import { createProcess } from '@/core/logic';
 import { createQueue } from '@/utils/logic';
 
-import getConnectionByProcess from '../../../logic/getConnectionByProcess';
-import createSocketDevice from '../../../logic/creators/createDevice';
+import { Event, type SocketConnection } from '../../domain';
+import startCommunication from '../startCommunication';
 import startMainPerson from '../startMainPerson';
 import startPerson from '../startPerson';
-import createURI from '../../../logic/creators/createURI';
-import startCommunication from '../startCommunication';
-import { SocketConnection } from '../../domain';
 
 const isMaster = process.argv.includes('--master');
 const i = process.argv.indexOf('--code');
@@ -20,7 +17,7 @@ const port = j !== -1 ? Number(process.argv[j + 1]) : 3000;
 export default function createSocketCommunicator() {
   const selfProcess = createProcess(code);
   const selfUri = createURI('http://localhost', port);
-  const selfDevice = createSocketDevice(selfUri, selfProcess);
+  const selfDevice = createDevice(selfUri, selfProcess);
   const selfConnections: SocketConnection[] = [];
   const selfQueue = createQueue();
 

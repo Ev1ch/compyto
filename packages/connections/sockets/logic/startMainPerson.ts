@@ -1,7 +1,7 @@
+import { State } from '@/connections/domain';
 import { createBalances, getBalancesByDevice } from '@/balancing/logic';
 
-import { State } from '../../domain';
-import { type ServerSocket, type SocketConnection, Event } from '../domain';
+import { Event, type ServerSocket, type SocketConnection } from '../domain';
 import { createSocketServer } from './creators';
 import { waitForConnections } from './waiting';
 

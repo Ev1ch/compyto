@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
 
-import type { Device, URI } from '../../../domain';
+import type { Device, URI } from '@/connections/domain';
+
 import type { ClientSocket } from '../../domain';
 import { getStringURI } from '../../../logic';
 

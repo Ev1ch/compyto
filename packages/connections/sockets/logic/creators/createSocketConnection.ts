@@ -1,4 +1,5 @@
-import { type Device, State } from '../../../domain';
+import { State, type Device } from '@/connections/domain';
+
 import type { Socket, SocketConnection } from '../../domain';
 
 export default function createSocketConnection(
