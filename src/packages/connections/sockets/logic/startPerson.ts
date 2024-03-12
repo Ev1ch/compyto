@@ -1,30 +1,26 @@
 import type { Balance } from '@/balancing/domain';
 import type { Device } from '@/connections/domain';
+import type { SettingsMaster } from '@/runner/domain';
 import {
   getClientBalancesByDevice,
   getServerBalancesByDevice,
 } from '@/balancing/logic';
 
-import { Event, type ClientSocket, type SocketConnection } from '../domain';
+import { Event, type Socket, type SocketConnection } from '../domain';
 import { createSocketClient, createSocketConnection } from './creators';
 import { waitForClientBalances, waitForServerBalances } from './waiting';
 
 export type StartPersonCallback = (
-  io: ClientSocket,
+  io: Socket,
   connections: SocketConnection[],
 ) => void;
 
 export default function startPerson(
+  master: SettingsMaster,
   selfDevice: Device,
   callback: StartPersonCallback,
 ) {
-  const io = createSocketClient(
-    {
-      path: 'http://localhost',
-      port: 3000,
-    },
-    selfDevice,
-  );
+  const io = createSocketClient(master.uri, selfDevice);
   const connections: SocketConnection[] = [];
 
   function ready() {
@@ -72,5 +68,6 @@ export default function startPerson(
     throw error;
   });
 
+  // @ts-expect-error Property 'connect' does not exist on type 'Socket'.
   io.connect();
 }

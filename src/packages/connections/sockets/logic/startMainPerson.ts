@@ -1,23 +1,26 @@
-import { State, type Device } from '@/connections/domain';
+import { State, type Device, type URI } from '@/connections/domain';
+import type { Process } from '@/core/domain';
 import { createBalances, getBalancesByDevice } from '@/balancing/logic';
 
-import { Event, type ServerSocket, type SocketConnection } from '../domain';
+import { Event, type SocketConnection, type SocketsServer } from '../domain';
 import { createSocketServer } from './creators';
 import { waitForConnections } from './waiting';
 
 export type StartMainPersonCallback = (
-  io: ServerSocket,
+  io: SocketsServer,
   connections: SocketConnection[],
 ) => void;
 
 export default function startMainPerson(
-  port: number,
+  clients: Process[],
+  { port }: URI,
   selfDevice: Device,
   callback: StartMainPersonCallback,
 ) {
   const io = createSocketServer();
+  const codes = clients.map(({ code }) => code);
 
-  waitForConnections(io, ['pass2', 'pass1'], (connections) => {
+  waitForConnections(io, codes, (connections) => {
     const devices = connections.map(({ device }) => device);
     const balances = createBalances(devices);
 

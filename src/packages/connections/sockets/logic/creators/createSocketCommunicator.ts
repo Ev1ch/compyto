@@ -1,10 +1,7 @@
 import type { Communicator } from '@/connections/domain';
 import type { Process } from '@/core/domain';
-import {
-  createDevice,
-  createURI,
-  getConnectionByProcess,
-} from '@/connections/logic';
+import type { Settings } from '@/runner/domain';
+import { createDevice, getConnectionByProcess } from '@/connections/logic';
 import { createGroup, createProcess } from '@/core/logic';
 import { createQueue } from '@/utils/logic';
 
@@ -13,15 +10,14 @@ import setCommunicationHandlers from '../setCommunicationHandlers';
 import startMainPerson from '../startMainPerson';
 import startPerson from '../startPerson';
 
-const isMaster = process.argv.includes('--master');
-const i = process.argv.indexOf('--code');
-const code = i !== -1 ? process.argv[i + 1] : 'master';
-const j = process.argv.indexOf('--port');
-const port = j !== -1 ? Number(process.argv[j + 1]) : 3000;
-
-export default function createSocketCommunicator(): Communicator {
-  const selfProcess = createProcess(code);
-  const selfUri = createURI('http://localhost', port);
+export default function createSocketCommunicator({
+  isMaster = false,
+  code: selfCode,
+  uri: selfUri,
+  clients,
+  master,
+}: Settings): Communicator {
+  const selfProcess = createProcess(selfCode);
   const selfDevice = createDevice(selfUri, selfProcess);
   const selfGroup = createGroup();
   const selfConnections: SocketConnection[] = [];
@@ -37,13 +33,13 @@ export default function createSocketCommunicator(): Communicator {
   function start() {
     return new Promise<void>((resolve) => {
       if (isMaster) {
-        startMainPerson(port, selfDevice, (io, connections) => {
+        startMainPerson(clients!, selfUri, selfDevice, (io, connections) => {
           setConnections(connections);
           io.emit(Event.CONFIRMATION_RECEIVED);
           resolve(undefined);
         });
       } else {
-        startPerson(selfDevice, (io, connections) => {
+        startPerson(master!, selfDevice, (io, connections) => {
           setConnections(connections);
           io.emit(Event.CONFIRMATION);
           io.on(Event.CONFIRMATION_RECEIVED, () => resolve(undefined));
