@@ -36,6 +36,7 @@ export default function waitForClientBalances(
     });
 
     console.log('Connecting as client to', balance.server.uri);
+    // @ts-expect-error Property 'connect' does not exist on type 'Socket'.
     client.connect();
   });
 }

@@ -1,8 +1,8 @@
 import { Server } from 'socket.io';
 
-import type { ServerSocket } from '../../domain';
+import type { SocketsServer } from '../../domain';
 
-export default function createSocketServer(): ServerSocket {
+export default function createSocketServer(): SocketsServer {
   const io = new Server({});
 
   return io;
