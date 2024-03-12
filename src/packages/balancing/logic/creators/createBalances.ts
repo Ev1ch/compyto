@@ -3,7 +3,7 @@ import type { Device } from '@/connections/domain';
 import type { Balance } from '../../domain';
 import createBalance from './createBalance';
 
-export default function createBalances(devices: Device[]) {
+export default function createBalances(devices: Device[]): Balance[] {
   const balances: Map<string, Balance> = new Map();
 
   devices.forEach((firstDevice, index) => {

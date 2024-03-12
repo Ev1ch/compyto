@@ -1,6 +1,6 @@
-import type { Perform } from '../../domain';
+import type { Perform, Worker } from '../../domain';
 
-export default function createWorker(perform: Perform) {
+export default function createWorker(perform: Perform): Worker {
   return {
     perform,
   };

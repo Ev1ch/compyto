@@ -1,9 +1,12 @@
 import type { Operator } from '@/core/domain';
-import { createId } from '@/utils/logic';
 
-export default function createCommand(operator: Operator, data: unknown) {
+import type { Command } from '../../domain';
+
+export default function createCommand(
+  operator: Operator,
+  data: unknown,
+): Command {
   return {
-    id: createId(),
     operator,
     data,
   };

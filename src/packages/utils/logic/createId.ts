@@ -1,5 +1,7 @@
 import { randomUUID } from 'crypto';
 
-export default function createId() {
+import type { Id } from '../domain';
+
+export default function createId(): Id {
   return randomUUID();
 }

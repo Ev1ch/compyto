@@ -1,6 +1,8 @@
-import type { WorkerWithType } from '../../domain/Worker';
+import type { Operator, WorkerWithType } from '../../domain';
 
-export default function createOperator(workerWithTypes: WorkerWithType[]) {
+export default function createOperator(
+  workerWithTypes: WorkerWithType[],
+): Operator {
   const types = workerWithTypes.map(({ type }) => type);
 
   return {

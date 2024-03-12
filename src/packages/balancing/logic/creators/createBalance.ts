@@ -1,6 +1,8 @@
 import type { Device } from '@/connections/domain';
 
-export default function createBalance(client: Device, server: Device) {
+import type { Balance } from '../../domain';
+
+export default function createBalance(client: Device, server: Device): Balance {
   return {
     client,
     server,
