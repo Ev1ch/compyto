@@ -1,3 +1,4 @@
+export type { default as Code } from './Code';
 export type { default as Group } from './Group';
 export type { default as Operator } from './Operator';
 export type { default as Perform } from './Perform';
