@@ -5,3 +5,4 @@ export type {
   QueueEvents,
   QueueEvent,
 } from './Queue';
+export type { default as Xor } from './Xor';
