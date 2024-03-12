@@ -1,6 +1,6 @@
-import type { Operator } from '@/core/domain';
+import type { OperatorType } from '@/core/domain';
 
 export default interface Command {
-  operator: Operator;
+  operatorType: OperatorType;
   data: unknown;
 }

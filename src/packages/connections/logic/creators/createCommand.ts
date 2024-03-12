@@ -1,13 +1,13 @@
-import type { Operator } from '@/core/domain';
+import type { OperatorType } from '@/core/domain';
 
 import type { Command } from '../../domain';
 
 export default function createCommand(
-  operator: Operator,
+  operatorType: OperatorType,
   data: unknown,
 ): Command {
   return {
-    operator,
+    operatorType,
     data,
   };
 }

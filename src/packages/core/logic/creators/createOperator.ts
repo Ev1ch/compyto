@@ -1,26 +1,27 @@
-import type { Operator, WorkerWithType } from '../../domain';
+import type {
+  Operator,
+  OperatorType,
+  UnknownArgs,
+  WorkerWithType,
+} from '../../domain';
 
-export default function createOperator(
-  workerWithTypes: WorkerWithType[],
-): Operator {
-  const types = workerWithTypes.map(({ type }) => type);
+export default function createOperator<
+  TWorkerWithTypes extends WorkerWithType<any[], any>[],
+  TArgs extends UnknownArgs = Parameters<
+    TWorkerWithTypes[number]['worker']['perform']
+  >,
+  TValue = ReturnType<TWorkerWithTypes[number]['worker']['perform']>,
+>(
+  type: OperatorType,
+  workerWithTypes: TWorkerWithTypes,
+): Operator<TArgs, TValue> {
+  const allowedTypes = workerWithTypes.map(({ type }) => type);
 
   return {
-    types,
-    apply(value: unknown) {
-      const type = typeof value;
-
-      const workerWithType = workerWithTypes.find(
-        (workerWithType) => workerWithType.type === type,
-      );
-
-      if (!workerWithType) {
-        throw new Error(`Worker is not found for type: ${type}`);
-      }
-
-      const { worker } = workerWithType;
-
-      return worker.perform(value);
+    type,
+    allowedTypes,
+    apply() {
+      throw new Error('Not implemented');
     },
   };
 }
