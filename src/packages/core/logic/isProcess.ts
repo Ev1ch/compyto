@@ -1,8 +1,6 @@
-import { isObject } from '@/validation/logic';
-
 import type { Process } from '../domain';
-import isCode from './isCode';
+import { ProcessSchema } from '../schemas';
 
 export default function isProcess(value: unknown): value is Process {
-  return isObject(value) && 'code' in value && isCode(value.code);
+  return ProcessSchema.isValidSync(value);
 }
