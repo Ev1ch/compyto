@@ -1,10 +1,10 @@
-import * as yup from 'yup';
+import validation from '@/validation';
 
-const URISchema = yup
+const URISchema = validation
   .object()
   .shape({
-    path: yup.string().required().strict(),
-    code: yup.number().integer().required().strict(),
+    path: validation.string().required().strict(),
+    port: validation.number().integer().required().strict(),
   })
   .strict();
 

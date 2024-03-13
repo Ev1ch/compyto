@@ -1,6 +1,6 @@
 import type { Balance } from '@/balancing/domain';
 import type { Device } from '@/connections/domain';
-import type { SettingsMaster } from '@/runner/domain';
+import { Settings } from '@/runner/domain';
 import {
   getClientBalancesByDevice,
   getServerBalancesByDevice,
@@ -16,7 +16,7 @@ export type StartPersonCallback = (
 ) => void;
 
 export default function startPerson(
-  master: SettingsMaster,
+  master: Exclude<Settings['master'], undefined>,
   selfDevice: Device,
   callback: StartPersonCallback,
 ) {

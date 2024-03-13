@@ -1,9 +1,11 @@
-import * as yup from 'yup';
+import validation from '@/validation';
 
-const ProcessSchema = yup
+import CodeSchema from './CodeSchema';
+
+const ProcessSchema = validation
   .object()
   .shape({
-    code: yup.string().required().strict(),
+    code: CodeSchema,
   })
   .strict();
 
