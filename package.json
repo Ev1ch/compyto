@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
+    "build:docs": "typedoc",
     "format": "prettier --check .",
     "format:write": "prettier --write .",
     "lint": "eslint . --ext .ts",
@@ -16,7 +17,11 @@
     "@typescript-eslint/parser": "^7.2.0",
     "eslint": "^8.57.0",
     "lint-staged": "^15.2.2",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "typedoc": "^0.25.12",
+    "typedoc-material-theme": "^1.0.2",
+    "typedoc-plugin-remove-references": "^0.0.6",
+    "typedoc-plugin-rename-defaults": "^0.7.0"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
