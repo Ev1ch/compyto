@@ -1,0 +1,12 @@
+{
+  "plugin": [
+    "typedoc-plugin-rename-defaults",
+    "typedoc-material-theme",
+    "typedoc-plugin-remove-references"
+  ],
+  "themeColor": "#8956ff",
+  "entryPointStrategy": "expand",
+  "name": "MPI",
+  "hideGenerator": true,
+  "entryPoints": ["./src"]
+}
