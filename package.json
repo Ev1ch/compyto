@@ -8,7 +8,9 @@
     "format": "prettier --check .",
     "format:write": "prettier --write .",
     "lint": "eslint . --ext .ts",
-    "lint:write": "eslint . --ext .ts --fix"
+    "lint:write": "eslint . --ext .ts --fix",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.1.1",
