@@ -16,4 +16,10 @@ yup.addMethod(yup.Schema, 'notPresent', function (message) {
   });
 });
 
+declare module 'yup' {
+  interface Schema {
+    notPresent(): Schema;
+  }
+}
+
 export default yup;
