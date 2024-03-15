@@ -8,5 +8,6 @@ export default interface Group {
   readonly processes: Process[];
   add(...processes: Process[]): void;
   remove(process: Process): void;
+  size: number;
   [Symbol.iterator](): IterableIterator<Process>;
 }

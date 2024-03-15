@@ -22,6 +22,9 @@ export default function createGroup(): Group {
     processes,
     add,
     remove,
+    get size() {
+      return processes.length;
+    },
     [Symbol.iterator]: iterator,
   };
 }
