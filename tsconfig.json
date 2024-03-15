@@ -6,10 +6,12 @@
     "moduleResolution": "node",
     "baseUrl": "./src",
     "downlevelIteration": true,
+    "esModuleInterop": true,
     "paths": {
       "@/*": ["packages/*"]
     },
-    "outDir": "dist"
+    "outDir": "dist",
+    "resolveJsonModule": true
   },
   "include": ["src/**/*"]
 }
