@@ -5,6 +5,7 @@ enum Event {
 
   IDENTIFICATION = 'identification',
   CONNECTION = 'connection',
+  DISCONNECTION = 'disconnection',
   BALANCES = 'balances',
   CONFIRMATION = 'confirmation',
   CONFIRMATION_RECEIVED = 'confirmation-received',

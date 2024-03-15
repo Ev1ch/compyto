@@ -9,7 +9,12 @@ import { createDevice, getConnectionByProcess } from '@/connections/logic';
 import { createGroup, createProcess } from '@/core/logic';
 import { createQueue } from '@/utils/logic';
 
-import { Event, type SocketConnection } from '../../domain';
+import {
+  Event,
+  type Socket,
+  type SocketConnection,
+  type SocketsServer,
+} from '../../domain';
 import setCommunicationHandlers from '../setCommunicationHandlers';
 import startMainPerson from '../startMainPerson';
 import startPerson from '../startPerson';
@@ -21,11 +26,13 @@ export default function createSocketCommunicator({
   clients,
   master,
 }: Settings): Communicator {
+  let selfIo: Socket | SocketsServer | null = null;
   const selfProcess = createProcess(selfCode);
   const selfDevice = createDevice(selfUri, selfProcess);
   const selfGroup = createGroup();
   const selfConnections: SocketConnection[] = [];
   const selfQueue = createQueue<ProcessWithData>();
+  let isStarted = false;
 
   function setConnections(connections: SocketConnection[]) {
     const processes = connections.map(({ device: { process } }) => process);
@@ -38,18 +45,40 @@ export default function createSocketCommunicator({
     return new Promise<void>((resolve) => {
       if (isMaster) {
         startMainPerson(clients!, selfUri, selfDevice, (io, connections) => {
+          selfIo = io;
           setConnections(connections);
           io.emit(Event.CONFIRMATION_RECEIVED);
+          isStarted = true;
           resolve(undefined);
         });
       } else {
         startPerson(master!, selfDevice, (io, connections) => {
+          selfIo = io;
           setConnections(connections);
           io.emit(Event.CONFIRMATION);
-          io.on(Event.CONFIRMATION_RECEIVED, () => resolve(undefined));
+          io.on(Event.CONFIRMATION_RECEIVED, () => {
+            isStarted = true;
+            resolve(undefined);
+          });
         });
       }
     });
+  }
+
+  async function finalize() {
+    if (!isStarted) {
+      throw new Error('Communicator is not started');
+    }
+
+    selfConnections.forEach(({ socket }) => {
+      socket.disconnect();
+    });
+
+    if (isMaster) {
+      (selfIo as SocketsServer).close();
+    } else {
+      (selfIo as Socket).disconnect();
+    }
   }
 
   async function send(data: unknown, processes: Process[], abort?: Abort) {
@@ -121,5 +150,6 @@ export default function createSocketCommunicator({
     send,
     receive,
     broadcast,
+    finalize,
   };
 }
