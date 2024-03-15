@@ -9,6 +9,13 @@
   "exports": {
     "./*": "./dist/*"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ev1ch/compyto.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Ev1ch/compyto/issues"
+  },
   "scripts": {
     "build": "tsc && tsc-alias",
     "build:npm": "tsc --project tsconfig.npm.json && tsc-alias",
