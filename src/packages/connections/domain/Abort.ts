@@ -1,3 +1,3 @@
-type Abort = AbortController;
-
-export default Abort;
+export default interface Abort extends AbortController {
+  abort(reason?: string): void;
+}
