@@ -21,8 +21,22 @@ jobs:
       - name: Build docs
         run: yarn build:docs
 
+      - name: Upload documentation
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: github-pages
+          path: docs
+
   deploy:
     needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     runs-on: ubuntu-latest
     steps:
