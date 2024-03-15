@@ -8,5 +8,5 @@
   "entryPointStrategy": "expand",
   "name": "MPI",
   "hideGenerator": true,
-  "entryPoints": ["./src"]
+  "entryPoints": ["./src/packages"]
 }
