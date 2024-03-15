@@ -1,4 +1,4 @@
-import type { Communicator } from '@/connections/domain';
+import type { Abort, Communicator } from '@/connections/domain';
 import type { Process } from '@/core/domain';
 import type { Settings } from '@/runner/domain';
 import { createDevice, getConnectionByProcess } from '@/connections/logic';
@@ -48,36 +48,54 @@ export default function createSocketCommunicator({
     });
   }
 
-  async function send(data: unknown, processes: Process[]) {
-    processes.forEach((process) => {
-      const connection = getConnectionByProcess(selfConnections, process);
-
-      if (!connection) {
-        throw new Error('Connection not found');
+  async function send(data: unknown, processes: Process[], abort?: Abort) {
+    return new Promise<void>((resolve, reject) => {
+      function handleAbort() {
+        reject(abort?.signal.reason);
       }
 
-      connection.socket.emit(Event.SEND, data);
+      abort?.signal.addEventListener('abort', handleAbort, { once: true });
+
+      processes.forEach((process) => {
+        const connection = getConnectionByProcess(selfConnections, process);
+
+        if (!connection) {
+          throw new Error('Connection not found');
+        }
+
+        connection.socket.emit(Event.SEND, data);
+      });
+
+      abort?.signal.removeEventListener('abort', handleAbort);
+      resolve(undefined);
     });
   }
 
-  function broadcast(data: unknown) {
+  function broadcast(data: unknown, abort?: Abort) {
     const processes = selfConnections.map(({ device: { process } }) => process);
 
-    return send(data, processes);
+    return send(data, processes, abort);
   }
 
-  function receive() {
-    return new Promise((resolve) => {
-      if (selfQueue.length) {
-        return resolve(selfQueue.dequeue());
+  function receive(abort?: Abort) {
+    return new Promise((resolve, reject) => {
+      function handleAbort() {
+        selfQueue.removeListener('enqueue', handleEnqueue);
+        reject(abort?.signal.reason);
       }
 
       function handleEnqueue() {
-        selfQueue.removeListener('enqueue', handleEnqueue);
+        abort?.signal.removeEventListener('abort', handleAbort);
         resolve(selfQueue.dequeue());
       }
 
-      selfQueue.addListener('enqueue', handleEnqueue);
+      abort?.signal.addEventListener('abort', handleAbort, { once: true });
+
+      if (selfQueue.length) {
+        return handleEnqueue();
+      }
+
+      selfQueue.once('enqueue', handleEnqueue);
     });
   }
 
