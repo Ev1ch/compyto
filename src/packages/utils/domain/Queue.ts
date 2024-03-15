@@ -7,6 +7,11 @@ export interface QueueEvents<TValue> {
 
 export type QueueCallback<TValue> = (value: TValue) => void;
 
+/**
+ * Represents a queue data structure.
+ * Implement core methods to work with queue and
+ * provides event listeners to track changes.
+ */
 export default interface Queue<TValue> {
   enqueue(value: TValue): void;
   dequeue(): TValue;
