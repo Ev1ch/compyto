@@ -1,7 +1,7 @@
 import { createServer } from 'net';
 
 export default async function getRandomFreePort() {
-  return new Promise((resolve, reject) => {
+  return new Promise<number>((resolve, reject) => {
     const server = createServer();
 
     server.listen(0, () => {
