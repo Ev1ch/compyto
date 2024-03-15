@@ -2,7 +2,7 @@
   "compilerOptions": {
     "strict": true,
     "lib": ["esnext"],
-    "module": "esnext",
+    "module": "es6",
     "moduleResolution": "node",
     "baseUrl": "./src",
     "downlevelIteration": true,
@@ -13,5 +13,9 @@
     "outDir": "dist",
     "resolveJsonModule": true
   },
-  "include": ["src/**/*"]
+  "tsc-alias": {
+    "resolveFullPaths": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["src/tests/**/*", "src/**/*.test.ts", "src/**/*.spec.ts"]
 }
