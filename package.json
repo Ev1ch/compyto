@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "license": "MIT",
   "type": "module",
+  "exports": {
+    "./*": "./dist/*"
+  },
   "scripts": {
     "build": "tsc && tsc-alias",
     "build:npm": "tsc --project tsconfig.npm.json && tsc-alias",
