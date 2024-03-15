@@ -51,7 +51,7 @@ export default function createSocketCommunicator({
   async function send(data: unknown, processes: Process[], abort?: Abort) {
     return new Promise<void>((resolve, reject) => {
       function handleAbort() {
-        reject(new Error('Aborted'));
+        reject(abort?.signal.reason);
       }
 
       abort?.signal.addEventListener('abort', handleAbort, { once: true });
@@ -81,22 +81,21 @@ export default function createSocketCommunicator({
     return new Promise((resolve, reject) => {
       function handleAbort() {
         selfQueue.removeListener('enqueue', handleEnqueue);
-        reject(new Error('Aborted'));
+        reject(abort?.signal.reason);
+      }
+
+      function handleEnqueue() {
+        abort?.signal.removeEventListener('abort', handleAbort);
+        resolve(selfQueue.dequeue());
       }
 
       abort?.signal.addEventListener('abort', handleAbort, { once: true });
 
       if (selfQueue.length) {
-        return resolve(selfQueue.dequeue());
+        return handleEnqueue();
       }
 
-      function handleEnqueue() {
-        selfQueue.removeListener('enqueue', handleEnqueue);
-        resolve(selfQueue.dequeue());
-      }
-
-      abort?.signal.removeEventListener('abort', handleAbort);
-      selfQueue.addListener('enqueue', handleEnqueue);
+      selfQueue.once('enqueue', handleEnqueue);
     });
   }
 
