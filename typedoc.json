@@ -6,7 +6,7 @@
   ],
   "themeColor": "#8956ff",
   "entryPointStrategy": "expand",
-  "name": "compy",
+  "name": "compyto",
   "hideGenerator": true,
   "entryPoints": ["./src/packages"]
 }
