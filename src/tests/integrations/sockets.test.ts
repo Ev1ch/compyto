@@ -40,3 +40,10 @@ test('receive', async () => {
     }),
   );
 });
+
+test('finalize', async () => {
+  await Promise.all([communicators[0].finalize()]);
+  await Promise.all(
+    communicators.slice(1).map((communicator) => communicator.finalize()),
+  );
+});
