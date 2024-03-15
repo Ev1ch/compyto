@@ -1,4 +1,8 @@
-import type { Abort, Communicator } from '@/connections/domain';
+import type {
+  Abort,
+  Communicator,
+  ProcessWithData,
+} from '@/connections/domain';
 import type { Process } from '@/core/domain';
 import type { Settings } from '@/runner/domain';
 import { createDevice, getConnectionByProcess } from '@/connections/logic';
@@ -21,7 +25,7 @@ export default function createSocketCommunicator({
   const selfDevice = createDevice(selfUri, selfProcess);
   const selfGroup = createGroup();
   const selfConnections: SocketConnection[] = [];
-  const selfQueue = createQueue();
+  const selfQueue = createQueue<ProcessWithData>();
 
   function setConnections(connections: SocketConnection[]) {
     const processes = connections.map(({ device: { process } }) => process);
@@ -78,13 +82,23 @@ export default function createSocketCommunicator({
   }
 
   function receive(abort?: Abort) {
-    return new Promise((resolve, reject) => {
+    return new Promise<ProcessWithData>((resolve, reject) => {
       function handleAbort() {
         selfQueue.removeListener('enqueue', handleEnqueue);
         reject(abort?.signal.reason);
       }
 
       function handleEnqueue() {
+        /**
+         * Prevent race condition, when
+         * there are multiple `receive` calls,
+         * and the previous one took the value
+         */
+        if (!selfQueue.length) {
+          return;
+        }
+
+        selfQueue.removeListener('enqueue', handleEnqueue);
         abort?.signal.removeEventListener('abort', handleAbort);
         resolve(selfQueue.dequeue());
       }
@@ -95,7 +109,7 @@ export default function createSocketCommunicator({
         return handleEnqueue();
       }
 
-      selfQueue.once('enqueue', handleEnqueue);
+      selfQueue.addListener('enqueue', handleEnqueue);
     });
   }
 
