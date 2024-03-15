@@ -1,8 +1,11 @@
 {
   "name": "compyto",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "license": "MIT",
   "type": "module",
+  "files": [
+    "dist"
+  ],
   "exports": {
     "./*": "./dist/*"
   },
