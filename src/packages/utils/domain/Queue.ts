@@ -11,6 +11,7 @@ export default interface Queue<TValue> {
   enqueue(value: TValue): void;
   dequeue(): TValue;
   readonly length: number;
+  once(event: QueueEvent, callback: QueueCallback<TValue>): void;
   addListener(event: QueueEvent, callback: QueueCallback<TValue>): void;
   removeListener(event: QueueEvent, callback: QueueCallback<TValue>): void;
   removeAllListeners(event: QueueEvent): void;

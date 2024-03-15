@@ -7,6 +7,7 @@ export default function createQueue<TValue>(): Queue<TValue> {
   const addListener = emitter.addListener.bind(emitter);
   const removeListener = emitter.removeListener.bind(emitter);
   const removeAllListeners = emitter.removeAllListeners.bind(emitter);
+  const once = emitter.once.bind(emitter);
 
   function enqueue(value: TValue) {
     array.push(value);
@@ -26,6 +27,7 @@ export default function createQueue<TValue>(): Queue<TValue> {
   return {
     enqueue,
     dequeue,
+    once,
     addListener,
     removeListener,
     removeAllListeners,
