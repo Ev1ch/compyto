@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Build docs
+      - name: Build documentation
         run: yarn build:docs
 
       - name: Upload documentation
@@ -40,6 +40,6 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy documentation
         id: deployment
         uses: actions/deploy-pages@v4

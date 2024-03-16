@@ -18,10 +18,10 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Build
+      - name: Build library
         run: yarn build:npm
 
-      - name: Publish to NPM
+      - name: Publish package to NPM
         run: yarn publish
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
