@@ -1,11 +1,9 @@
-export type QueueEvent = 'enqueue' | 'dequeue';
+import type { EventListener } from './EventsEmitter';
 
-export interface QueueEvents<TValue> {
+export type QueueEventsMap<TValue> = {
   enqueue: [TValue];
   dequeue: [TValue];
-}
-
-export type QueueCallback<TValue> = (value: TValue) => void;
+};
 
 /**
  * Represents a queue data structure.
@@ -13,11 +11,21 @@ export type QueueCallback<TValue> = (value: TValue) => void;
  * provides event listeners to track changes.
  */
 export default interface Queue<TValue> {
+  readonly length: number;
+
   enqueue(value: TValue): void;
   dequeue(): TValue;
-  readonly length: number;
-  once(event: QueueEvent, callback: QueueCallback<TValue>): void;
-  addListener(event: QueueEvent, callback: QueueCallback<TValue>): void;
-  removeListener(event: QueueEvent, callback: QueueCallback<TValue>): void;
-  removeAllListeners(event: QueueEvent): void;
+
+  once<TEvent extends keyof QueueEventsMap<TValue>>(
+    event: TEvent,
+    callback: EventListener<QueueEventsMap<TValue>[TEvent]>,
+  ): void;
+  on<TEvent extends keyof QueueEventsMap<TValue>>(
+    event: TEvent,
+    callback: EventListener<QueueEventsMap<TValue>[TEvent]>,
+  ): void;
+  off<TEvent extends keyof QueueEventsMap<TValue>>(
+    event: TEvent,
+    callback: EventListener<QueueEventsMap<TValue>[TEvent]>,
+  ): void;
 }
