@@ -35,6 +35,7 @@ export default function createSocketCommunicator({
   const selfConnections: SocketConnection[] = [];
   const selfQueue = createQueue<ProcessWithData>();
   let isStarted = false;
+  monitoring.context.process = selfProcess;
 
   function setConnections(connections: SocketConnection[]) {
     const processes = connections.map(({ device: { process } }) => process);
