@@ -1,13 +1,13 @@
 import type { EventListener } from '@/utils/domain/EventsEmitter';
 
-import MonitoringContext from './MonitoringContext';
+import MonitoringEventContext from './MonitoringEventContext';
 import MonitoringEventsMap, { MonitoringEvents } from './MonitoringEventsMap';
 
 export default interface Monitoring {
   on<TEvent extends MonitoringEvents>(
     event: TEvent,
     listener: EventListener<
-      [MonitoringContext, ...MonitoringEventsMap[TEvent]]
+      [MonitoringEventContext, ...MonitoringEventsMap[TEvent]]
     >,
   ): void;
 
@@ -15,7 +15,7 @@ export default interface Monitoring {
     listener: EventListener<
       [
         MonitoringEvents,
-        MonitoringContext,
+        MonitoringEventContext,
         ...MonitoringEventsMap[MonitoringEvents],
       ]
     >,
@@ -24,7 +24,7 @@ export default interface Monitoring {
   off<TEvent extends MonitoringEvents>(
     event: TEvent,
     listener: EventListener<
-      [MonitoringContext, ...MonitoringEventsMap[TEvent]]
+      [MonitoringEventContext, ...MonitoringEventsMap[TEvent]]
     >,
   ): void;
 
@@ -32,7 +32,7 @@ export default interface Monitoring {
     listener: EventListener<
       [
         MonitoringEvents,
-        MonitoringContext,
+        MonitoringEventContext,
         ...MonitoringEventsMap[MonitoringEvents],
       ]
     >,

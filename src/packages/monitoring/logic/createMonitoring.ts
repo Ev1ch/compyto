@@ -3,7 +3,7 @@ import { createEventsEmitter } from '@/utils/logic';
 
 import type { Monitoring, MonitoringEventsMap } from '../domain';
 import { ANY_MONITORING_EVENT } from '../constants';
-import getMonitoringContext from './getMonitoringContext';
+import getMonitoringEventContext from './getMonitoringEventContext';
 
 export default function createMonitoring(): Monitoring {
   const emitter = createEventsEmitter<MonitoringEventsMap>();
@@ -11,7 +11,7 @@ export default function createMonitoring(): Monitoring {
   const off = emitter.off.bind(emitter) as any;
 
   const emit: Monitoring['emit'] = (event, ...args) => {
-    const context = getMonitoringContext();
+    const context = getMonitoringEventContext();
     // @ts-expect-error Argument of type...
     emitter.emit(event, context, ...(args as any));
     // @ts-expect-error Argument of type...
