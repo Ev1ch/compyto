@@ -5,7 +5,7 @@ import { getMonitoringEventParts } from '@/monitoring/utils';
 import {
   COLOR_TO_PRINT_METHOD_MAP,
   EVENT_SCOPE_TO_COLOR_MAP,
-  EVENT_TYPE_TO_COLOR_MAP,
+  TYPE_TO_COLOR_MAP,
 } from '../constants';
 
 export default function getColoredMonitoringEvent<
@@ -13,7 +13,7 @@ export default function getColoredMonitoringEvent<
 >(event: TEvent) {
   const [type, scope, name] = getMonitoringEventParts(event);
 
-  const typeColor = EVENT_TYPE_TO_COLOR_MAP[type];
+  const typeColor = TYPE_TO_COLOR_MAP[type];
   const scopeColor = EVENT_SCOPE_TO_COLOR_MAP[scope];
   const getTypeColored = COLOR_TO_PRINT_METHOD_MAP[typeColor];
   const getScopeColored = COLOR_TO_PRINT_METHOD_MAP[scopeColor];
