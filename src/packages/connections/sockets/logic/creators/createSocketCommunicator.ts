@@ -113,7 +113,7 @@ export default function createSocketCommunicator({
   function receive(abort?: Abort) {
     return new Promise<ProcessWithData>((resolve, reject) => {
       function handleAbort() {
-        selfQueue.removeListener('enqueue', handleEnqueue);
+        selfQueue.off('enqueue', handleEnqueue);
         reject(abort?.signal.reason);
       }
 
@@ -127,7 +127,7 @@ export default function createSocketCommunicator({
           return;
         }
 
-        selfQueue.removeListener('enqueue', handleEnqueue);
+        selfQueue.on('enqueue', handleEnqueue);
         abort?.signal.removeEventListener('abort', handleAbort);
         resolve(selfQueue.dequeue());
       }
@@ -138,7 +138,7 @@ export default function createSocketCommunicator({
         return handleEnqueue();
       }
 
-      selfQueue.addListener('enqueue', handleEnqueue);
+      selfQueue.on('enqueue', handleEnqueue);
     });
   }
 
