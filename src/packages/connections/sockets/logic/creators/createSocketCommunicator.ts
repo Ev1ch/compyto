@@ -7,6 +7,7 @@ import type { Process } from '@/core/domain';
 import type { Settings } from '@/runner/domain';
 import { createDevice, getConnectionByProcess } from '@/connections/logic';
 import { createGroup, createProcess } from '@/core/logic';
+import { monitoring } from '@/monitoring/logic';
 import { createQueue } from '@/utils/logic';
 
 import {
@@ -26,6 +27,7 @@ export default function createSocketCommunicator({
   clients,
   master,
 }: Settings): Communicator {
+  monitoring.emit('info:connections/communicator-creation-started');
   let selfIo: Socket | SocketsServer | null = null;
   const selfProcess = createProcess(selfCode);
   const selfDevice = createDevice(selfUri, selfProcess);
@@ -127,7 +129,7 @@ export default function createSocketCommunicator({
           return;
         }
 
-        selfQueue.on('enqueue', handleEnqueue);
+        selfQueue.off('enqueue', handleEnqueue);
         abort?.signal.removeEventListener('abort', handleAbort);
         resolve(selfQueue.dequeue());
       }
@@ -142,6 +144,7 @@ export default function createSocketCommunicator({
     });
   }
 
+  monitoring.emit('info:connections/communicator-creation-finished');
   return {
     isMaster,
     process: selfProcess,
