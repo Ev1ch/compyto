@@ -7,6 +7,7 @@ enum Color {
   CYAN = 'cyan',
   WHITE = 'white',
   BLACK = 'black',
+  GRAY = 'gray',
 }
 
 export default Color;
