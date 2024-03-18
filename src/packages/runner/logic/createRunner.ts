@@ -14,15 +14,17 @@ import { SettingsSchema } from '../schemas';
 export default async function createRunner(): Promise<Runner> {
   monitoring.onAny(logger.event);
 
-  monitoring.emit('info:balancing/example', 1);
-
   const settingsPath = path.resolve(
     process.env.SETTINGS_PATH ?? DEFAULT_SETTINGS_PATH,
   );
+  monitoring.emit('info:runner/settings-path-resolved', settingsPath);
 
   const string = (await readFile(settingsPath)).toString();
+  monitoring.emit('info:runner/settings-file-read', string);
   const settings = JSON.parse(string);
+  monitoring.emit('info:runner/settings-file-parsed', string);
   await SettingsSchema.validate(settings);
+  monitoring.emit('info:runner/settings-validated');
 
   const communicator = createSocketCommunicator(settings);
 

@@ -1,10 +1,27 @@
-import type { Reducer } from '@/utils/domain';
+import type { Balance } from '@/balancing/domain';
+import type { Device } from '@/connections/domain';
 
-import type MonitoringEvent from './MonitoringEvent';
+type MonitoringEventsMap = {
+  'info:runner/settings-path-resolved': [string];
+  'info:runner/settings-file-read': [string];
+  'info:runner/settings-file-parsed': [unknown];
+  'info:runner/settings-validated': [];
 
-type MonitoringEventsMap = Reducer<
-  [Record<MonitoringEvent<'info', 'balancing', 'example'>, [number]>]
->;
+  'info:connections/communicator-creation-started': [];
+  'info:connections/communicator-creation-finished': [];
+  'info:connections/main-person-identification-sent': [];
+  'info:connections/main-person-balances-sent': [Balance[]];
+  'info:connections/main-person-confirmation-received': [Device];
+  'info:connections/main-person-got-client': [Device];
+  'info:connections/main-person-started': [];
+  'info:connections/person-identification-received': [Device];
+  'info:connections/person-balances-received': [Balance[]];
+  'info:connections/person-as-client-connected': [Device];
+  'info:connections/person-as-client-connecting-started': [];
+  'info:connections/person-as-server-got-client': [Device];
+  'info:connections/person-as-server-identification-sent': [Device];
+  'info:connections/person-started': [];
+};
 
 export type MonitoringEvents = keyof MonitoringEventsMap;
 

@@ -1,4 +1,5 @@
 import type { Device } from '@/connections/domain';
+import { monitoring } from '@/monitoring/logic';
 
 import { Event, type SocketConnection, type SocketsServer } from '../../domain';
 import { createSocketConnection } from '../creators';
@@ -21,7 +22,7 @@ export default function waitForConnections(
       throw new Error('No device found in the socket handshake');
     }
 
-    console.log('Get the client with URI', device.uri);
+    monitoring.emit('info:connections/main-person-got-client', device);
     const {
       process: { code },
     } = device;
