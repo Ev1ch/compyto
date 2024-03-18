@@ -29,6 +29,7 @@ export default function createMonitoring(): Monitoring {
   };
 
   return {
+    context: {},
     on,
     off,
     onAny,

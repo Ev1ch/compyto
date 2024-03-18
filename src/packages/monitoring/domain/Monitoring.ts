@@ -1,9 +1,12 @@
 import type { EventListener } from '@/utils/domain/EventsEmitter';
 
-import MonitoringEventContext from './MonitoringEventContext';
+import type MonitoringContext from './MonitoringContext';
+import type MonitoringEventContext from './MonitoringEventContext';
 import MonitoringEventsMap, { MonitoringEvents } from './MonitoringEventsMap';
 
 export default interface Monitoring {
+  context: MonitoringContext;
+
   on<TEvent extends MonitoringEvents>(
     event: TEvent,
     listener: EventListener<
