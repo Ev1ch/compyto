@@ -1,5 +1,6 @@
 import type { Color, Logger, Print } from '../domain';
 import { COLOR_TO_PRINT_METHOD_MAP, TYPE_TO_COLOR_MAP } from '../constants';
+import getColoredMonitoringContext from './getColoredMonitoringContext';
 import getColoredMonitoringEvent from './getColoredMonitoringEvent';
 import getLog from './getLog';
 
@@ -31,6 +32,7 @@ export default function createConsoleLogger(): Logger {
 
   const event: Logger['event'] = (event, context, ...args) => {
     const log = getLog(
+      getColoredMonitoringContext(),
       getColoredMonitoringEvent(event),
       'with arguments:',
       args,
