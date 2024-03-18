@@ -5,7 +5,7 @@ import type {
 } from '../domain';
 import { SCOPE_DELIMITER, TYPE_DELIMITER } from '../constants';
 
-export default function getScopeFromMonitoringEvent<
+export default function getMonitoringEventParts<
   TMonitoringEventType extends MonitoringEventType,
   TMonitoringEventScope extends MonitoringEventScope,
   TMonitoringEventName extends string,
@@ -16,8 +16,12 @@ export default function getScopeFromMonitoringEvent<
     TMonitoringEventName
   >,
 ) {
-  const [, other] = event.split(TYPE_DELIMITER);
-  const [scope] = other.split(SCOPE_DELIMITER);
+  const [type, other] = event.split(TYPE_DELIMITER);
+  const [scope, name] = other.split(SCOPE_DELIMITER);
 
-  return scope as TMonitoringEventScope;
+  return [type, scope, name] as [
+    TMonitoringEventType,
+    TMonitoringEventScope,
+    TMonitoringEventName,
+  ];
 }
