@@ -1,4 +1,4 @@
 {
-  "*.ts": ["yarn format", "yarn lint"],
-  "*.json": ["yarn format"]
+  "*.ts": ["prettier --check", "eslint"],
+  "*.json": ["prettier --check"]
 }
