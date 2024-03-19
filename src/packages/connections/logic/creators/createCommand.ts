@@ -1,11 +1,11 @@
 import type { OperatorType } from '@/core/domain';
 
-import type { Command } from '../../domain';
+import type { Command, Data } from '../../domain';
 
-export default function createCommand(
+export default function createCommand<TData extends Data>(
   operatorType: OperatorType,
-  data: unknown,
-): Command {
+  data: TData,
+): Command<TData> {
   return {
     operatorType,
     data,

@@ -7,5 +7,5 @@ import type State from './State';
  */
 export default interface Connection {
   state: State;
-  device: Device;
+  readonly device: Device;
 }

@@ -9,6 +9,6 @@ import type Settings from './Settings';
  * based on them.
  */
 export default interface Runner {
-  settings: Settings;
-  communicator: Communicator;
+  readonly settings: Settings;
+  readonly communicator: Communicator;
 }

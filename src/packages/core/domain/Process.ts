@@ -6,5 +6,5 @@ import type Code from './Code';
  * perform operations.
  */
 export default interface Process {
-  code: Code;
+  readonly code: Code;
 }
