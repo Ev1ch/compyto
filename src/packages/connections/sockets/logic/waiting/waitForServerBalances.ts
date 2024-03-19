@@ -2,7 +2,7 @@ import type { Balance } from '@/balancing/domain';
 import type { Device } from '@/connections/domain';
 import { monitoring } from '@/monitoring/logic';
 
-import { Event, type SocketConnection } from '../../domain';
+import { SocketEvent, type SocketConnection } from '../../domain';
 import { createSocketConnection, createSocketServer } from '../creators';
 
 export type WaitForServerBalancesCallback = (
@@ -17,7 +17,7 @@ export default function waitForServerBalances(
   const io = createSocketServer();
   const connections: SocketConnection[] = [];
 
-  io.on(Event.CONNECTION, (socket) => {
+  io.on(SocketEvent.CONNECTION, (socket) => {
     const device = socket.handshake.auth.device as Device | undefined;
 
     if (!device) {
@@ -29,7 +29,7 @@ export default function waitForServerBalances(
     const connection = createSocketConnection(socket, device);
     connections.push(connection);
 
-    socket.emit(Event.IDENTIFICATION, selfDevice);
+    socket.emit(SocketEvent.IDENTIFICATION, selfDevice);
     monitoring.emit(
       'info:connections/person-as-server-identification-sent',
       device,

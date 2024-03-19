@@ -2,7 +2,7 @@ import type { Balance } from '@/balancing/domain';
 import type { Device } from '@/connections/domain';
 import { monitoring } from '@/monitoring/logic';
 
-import { Event, type SocketConnection } from '../../domain';
+import { SocketEvent, type SocketConnection } from '../../domain';
 import { createSocketClient, createSocketConnection } from '../creators';
 
 export type WaitForClientBalancesCallback = (
@@ -19,7 +19,7 @@ export default function waitForClientBalances(
   balances.forEach((balance) => {
     const client = createSocketClient(balance.server.uri, selfDevice);
 
-    client.once(Event.IDENTIFICATION, (device: Device) => {
+    client.once(SocketEvent.IDENTIFICATION, (device: Device) => {
       monitoring.emit('info:connections/person-as-client-connected', device);
       const connection = createSocketConnection(client, device);
       connections.push(connection);

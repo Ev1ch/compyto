@@ -7,7 +7,7 @@ import {
 } from '@/balancing/logic';
 import { monitoring } from '@/monitoring/logic';
 
-import { Event, type Socket, type SocketConnection } from '../domain';
+import { SocketEvent, type Socket, type SocketConnection } from '../domain';
 import { createSocketClient, createSocketConnection } from './creators';
 import { waitForClientBalances, waitForServerBalances } from './waiting';
 
@@ -28,12 +28,12 @@ export default function startPerson(
     callback(io, connections);
   }
 
-  io.once(Event.IDENTIFICATION, (device: Device) => {
+  io.once(SocketEvent.IDENTIFICATION, (device: Device) => {
     monitoring.emit('info:connections/person-identification-received', device);
     connections.push(createSocketConnection(io, device));
   });
 
-  io.once(Event.BALANCES, (balances: Balance[]) => {
+  io.once(SocketEvent.BALANCES, (balances: Balance[]) => {
     monitoring.emit('info:connections/person-balances-received', balances);
 
     const clientBalances = getClientBalancesByDevice(balances, selfDevice);

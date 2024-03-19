@@ -3,7 +3,11 @@ import type { Process } from '@/core/domain';
 import { createBalances, getBalancesByDevice } from '@/balancing/logic';
 import { monitoring } from '@/monitoring/logic';
 
-import { Event, type SocketConnection, type SocketsServer } from '../domain';
+import {
+  SocketEvent,
+  type SocketConnection,
+  type SocketsServer,
+} from '../domain';
 import { createSocketServer } from './creators';
 import { waitForConnections } from './waiting';
 
@@ -27,17 +31,17 @@ export default function startMainPerson(
 
     connections.forEach((connection) => {
       const { socket, device } = connection;
-      socket.emit(Event.IDENTIFICATION, selfDevice);
+      socket.emit(SocketEvent.IDENTIFICATION, selfDevice);
       monitoring.emit('info:connections/main-person-identification-sent');
 
       const deviceBalances = getBalancesByDevice(balances, device);
-      socket.emit(Event.BALANCES, deviceBalances);
+      socket.emit(SocketEvent.BALANCES, deviceBalances);
       monitoring.emit(
         'info:connections/main-person-balances-sent',
         deviceBalances,
       );
 
-      socket.once(Event.CONFIRMATION, () => {
+      socket.once(SocketEvent.CONFIRMATION, () => {
         monitoring.emit(
           'info:connections/main-person-confirmation-received',
           connection.device,

@@ -11,7 +11,7 @@ import { monitoring } from '@/monitoring/logic';
 import { createQueue } from '@/utils/logic';
 
 import {
-  Event,
+  SocketEvent,
   type Socket,
   type SocketConnection,
   type SocketsServer,
@@ -50,7 +50,7 @@ export default function createSocketCommunicator({
         startMainPerson(clients!, selfUri, selfDevice, (io, connections) => {
           selfIo = io;
           setConnections(connections);
-          io.emit(Event.CONFIRMATION_RECEIVED);
+          io.emit(SocketEvent.CONFIRMATION_RECEIVED);
           isStarted = true;
           resolve(undefined);
         });
@@ -58,8 +58,8 @@ export default function createSocketCommunicator({
         startPerson(master!, selfDevice, (io, connections) => {
           selfIo = io;
           setConnections(connections);
-          io.emit(Event.CONFIRMATION);
-          io.on(Event.CONFIRMATION_RECEIVED, () => {
+          io.emit(SocketEvent.CONFIRMATION);
+          io.on(SocketEvent.CONFIRMATION_RECEIVED, () => {
             isStarted = true;
             resolve(undefined);
           });
@@ -99,7 +99,7 @@ export default function createSocketCommunicator({
           throw new Error('Connection not found');
         }
 
-        connection.socket.emit(Event.SEND, data);
+        connection.socket.emit(SocketEvent.SEND, data);
       });
 
       abort?.signal.removeEventListener('abort', handleAbort);
