@@ -1,4 +1,4 @@
-import { MonitoringEvents } from '@/monitoring/domain';
+import type { MonitoringEvents } from '@/monitoring/domain';
 import { SCOPE_DELIMITER, TYPE_DELIMITER } from '@/monitoring/constants';
 import { getMonitoringEventParts } from '@/monitoring/utils';
 
@@ -18,5 +18,8 @@ export default function getColoredMonitoringEvent<
   const getTypeColored = COLOR_TO_PRINT_METHOD_MAP[typeColor];
   const getScopeColored = COLOR_TO_PRINT_METHOD_MAP[scopeColor];
 
-  return `${getTypeColored(`${type}${TYPE_DELIMITER}`)}${getScopeColored(`${scope}${SCOPE_DELIMITER}${name}`)}`;
+  const coloredType = getTypeColored(`${type}${TYPE_DELIMITER}`);
+  const coloredScope = getScopeColored(`${scope}${SCOPE_DELIMITER}${name}`);
+
+  return `${coloredType}${coloredScope}`;
 }

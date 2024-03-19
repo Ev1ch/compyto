@@ -1,3 +1,7 @@
+import type { UnknownArgs } from '@/core/domain';
+
 export type { EventEmitter as default } from 'node:events';
 
-export type EventListener<TArgs extends unknown[]> = (...args: TArgs) => void;
+export type EventListener<TArgs extends UnknownArgs[]> = (
+  ...args: TArgs
+) => void;
