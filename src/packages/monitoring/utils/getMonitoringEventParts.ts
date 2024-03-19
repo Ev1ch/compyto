@@ -15,13 +15,13 @@ export default function getMonitoringEventParts<
     TMonitoringEventScope,
     TMonitoringEventName
   >,
-) {
+): [TMonitoringEventType, TMonitoringEventScope, TMonitoringEventName] {
   const [type, other] = event.split(TYPE_DELIMITER);
   const [scope, name] = other.split(SCOPE_DELIMITER);
 
-  return [type, scope, name] as [
-    TMonitoringEventType,
-    TMonitoringEventScope,
-    TMonitoringEventName,
+  return [
+    type as TMonitoringEventType,
+    scope as TMonitoringEventScope,
+    name as TMonitoringEventName,
   ];
 }
