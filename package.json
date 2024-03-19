@@ -17,23 +17,27 @@
     "url": "https://github.com/Ev1ch/compyto/issues"
   },
   "scripts": {
-    "build": "tsc && tsc-alias",
+    "build": "tsc --project tsconfig.packages.json && tsc-alias",
     "build:npm": "tsc --project tsconfig.npm.json && tsc-alias",
     "build:docs": "typedoc",
     "format": "prettier --check .",
     "format:write": "prettier --write .",
-    "lint": "eslint . --ext .ts",
-    "lint:write": "eslint . --ext .ts --fix",
+    "lint": "eslint ./src --ext .ts",
+    "lint:write": "eslint ./src --ext .ts --fix",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.2.1",
+    "@commitlint/config-conventional": "^19.1.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.1.1",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.24",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "eslint": "^8.57.0",
+    "husky": "^9.0.11",
     "jest": "^29.7.0",
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5",

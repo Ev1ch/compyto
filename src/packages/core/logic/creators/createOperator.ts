@@ -6,6 +6,7 @@ import type {
 } from '../../domain';
 
 export default function createOperator<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TWorkerWithTypes extends WorkerWithType<any[], any>[],
   TArgs extends UnknownArgs = Parameters<
     TWorkerWithTypes[number]['worker']['perform']
