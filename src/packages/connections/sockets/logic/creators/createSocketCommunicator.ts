@@ -74,13 +74,13 @@ export default function createSocketCommunicator({
     }
 
     selfConnections.forEach(({ socket }) => {
-      socket.disconnect();
+      socket.disconnect(true);
     });
 
     if (isMaster) {
       (selfIo as SocketsServer).close();
     } else {
-      (selfIo as Socket).disconnect();
+      (selfIo as Socket).disconnect(true);
     }
   }
 
