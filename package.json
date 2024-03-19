@@ -17,7 +17,7 @@
     "url": "https://github.com/Ev1ch/compyto/issues"
   },
   "scripts": {
-    "build": "tsc && tsc-alias",
+    "build": "tsc --project tsconfig.packages.json && tsc-alias",
     "build:npm": "tsc --project tsconfig.npm.json && tsc-alias",
     "build:docs": "typedoc",
     "format": "prettier --check .",
