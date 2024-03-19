@@ -9,7 +9,7 @@ import type Print from './Print';
 /**
  * The interface which represents the logger,
  * providing the ability to log events, errors, warnings
- * and info messages. Based on {@link packages/logging/domain/Print.Print | print}
+ * and info messages. Based on {@link packages/logging/domain/Print.Print | print}.
  */
 export default interface Logger {
   event<TEvent extends MonitoringEvents>(

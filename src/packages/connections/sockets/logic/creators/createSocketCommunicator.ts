@@ -124,7 +124,7 @@ export default function createSocketCommunicator({
         /**
          * Prevent race condition, when
          * there are multiple `receive` calls,
-         * and the previous one took the value
+         * and the previous one took the value.
          */
         if (!selfQueue.length) {
           return;

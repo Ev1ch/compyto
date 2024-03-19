@@ -17,7 +17,7 @@ export const MONITORING_CONTEXT_COLOR = Color.WHITE;
 /**
  * Map of color to which allows to
  * divide color printing implementation
- * from abstract color code
+ * from abstract color code.
  */
 export const COLOR_TO_PRINT_METHOD_MAP: Record<Color, Print> = {
   [Color.RED]: chalk.red.bold,

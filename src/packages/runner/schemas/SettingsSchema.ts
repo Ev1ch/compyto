@@ -3,7 +3,7 @@ import { CodeSchema, ProcessSchema } from '@/core/schemas';
 import validation from '@/validation';
 
 /**
- * {@link packages/runner/domain/Settings.Settings | Settings} validation schema
+ * {@link packages/runner/domain/Settings.Settings | Settings} validation schema.
  */
 const SettingsSchema = validation
   .object()
