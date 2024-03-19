@@ -7,10 +7,11 @@ import type { Process } from '@/core/domain';
 import type { Settings } from '@/runner/domain';
 import { createDevice, getConnectionByProcess } from '@/connections/logic';
 import { createGroup, createProcess } from '@/core/logic';
+import { monitoring } from '@/monitoring/logic';
 import { createQueue } from '@/utils/logic';
 
 import {
-  Event,
+  SocketEvent,
   type Socket,
   type SocketConnection,
   type SocketsServer,
@@ -26,6 +27,7 @@ export default function createSocketCommunicator({
   clients,
   master,
 }: Settings): Communicator {
+  monitoring.emit('info:connections/communicator-creation-started');
   let selfIo: Socket | SocketsServer | null = null;
   const selfProcess = createProcess(selfCode);
   const selfDevice = createDevice(selfUri, selfProcess);
@@ -33,6 +35,7 @@ export default function createSocketCommunicator({
   const selfConnections: SocketConnection[] = [];
   const selfQueue = createQueue<ProcessWithData>();
   let isStarted = false;
+  monitoring.context.process = selfProcess;
 
   function setConnections(connections: SocketConnection[]) {
     const processes = connections.map(({ device: { process } }) => process);
@@ -47,7 +50,7 @@ export default function createSocketCommunicator({
         startMainPerson(clients!, selfUri, selfDevice, (io, connections) => {
           selfIo = io;
           setConnections(connections);
-          io.emit(Event.CONFIRMATION_RECEIVED);
+          io.emit(SocketEvent.CONFIRMATION_RECEIVED);
           isStarted = true;
           resolve(undefined);
         });
@@ -55,8 +58,8 @@ export default function createSocketCommunicator({
         startPerson(master!, selfDevice, (io, connections) => {
           selfIo = io;
           setConnections(connections);
-          io.emit(Event.CONFIRMATION);
-          io.on(Event.CONFIRMATION_RECEIVED, () => {
+          io.emit(SocketEvent.CONFIRMATION);
+          io.on(SocketEvent.CONFIRMATION_RECEIVED, () => {
             isStarted = true;
             resolve(undefined);
           });
@@ -71,13 +74,13 @@ export default function createSocketCommunicator({
     }
 
     selfConnections.forEach(({ socket }) => {
-      socket.disconnect();
+      socket.disconnect(true);
     });
 
     if (isMaster) {
       (selfIo as SocketsServer).close();
     } else {
-      (selfIo as Socket).disconnect();
+      (selfIo as Socket).disconnect(true);
     }
   }
 
@@ -96,7 +99,7 @@ export default function createSocketCommunicator({
           throw new Error('Connection not found');
         }
 
-        connection.socket.emit(Event.SEND, data);
+        connection.socket.emit(SocketEvent.SEND, data);
       });
 
       abort?.signal.removeEventListener('abort', handleAbort);
@@ -113,7 +116,7 @@ export default function createSocketCommunicator({
   function receive(abort?: Abort) {
     return new Promise<ProcessWithData>((resolve, reject) => {
       function handleAbort() {
-        selfQueue.removeListener('enqueue', handleEnqueue);
+        selfQueue.off('enqueue', handleEnqueue);
         reject(abort?.signal.reason);
       }
 
@@ -121,13 +124,13 @@ export default function createSocketCommunicator({
         /**
          * Prevent race condition, when
          * there are multiple `receive` calls,
-         * and the previous one took the value
+         * and the previous one took the value.
          */
         if (!selfQueue.length) {
           return;
         }
 
-        selfQueue.removeListener('enqueue', handleEnqueue);
+        selfQueue.off('enqueue', handleEnqueue);
         abort?.signal.removeEventListener('abort', handleAbort);
         resolve(selfQueue.dequeue());
       }
@@ -138,10 +141,11 @@ export default function createSocketCommunicator({
         return handleEnqueue();
       }
 
-      selfQueue.addListener('enqueue', handleEnqueue);
+      selfQueue.on('enqueue', handleEnqueue);
     });
   }
 
+  monitoring.emit('info:connections/communicator-creation-finished');
   return {
     isMaster,
     process: selfProcess,

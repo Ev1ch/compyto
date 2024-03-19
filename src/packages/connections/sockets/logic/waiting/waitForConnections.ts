@@ -1,6 +1,11 @@
 import type { Device } from '@/connections/domain';
+import { monitoring } from '@/monitoring/logic';
 
-import { Event, type SocketConnection, type SocketsServer } from '../../domain';
+import {
+  SocketEvent,
+  type SocketConnection,
+  type SocketsServer,
+} from '../../domain';
 import { createSocketConnection } from '../creators';
 
 export type WaitForConnectionsCallback = (
@@ -14,14 +19,14 @@ export default function waitForConnections(
 ) {
   const connections: SocketConnection[] = [];
 
-  io.on(Event.CONNECTION, (socket) => {
+  io.on(SocketEvent.CONNECTION, (socket) => {
     const device = socket.handshake.auth.device as Device | undefined;
 
     if (!device) {
       throw new Error('No device found in the socket handshake');
     }
 
-    console.log('Get the client with URI', device.uri);
+    monitoring.emit('info:connections/main-person-got-client', device);
     const {
       process: { code },
     } = device;

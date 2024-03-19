@@ -5,8 +5,9 @@ import {
   getClientBalancesByDevice,
   getServerBalancesByDevice,
 } from '@/balancing/logic';
+import { monitoring } from '@/monitoring/logic';
 
-import { Event, type Socket, type SocketConnection } from '../domain';
+import { SocketEvent, type Socket, type SocketConnection } from '../domain';
 import { createSocketClient, createSocketConnection } from './creators';
 import { waitForClientBalances, waitForServerBalances } from './waiting';
 
@@ -27,13 +28,13 @@ export default function startPerson(
     callback(io, connections);
   }
 
-  io.once(Event.IDENTIFICATION, (device: Device) => {
-    console.log('Received identification from master', device);
+  io.once(SocketEvent.IDENTIFICATION, (device: Device) => {
+    monitoring.emit('info:connections/person-identification-received', device);
     connections.push(createSocketConnection(io, device));
   });
 
-  io.once(Event.BALANCES, (balances: Balance[]) => {
-    console.log('Received balances from master', balances);
+  io.once(SocketEvent.BALANCES, (balances: Balance[]) => {
+    monitoring.emit('info:connections/person-balances-received', balances);
 
     const clientBalances = getClientBalancesByDevice(balances, selfDevice);
     const serverBalances = getServerBalancesByDevice(balances, selfDevice);
@@ -70,4 +71,5 @@ export default function startPerson(
 
   // @ts-expect-error Property 'connect' does not exist on type 'Socket'.
   io.connect();
+  monitoring.emit('info:connections/person-started');
 }

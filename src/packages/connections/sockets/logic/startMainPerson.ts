@@ -1,8 +1,13 @@
 import { State, type Device, type URI } from '@/connections/domain';
 import type { Process } from '@/core/domain';
 import { createBalances, getBalancesByDevice } from '@/balancing/logic';
+import { monitoring } from '@/monitoring/logic';
 
-import { Event, type SocketConnection, type SocketsServer } from '../domain';
+import {
+  SocketEvent,
+  type SocketConnection,
+  type SocketsServer,
+} from '../domain';
 import { createSocketServer } from './creators';
 import { waitForConnections } from './waiting';
 
@@ -26,19 +31,21 @@ export default function startMainPerson(
 
     connections.forEach((connection) => {
       const { socket, device } = connection;
-      socket.emit(Event.IDENTIFICATION, selfDevice);
-      console.log('Sent identification to', device);
+      socket.emit(SocketEvent.IDENTIFICATION, selfDevice);
+      monitoring.emit('info:connections/main-person-identification-sent');
 
       const deviceBalances = getBalancesByDevice(balances, device);
-      socket.emit(Event.BALANCES, deviceBalances);
-      console.log(
-        'Sent balances to',
-        device,
-        JSON.stringify(deviceBalances, null, 2),
+      socket.emit(SocketEvent.BALANCES, deviceBalances);
+      monitoring.emit(
+        'info:connections/main-person-balances-sent',
+        deviceBalances,
       );
 
-      socket.once(Event.CONFIRMATION, () => {
-        console.log('Got a confirmation from', device);
+      socket.once(SocketEvent.CONFIRMATION, () => {
+        monitoring.emit(
+          'info:connections/main-person-confirmation-received',
+          connection.device,
+        );
         connection.state = State.CONFIRMED;
 
         if (connections.every(({ state }) => state === State.CONFIRMED)) {
@@ -49,5 +56,5 @@ export default function startMainPerson(
   });
 
   io.listen(port);
-  console.log('Listening on port', port);
+  monitoring.emit('info:connections/main-person-started');
 }

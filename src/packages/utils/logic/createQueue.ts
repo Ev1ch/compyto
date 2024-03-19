@@ -1,20 +1,19 @@
-import type { Queue, QueueEvent, QueueEvents } from '../domain';
+import type { Queue, QueueEventsMap } from '../domain';
 import createEventsEmitter from './createEventsEmitter';
 
 export default function createQueue<TValue>(): Queue<TValue> {
   const array: TValue[] = [];
-  const emitter = createEventsEmitter<QueueEvent, QueueEvents<TValue>>();
-  const addListener = emitter.addListener.bind(emitter);
-  const removeListener = emitter.removeListener.bind(emitter);
-  const removeAllListeners = emitter.removeAllListeners.bind(emitter);
+  const emitter = createEventsEmitter<QueueEventsMap<TValue>>();
+  const off = emitter.off.bind(emitter);
+  const on = emitter.on.bind(emitter);
   const once = emitter.once.bind(emitter);
 
-  function enqueue(value: TValue) {
+  const enqueue: Queue<TValue>['enqueue'] = (value) => {
     array.push(value);
     emitter.emit('enqueue', value);
-  }
+  };
 
-  function dequeue() {
+  const dequeue: Queue<TValue>['dequeue'] = () => {
     if (!array.length) {
       throw new Error('Queue is empty');
     }
@@ -22,17 +21,18 @@ export default function createQueue<TValue>(): Queue<TValue> {
     const value = array.shift()!;
     emitter.emit('dequeue', value);
     return value;
-  }
+  };
 
   return {
-    enqueue,
-    dequeue,
-    once,
-    addListener,
-    removeListener,
-    removeAllListeners,
     get length() {
       return array.length;
     },
+
+    enqueue,
+    dequeue,
+
+    once,
+    on,
+    off,
   };
 }

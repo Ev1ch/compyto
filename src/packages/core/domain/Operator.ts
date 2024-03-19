@@ -7,8 +7,8 @@ import type Type from './Type';
  * applied to values in some group methods.
  */
 export default interface Operator<TArgs extends UnknownArgs, TValue> {
-  type: OperatorType;
-  allowedTypes: Type[];
+  readonly type: OperatorType;
+  readonly allowedTypes: Type[];
   apply<TApplyArgs extends TArgs, TApplyValue extends TValue>(
     ...args: TApplyArgs
   ): TApplyValue;

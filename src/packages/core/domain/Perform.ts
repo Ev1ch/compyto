@@ -1,3 +1,7 @@
+/**
+ * Alias to represent an array of unknown arguments.
+ * The alias is  widely used on the domain level.
+ */
 export type UnknownArgs = unknown[];
 
 /**

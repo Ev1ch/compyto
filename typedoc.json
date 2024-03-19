@@ -8,5 +8,6 @@
   "entryPointStrategy": "expand",
   "name": "compyto",
   "hideGenerator": true,
+  "basePath": "./src",
   "entryPoints": ["./src/packages"]
 }

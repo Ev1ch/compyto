@@ -1,8 +1,11 @@
-import { EventEmitter } from 'node:events';
+import NodeEventsEmitter from 'events';
+
+import type { UnknownArgs } from '@/core/domain';
+
+import type { EventsEmitter } from '../domain';
 
 export default function createEventsEmitter<
-  TEvent extends string,
-  TEvents extends Record<TEvent, unknown[]>,
->() {
-  return new EventEmitter<TEvents>();
+  TEvents extends Record<string, UnknownArgs>,
+>(): EventsEmitter<TEvents> {
+  return new NodeEventsEmitter();
 }

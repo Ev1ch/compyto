@@ -1,7 +1,7 @@
 import validation from '@/validation';
 
 /**
- * {@link packages/connections/domain/URI.URI | URI} validation schema
+ * {@link packages/connections/domain/URI.URI | URI} validation schema.
  */
 const URISchema = validation
   .object()

@@ -6,8 +6,8 @@ import type Process from './Process';
  */
 export default interface Group {
   readonly processes: Process[];
+  readonly size: number;
   add(...processes: Process[]): void;
   remove(process: Process): void;
-  size: number;
   [Symbol.iterator](): IterableIterator<Process>;
 }

@@ -1,6 +1,6 @@
 import { createServer } from 'net';
 
-export default async function getRandomFreePort() {
+export default async function getRandomFreePort(): Promise<number> {
   return new Promise<number>((resolve, reject) => {
     const server = createServer();
 

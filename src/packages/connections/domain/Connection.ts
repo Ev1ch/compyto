@@ -3,9 +3,9 @@ import type State from './State';
 
 /**
  * Entity that represents the connection
- * between the peers
+ * between the peers.
  */
 export default interface Connection {
   state: State;
-  device: Device;
+  readonly device: Device;
 }

@@ -6,6 +6,6 @@ import { Device } from '@/connections/domain';
  * of P2P network.
  */
 export default interface Balance {
-  client: Device;
-  server: Device;
+  readonly client: Device;
+  readonly server: Device;
 }

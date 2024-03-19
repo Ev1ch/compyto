@@ -1,4 +1,4 @@
-enum Event {
+enum SocketEvent {
   SEND = 'send',
   RECEIVE = 'receive',
   COMMAND = 'command',
@@ -11,4 +11,4 @@ enum Event {
   CONFIRMATION_RECEIVED = 'confirmation-received',
 }
 
-export default Event;
+export default SocketEvent;

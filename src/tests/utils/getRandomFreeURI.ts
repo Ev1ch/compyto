@@ -1,7 +1,11 @@
+import type { URI } from '@/connections/domain';
+
 import { LOCAL_HOST } from '../constants';
 import getRandomFreePort from './getRandomFreePort';
 
-export default async function getRandomFreeURI(ignoredPorts?: number[]) {
+export default async function getRandomFreeURI(
+  ignoredPorts?: number[],
+): Promise<URI> {
   let port = null;
 
   while (!port) {
