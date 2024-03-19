@@ -22,8 +22,8 @@
     "build:docs": "typedoc",
     "format": "prettier --check .",
     "format:write": "prettier --write .",
-    "lint": "eslint . --ext .ts",
-    "lint:write": "eslint . --ext .ts --fix",
+    "lint": "eslint ./src --ext .ts",
+    "lint:write": "eslint ./src --ext .ts --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "prepare": "husky"
