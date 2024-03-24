@@ -35,5 +35,5 @@ export const COLOR_TO_PRINT_METHOD_MAP: Record<Color, Print> = {
 export const EVENT_SCOPE_TO_COLOR_MAP: Record<MonitoringEventScope, Color> = {
   balancing: Color.BLUE,
   runner: Color.MAGENTA,
-  connections: Color.BLACK,
+  connections: Color.GREEN,
 };
