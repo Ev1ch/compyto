@@ -93,6 +93,13 @@ export default function createSocketCommunicator({
       abort?.signal.addEventListener('abort', handleAbort, { once: true });
 
       processes.forEach((process) => {
+        if (process.code === selfProcess.code) {
+          selfQueue.enqueue({
+            data,
+            process: selfProcess,
+          });
+          return;
+        }
         const connection = getConnectionByProcess(selfConnections, process);
 
         if (!connection) {
@@ -111,6 +118,51 @@ export default function createSocketCommunicator({
     const processes = selfConnections.map(({ device: { process } }) => process);
 
     return send(data, processes, abort);
+  }
+
+  async function scatter(
+    data: unknown[],
+    sendCount: number,
+    receiveBuf: unknown[],
+    receiveCount: number,
+    abort?: Abort,
+  ) {
+    const allDevicesLength = selfConnections.length + 1; // include myself
+    // validate input
+    if (sendCount * allDevicesLength > data.length) {
+      throw new Error('wrong sendCount');
+    }
+    if (receiveCount > sendCount) {
+      throw new Error('Cant receive more than send');
+    }
+
+    // split data to send
+    const splittedData: Array<Array<unknown>> = [];
+    for (let i = 0; i < allDevicesLength; i++) {
+      const start = i * sendCount;
+      const end = start + sendCount;
+      splittedData.push(data.slice(start, end));
+    }
+
+    const connectedProcesses = selfConnections.map(
+      ({ device: { process } }) => process,
+    );
+    const processes = [selfProcess, ...connectedProcesses];
+    await Promise.all(
+      processes.map((process, index) =>
+        send(splittedData[index], [process], abort),
+      ),
+    );
+
+    const { data: received, process } = await receive(abort);
+    if (!Array.isArray(received)) {
+      throw new Error(
+        `Received data must be an array. Got ${received} from ${process.code}`,
+      );
+    }
+    receiveBuf.push(...received.slice(0, receiveCount));
+
+    return
   }
 
   function receive(abort?: Abort) {
@@ -154,6 +206,7 @@ export default function createSocketCommunicator({
     send,
     receive,
     broadcast,
+    scatter,
     finalize,
   };
 }
