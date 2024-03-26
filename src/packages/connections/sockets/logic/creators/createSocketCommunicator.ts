@@ -44,6 +44,10 @@ export default function createSocketCommunicator({
     setCommunicationHandlers(selfConnections, selfQueue);
   }
 
+  function areProcessesEqual(a: Process, b: Process) {
+    return a.code === b.code;
+  }
+
   function start() {
     return new Promise<void>((resolve) => {
       if (isMaster) {
@@ -93,7 +97,7 @@ export default function createSocketCommunicator({
       abort?.signal.addEventListener('abort', handleAbort, { once: true });
 
       processes.forEach((process) => {
-        if (process.code === selfProcess.code) {
+        if (areProcessesEqual(process, selfProcess)) {
           selfQueue.enqueue({
             data,
             process: selfProcess,
@@ -162,7 +166,7 @@ export default function createSocketCommunicator({
     }
     receiveBuf.push(...received.slice(0, receiveCount));
 
-    return
+    return;
   }
 
   function receive(abort?: Abort) {
