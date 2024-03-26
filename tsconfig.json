@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist"
+  },
+  "references": [
+    {
+      "path": "./packages/runner"
+    },
+    {
+      "path": "./packages/logging"
+    },
+    {
+      "path": "./packages/utils"
+    },
+    {
+      "path": "./packages/balancing"
+    },
+    {
+      "path": "./packages/connections"
+    },
+    {
+      "path": "./packages/validation"
+    },
+    {
+      "path": "./packages/core"
+    },
+    {
+      "path": "./packages/monitoring"
+    },
+    {
+      "path": "./packages/serialization"
+    },
+    {
+      "path": "./packages/sockets"
+    },
+    {
+      "path": "./packages/settings"
+    },
+    {
+      "path": "./packages/dashboard"
+    },
+    {
+      "path": "./tests"
+    }
+  ]
+}
