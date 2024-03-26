@@ -5,6 +5,7 @@ import type {
 } from '@/connections/domain';
 import type { Process } from '@/core/domain';
 import type { Settings } from '@/runner/domain';
+import lodash from '@/utils/domain/lodash';
 import { createDevice, getConnectionByProcess } from '@/connections/logic';
 import { createGroup, createProcess } from '@/core/logic';
 import { monitoring } from '@/monitoring/logic';
@@ -140,13 +141,7 @@ export default function createSocketCommunicator({
       throw new Error('Cant receive more than send');
     }
 
-    // split data to send
-    const splittedData: Array<Array<unknown>> = [];
-    for (let i = 0; i < allDevicesNumber; i++) {
-      const start = i * sendCount;
-      const end = start + sendCount;
-      splittedData.push(data.slice(start, end));
-    }
+    const splittedData: Array<Array<unknown>> = lodash.chunk(data, sendCount);
 
     const connectedProcesses = selfConnections.map(
       ({ device: { process } }) => process,
