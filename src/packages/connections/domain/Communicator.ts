@@ -15,9 +15,19 @@ export default interface Communicator {
   process: Process;
   group: Group;
   start(): Promise<void>;
-  send(data: Data, processes: Process[], abort?: Abort): Promise<void>;
+  send<TData extends Data>(
+    data: TData,
+    processes: Process[],
+    abort?: Abort,
+  ): Promise<void>;
   receive(abort?: Abort): Promise<ProcessWithData>;
-  broadcast(data: Data, abort?: Abort): Promise<void>;
-  scatter(data: Data[], sendCount: number, receiveBuf: Data[], receiveCount: number, abort?: Abort): Promise<void>;
+  broadcast<TData extends Data>(data: TData, abort?: Abort): Promise<void>;
+  scatter<TData extends Data>(
+    data: TData[],
+    sendCount: number,
+    receiveBuf: Data[],
+    receiveCount: number,
+    abort?: Abort,
+  ): Promise<void>;
   finalize(): Promise<void>;
 }
