@@ -159,6 +159,9 @@ export default function createSocketCommunicator({
         `Received data must be an array. Got ${received} from ${process.code}`,
       );
     }
+
+    // empty array
+    receiveBuf.length = 0;
     receiveBuf.push(...received.slice(0, receiveCount));
 
     return;
