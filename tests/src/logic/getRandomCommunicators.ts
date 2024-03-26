@@ -1,5 +1,5 @@
-import type { Communicator } from '@/connections/domain';
-import { createSocketCommunicator } from '@/connections/sockets/logic';
+import type { Communicator } from '@compyto/connections';
+import { createSocketCommunicator } from '@compyto/sockets';
 
 import getRandomClientSettings from './getRandomClientSettings';
 import getRandomMasterSettings from './getRandomMasterSettings';

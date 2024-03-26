@@ -1,16 +1,14 @@
 import { sample } from 'lodash';
 
-import type {
-  MonitoringEvent,
-  MonitoringEventScope,
-  MonitoringEventType,
-} from '@/monitoring/domain';
 import {
   MONITORING_EVENT_SCOPE,
   MONITORING_EVENT_TYPES,
   SCOPE_DELIMITER,
   TYPE_DELIMITER,
-} from '@/monitoring/constants';
+  type MonitoringEvent,
+  type MonitoringEventScope,
+  type MonitoringEventType,
+} from '@compyto/monitoring';
 
 export default function getRandomEvent(): MonitoringEvent<
   MonitoringEventType,

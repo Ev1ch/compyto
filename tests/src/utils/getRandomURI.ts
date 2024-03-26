@@ -1,4 +1,4 @@
-import type { URI } from '@/connections/domain';
+import type { URI } from '@compyto/connections';
 
 import getRandomPath from './getRandomPath';
 import getRandomPort from './getRandomPort';

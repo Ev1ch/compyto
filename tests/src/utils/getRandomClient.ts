@@ -1,4 +1,4 @@
-import type { Process } from '@/core/domain';
+import type { Process } from '@compyto/core';
 
 import getRandomCode from './getRandomCode';
 

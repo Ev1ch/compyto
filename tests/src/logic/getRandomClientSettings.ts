@@ -1,7 +1,7 @@
-import { getRandomFreeURI } from 'src/utils';
+import type { URI } from '@compyto/connections';
+import type { Code } from '@compyto/core';
 
-import type { URI } from '@/connections/domain';
-import type { Code } from '@/core/domain';
+import { getRandomFreeURI } from '../utils';
 
 export default async function getClientSettings(masterURI: URI, code: Code) {
   return {

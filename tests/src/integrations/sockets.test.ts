@@ -1,4 +1,4 @@
-import type { Communicator } from '@/connections/domain';
+import type { Communicator } from '@compyto/connections';
 
 import { getRandomCommunicators } from '../logic';
 
