@@ -2,15 +2,14 @@
   "compilerOptions": {
     "strict": true,
     "lib": ["esnext"],
-    "module": "es6",
+    "module": "commonjs",
     "moduleResolution": "node",
     "downlevelIteration": true,
     "esModuleInterop": true,
-    "outDir": "dist",
     "resolveJsonModule": true,
     "declaration": true,
-    "sourceMap": true,
-    "baseUrl": "./src"
+    "composite": true,
+    "sourceMap": true
   },
   "tsc-alias": {
     "resolveFullPaths": true
