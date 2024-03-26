@@ -1,4 +1,4 @@
-import type { OperatorType } from '@compyto/core/domain';
+import type { OperatorType } from '@compyto/core';
 
 import type { Command, Data } from '../../domain';
 

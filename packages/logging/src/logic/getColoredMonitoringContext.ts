@@ -1,4 +1,4 @@
-import { monitoring } from '@compyto/monitoring/logic';
+import { monitoring } from '@compyto/monitoring';
 
 import {
   COLOR_TO_PRINT_METHOD_MAP,

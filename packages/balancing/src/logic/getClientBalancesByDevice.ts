@@ -1,5 +1,4 @@
-import type { Device } from '@compyto/connections/domain';
-import { getStringURI } from '@compyto/connections/logic';
+import { getStringURI, type Device } from '@compyto/connections';
 
 import type { Balance } from '../domain';
 import getBalancesByDevice from './getBalancesByDevice';

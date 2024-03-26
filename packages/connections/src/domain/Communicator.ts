@@ -1,4 +1,4 @@
-import type { Group, Process } from '@compyto/core/domain';
+import type { Group, Process } from '@compyto/core';
 
 import type Abort from './Abort';
 import type Data from './Data';

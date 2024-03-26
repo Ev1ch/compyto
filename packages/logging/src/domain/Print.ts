@@ -1,4 +1,4 @@
-import type { UnknownArgs } from '@compyto/core/domain';
+import type { UnknownArgs } from '@compyto/core';
 
 /**
  * Represents core printing method.

@@ -2,7 +2,7 @@ import type {
   MonitoringEventContext,
   MonitoringEvents,
   MonitoringEventsMap,
-} from '@compyto/monitoring/domain';
+} from '@compyto/monitoring';
 
 import type Print from './Print';
 

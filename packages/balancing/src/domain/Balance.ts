@@ -1,4 +1,4 @@
-import { Device } from '@compyto/connections/domain';
+import type { Device } from '@compyto/connections';
 
 /**
  * Entity that represents the pair of

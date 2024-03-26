@@ -1,5 +1,6 @@
-import { MonitoringEventScope } from '@compyto/monitoring/domain';
 import chalk from 'chalk';
+
+import { MonitoringEventScope } from '@compyto/monitoring';
 
 import { Color, type Print } from './domain';
 

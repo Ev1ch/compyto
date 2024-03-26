@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createEventsEmitter } from '@compyto/utils/logic';
+import { createEventsEmitter } from '@compyto/utils';
 
 import type { Monitoring, MonitoringEventsMap } from '../domain';
 import { ANY_MONITORING_EVENT } from '../constants';

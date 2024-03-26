@@ -1,5 +1,6 @@
 import NodeEventsEmitter from 'events';
-import type { UnknownArgs } from '@compyto/core/domain';
+
+import type { UnknownArgs } from '@compyto/core';
 
 import type { EventsEmitter } from '../domain';
 

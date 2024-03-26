@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.common.json",
+  "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "module": "es6",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": "./src",
+    "paths": {
+      "#/*": ["modules/*"]
+    }
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "./tsconfig.node.json" },
+    {
+      "path": "../monitoring"
+    }
+  ]
+}

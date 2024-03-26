@@ -1,4 +1,4 @@
-import type { Process } from '@compyto/core/domain';
+import type { Process } from '@compyto/core';
 
 import type { Connection } from '../domain';
 

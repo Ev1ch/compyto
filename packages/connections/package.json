@@ -1,16 +1,19 @@
 {
   "name": "@compyto/connections",
   "version": "0.0.1",
-  "type": "module",
+  "main": "dist/index.js",
   "exports": {
-    "./*": "./src/*"
+    ".": "./dist/index.js",
+    "./*": "./dist/*"
+  },
+  "scripts": {
+    "build": "tsc && tsc-alias"
   },
   "dependencies": {
     "socket.io": "^4.7.4",
     "socket.io-client": "^4.7.4",
     "@compyto/validation": "^0.0.1",
     "@compyto/core": "^0.0.1",
-    "@compyto/utils": "^0.0.1",
-    "@compyto/balancing": "^0.0.1"
+    "@compyto/utils": "^0.0.1"
   }
 }

@@ -1,5 +1,5 @@
-import type { Balance } from '@compyto/balancing/domain';
-import type { Device } from '@compyto/connections/domain';
+import type { Balance } from '@compyto/balancing';
+import type { Device } from '@compyto/connections';
 
 /**
  * The map which matches the full event

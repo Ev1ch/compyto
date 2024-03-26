@@ -2,13 +2,14 @@ import 'dotenv/config';
 
 import { readFile } from 'node:fs/promises';
 import * as path from 'node:path';
-import { createSocketCommunicator } from '@compyto/connections/sockets/logic';
-import logger from '@compyto/logging/logic/logger';
-import { monitoring } from '@compyto/monitoring/logic';
+
+import { logger } from '@compyto/logging';
+import { monitoring } from '@compyto/monitoring';
+import { SettingsSchema } from '@compyto/settings';
+import { createSocketCommunicator } from '@compyto/sockets';
 
 import type { Runner } from '../domain';
 import { DEFAULT_SETTINGS_PATH } from '../constants';
-import { SettingsSchema } from '../schemas';
 
 export default async function createRunner(): Promise<Runner> {
   monitoring.onAny(logger.event);

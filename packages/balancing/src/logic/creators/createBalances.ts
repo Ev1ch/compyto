@@ -1,4 +1,4 @@
-import type { Device } from '@compyto/connections/domain';
+import type { Device } from '@compyto/connections';
 
 import type { Balance } from '../../domain';
 import createBalance from './createBalance';

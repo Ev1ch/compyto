@@ -1,6 +1,9 @@
-import { SCOPE_DELIMITER, TYPE_DELIMITER } from '@compyto/monitoring/constants';
-import type { MonitoringEvents } from '@compyto/monitoring/domain';
-import { getMonitoringEventParts } from '@compyto/monitoring/utils';
+import {
+  getMonitoringEventParts,
+  SCOPE_DELIMITER,
+  TYPE_DELIMITER,
+  type MonitoringEvents,
+} from '@compyto/monitoring';
 
 import {
   COLOR_TO_PRINT_METHOD_MAP,

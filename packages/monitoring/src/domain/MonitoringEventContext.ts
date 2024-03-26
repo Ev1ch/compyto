@@ -1,4 +1,4 @@
-import type { Id } from '@compyto/utils/domain';
+import type { Id } from '@compyto/utils';
 
 /**
  * The context,

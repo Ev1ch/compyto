@@ -1,4 +1,4 @@
-import type { EventListener } from '@compyto/utils/domain/EventsEmitter';
+import type { EventListener } from '@compyto/utils';
 
 import type MonitoringContext from './MonitoringContext';
 import type MonitoringEventContext from './MonitoringEventContext';

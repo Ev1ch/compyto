@@ -1,6 +1,5 @@
-import type { Communicator } from '@compyto/connections/domain';
-
-import type Settings from './Settings';
+import type { Communicator } from '@compyto/connections';
+import type { Settings } from '@compyto/settings';
 
 /**
  * Core runtime abstraction which

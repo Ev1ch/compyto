@@ -1,4 +1,4 @@
-import { createId } from '@compyto/utils/logic';
+import { createId } from '@compyto/utils';
 
 import type { MonitoringEventContext } from '../domain';
 

@@ -1,4 +1,4 @@
-import type { UnknownArgs } from '@compyto/core/domain';
+import type { UnknownArgs } from '@compyto/core';
 
 export type { EventEmitter as default } from 'node:events';
 
