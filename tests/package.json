@@ -12,6 +12,7 @@
     "ts-node": "^10.9.2",
     "@compyto/core": "0.0.1",
     "@compyto/connections": "0.0.1",
+    "@compyto/sockets": "0.0.1",
     "@compyto/monitoring": "0.0.1"
   }
 }

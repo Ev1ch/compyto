@@ -1,4 +1,4 @@
-import NodeEventsEmitter from 'events';
+import NodeEventsEmitter from 'node:events';
 
 import type { UnknownArgs } from '@compyto/core';
 

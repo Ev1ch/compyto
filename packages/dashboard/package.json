@@ -1,6 +1,7 @@
 {
   "name": "@compyto/dashboard",
   "version": "0.0.1",
+  "type": "module",
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build"
