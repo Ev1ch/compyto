@@ -1,0 +1,11 @@
+import { Device } from '@compyto/connections/domain';
+
+/**
+ * Entity that represents the pair of
+ * client and server for devices for P2P connection
+ * of P2P network.
+ */
+export default interface Balance {
+  readonly client: Device;
+  readonly server: Device;
+}

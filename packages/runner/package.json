@@ -1,0 +1,13 @@
+{
+  "name": "@compyto/runner",
+  "version": "0.0.1",
+  "exports": {
+    "./*": "./src/*"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "@compyto/connections": "0.0.1",
+    "@compyto/core": "0.0.1",
+    "@compyto/validation": "0.0.1"
+  }
+}

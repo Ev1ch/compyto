@@ -1,14 +1,9 @@
 {
-  "name": "compyto",
-  "version": "0.0.1",
-  "license": "MIT",
+  "private": true,
   "type": "module",
-  "files": [
-    "dist"
+  "workspaces": [
+    "packages/*"
   ],
-  "exports": {
-    "./*": "./dist/*"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Ev1ch/compyto.git"
@@ -17,8 +12,7 @@
     "url": "https://github.com/Ev1ch/compyto/issues"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.packages.json && tsc-alias",
-    "build:npm": "tsc --project tsconfig.npm.json && tsc-alias",
+    "build": "tsc && tsc-alias",
     "build:docs": "typedoc",
     "format": "prettier --check .",
     "format:write": "prettier --write .",
@@ -33,6 +27,7 @@
     "@commitlint/config-conventional": "^19.1.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.1.1",
     "@types/jest": "^29.5.12",
+    "@types/lodash": "^4.17.0",
     "@types/node": "^20.11.24",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
@@ -51,11 +46,6 @@
     "typescript": "^5.4.2"
   },
   "dependencies": {
-    "chalk": "^5.3.0",
-    "dotenv": "^16.4.5",
-    "lodash": "^4.17.21",
-    "socket.io": "^4.7.4",
-    "socket.io-client": "^4.7.4",
-    "yup": "^1.4.0"
+    "lodash": "^4.17.21"
   }
 }

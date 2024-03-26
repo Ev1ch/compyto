@@ -1,0 +1,7 @@
+{
+  "name": "@compyto/balancing",
+  "version": "0.0.1",
+  "dependencies": {
+    "@compyto/connections": "^0.0.1"
+  }
+}
