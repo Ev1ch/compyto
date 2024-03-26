@@ -1,6 +1,7 @@
 {
   "version": "0.0.1",
   "name": "@compyto/tests",
+  "private": true,
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch"
