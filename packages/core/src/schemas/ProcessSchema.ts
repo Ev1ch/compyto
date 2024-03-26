@@ -3,7 +3,7 @@ import validation from '@compyto/validation';
 import CodeSchema from './CodeSchema';
 
 /**
- * {@link packages/core/domain/Process.Process | Process} validation schema.
+ * {@link core/src.Process | Process} validation schema.
  */
 const ProcessSchema = validation
   .object()

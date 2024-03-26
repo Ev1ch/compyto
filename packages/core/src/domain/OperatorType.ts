@@ -1,7 +1,7 @@
 /**
  * Operator type code which is used to
  * identify the operator in communication
- * between {@link packages/core/domain/Process.Process | Processes}.
+ * between {@link core/src.Process | Processes}.
  */
 enum OperatorType {
   PLUS = '+',

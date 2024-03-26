@@ -4,7 +4,7 @@ import type { Device } from '@compyto/connections';
 /**
  * The map which matches the full event
  * and its args type. The event must match
- * the {@link packages/monitoring/domain/MonitoringEvent.MonitoringEvent | format}.
+ * the {@link monitoring/src.MonitoringEvent | format}.
  */
 type MonitoringEventsMap = {
   'info:runner/settings-path-resolved': [string];

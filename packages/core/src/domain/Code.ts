@@ -1,6 +1,6 @@
 /**
  * Process unique code
- * which allows to identify the {@link packages/core/domain/Process.Process | Process}
+ * which allows to identify the {@link core/src.Process | Process}
  * and communicate with it.
  */
 type Code = string;

@@ -5,7 +5,7 @@ import type { Xor } from '@compyto/utils';
 /**
  * Represents the settings
  * which are used to configure
- * the {@link packages/connections/domain/Communicator.Communicator  | communicators}.
+ * the {@link connections/src.Communicator  | communicators}.
  */
 type Settings = {
   code: Code;

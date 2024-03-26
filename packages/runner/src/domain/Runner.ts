@@ -4,7 +4,7 @@ import type { Settings } from '@compyto/settings';
 /**
  * Core runtime abstraction which
  * helps to read the settings and
- * create the {@link packages/connections/domain/Communicator.Communicator | communicator}
+ * create the {@link connections/src.Communicator | communicator}
  * based on them.
  */
 export default interface Runner {

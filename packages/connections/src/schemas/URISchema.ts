@@ -1,7 +1,7 @@
 import validation from '@compyto/validation';
 
 /**
- * {@link packages/connections/domain/URI.URI | URI} validation schema.
+ * {@link connections/src.URI | URI} validation schema.
  */
 const URISchema = validation
   .object()
