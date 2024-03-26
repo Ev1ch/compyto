@@ -131,9 +131,9 @@ export default function createSocketCommunicator({
     receiveCount: number,
     abort?: Abort,
   ) {
-    const allDevicesLength = selfConnections.length + 1; // include myself
+    const allDevicesNumber = selfConnections.length + 1; // include myself
     // validate input
-    if (sendCount * allDevicesLength > data.length) {
+    if (sendCount * allDevicesNumber > data.length) {
       throw new Error('wrong sendCount');
     }
     if (receiveCount > sendCount) {
@@ -142,7 +142,7 @@ export default function createSocketCommunicator({
 
     // split data to send
     const splittedData: Array<Array<unknown>> = [];
-    for (let i = 0; i < allDevicesLength; i++) {
+    for (let i = 0; i < allDevicesNumber; i++) {
       const start = i * sendCount;
       const end = start + sendCount;
       splittedData.push(data.slice(start, end));
