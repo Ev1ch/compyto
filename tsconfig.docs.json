@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "declaration": true,
+    "esModuleInterop": true
+  },
+  "include": ["./packages/**/*"],
+  "exclude": ["./packages/dashboard/**/*", "./packages/**/dist/**/*"]
+}

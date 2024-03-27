@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["esnext"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "composite": true,
+    "sourceMap": true
+  },
+  "tsc-alias": {
+    "resolveFullPaths": true
+  }
+}

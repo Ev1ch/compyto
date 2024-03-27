@@ -8,6 +8,7 @@
   "entryPointStrategy": "expand",
   "name": "compyto",
   "hideGenerator": true,
-  "basePath": "./src",
-  "entryPoints": ["./src/packages"]
+  "tsconfig": "tsconfig.docs.json",
+  "exclude": ["packages/**/dist/**/*"],
+  "entryPoints": ["packages/**/src/index.ts"]
 }

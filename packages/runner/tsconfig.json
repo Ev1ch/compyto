@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.common.json",
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../connections"
+    },
+    {
+      "path": "../core"
+    },
+    {
+      "path": "../validation"
+    },
+    {
+      "path": "../settings"
+    }
+  ]
+}

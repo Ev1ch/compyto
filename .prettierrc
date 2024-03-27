@@ -10,8 +10,8 @@
     "<BUILTIN_MODULES>",
     "<THIRD_PARTY_MODULES>",
     "",
-    "^@/(.*)/domain(.*)$",
-    "^@/([^/]+)((?!/domain).)*$",
+    "^@compyto/(.*)/domain(.*)$",
+    "^@compyto/([^/]+)((?!/domain).)*$",
     "",
     "^(\\.\\.?/)+domain*$",
     "^[.]"

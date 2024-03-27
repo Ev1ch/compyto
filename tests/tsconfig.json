@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfig.common.json",
+  "references": [
+    {
+      "path": "../packages/core"
+    },
+    {
+      "path": "../packages/connections"
+    },
+    {
+      "path": "../packages/monitoring"
+    },
+    {
+      "path": "../packages/sockets"
+    }
+  ]
+}

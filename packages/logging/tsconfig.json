@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.common.json",
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../core"
+    },
+    {
+      "path": "../monitoring"
+    }
+  ]
+}

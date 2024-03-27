@@ -1,7 +1,0 @@
-{
-  "extends": "./tsconfig.packages.json",
-  "compilerOptions": {
-    "declaration": true,
-    "sourceMap": true
-  }
-}

@@ -1,0 +1,15 @@
+{
+  "name": "@compyto/validation",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*"
+  },
+  "scripts": {
+    "build": "tsc && tsc-alias"
+  },
+  "dependencies": {
+    "yup": "^1.4.0"
+  }
+}

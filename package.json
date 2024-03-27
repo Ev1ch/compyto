@@ -1,14 +1,9 @@
 {
-  "name": "compyto",
-  "version": "0.0.1",
-  "license": "MIT",
-  "type": "module",
-  "files": [
-    "dist"
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "tests"
   ],
-  "exports": {
-    "./*": "./dist/*"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Ev1ch/compyto.git"
@@ -17,31 +12,26 @@
     "url": "https://github.com/Ev1ch/compyto/issues"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.packages.json && tsc-alias",
-    "build:npm": "tsc --project tsconfig.npm.json && tsc-alias",
+    "build:all": "yarn workspace @compyto/validation build && yarn workspace @compyto/core build && yarn workspace @compyto/utils build && yarn workspace @compyto/connections build && yarn workspaces run build",
     "build:docs": "typedoc",
     "format": "prettier --check .",
     "format:write": "prettier --write .",
-    "lint": "eslint ./src --ext .ts",
-    "lint:write": "eslint ./src --ext .ts --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "lint": "eslint . --ext .ts",
+    "lint:write": "eslint . --ext .ts --fix",
     "prepare": "husky"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.2.1",
     "@commitlint/config-conventional": "^19.1.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.1.1",
-    "@types/jest": "^29.5.12",
+    "@types/lodash": "^4.17.0",
     "@types/node": "^20.11.24",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "eslint": "^8.57.0",
     "husky": "^9.0.11",
-    "jest": "^29.7.0",
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5",
-    "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.8",
     "typedoc": "^0.25.12",
@@ -51,11 +41,6 @@
     "typescript": "^5.4.2"
   },
   "dependencies": {
-    "chalk": "^5.3.0",
-    "dotenv": "^16.4.5",
-    "lodash": "^4.17.21",
-    "socket.io": "^4.7.4",
-    "socket.io-client": "^4.7.4",
-    "yup": "^1.4.0"
+    "lodash": "^4.17.21"
   }
 }

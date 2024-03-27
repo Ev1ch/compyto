@@ -1,20 +1,43 @@
 {
-  "compilerOptions": {
-    "strict": true,
-    "lib": ["esnext"],
-    "module": "es6",
-    "moduleResolution": "node",
-    "baseUrl": "./src",
-    "downlevelIteration": true,
-    "esModuleInterop": true,
-    "paths": {
-      "@/*": ["packages/*"]
+  "references": [
+    {
+      "path": "./packages/runner"
     },
-    "outDir": "dist",
-    "resolveJsonModule": true
-  },
-  "tsc-alias": {
-    "resolveFullPaths": true
-  },
-  "include": ["src/**/*"]
+    {
+      "path": "./packages/logging"
+    },
+    {
+      "path": "./packages/utils"
+    },
+    {
+      "path": "./packages/balancing"
+    },
+    {
+      "path": "./packages/connections"
+    },
+    {
+      "path": "./packages/validation"
+    },
+    {
+      "path": "./packages/core"
+    },
+    {
+      "path": "./packages/monitoring"
+    },
+    {
+      "path": "./packages/serialization"
+    },
+    {
+      "path": "./packages/sockets"
+    },
+    {
+      "path": "./packages/settings"
+    },
+    {
+      "path": "./packages/dashboard"
+    },
+    {
+      "path": "./tests"
+    }
+  ]
 }
