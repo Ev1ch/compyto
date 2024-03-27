@@ -2,7 +2,7 @@
   "compilerOptions": {
     "strict": true,
     "lib": ["esnext"],
-    "module": "commonjs",
+    "module": "es6",
     "moduleResolution": "node",
     "downlevelIteration": true,
     "esModuleInterop": true,

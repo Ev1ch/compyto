@@ -2,10 +2,11 @@
   "version": "0.0.1",
   "name": "@compyto/tests",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "echo \"No build for tests\"",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
   },
   "dependencies": {
     "@types/jest": "^29.5.12",
