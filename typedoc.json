@@ -1,9 +1,5 @@
 {
-  "plugin": [
-    "typedoc-plugin-rename-defaults",
-    "typedoc-material-theme",
-    "typedoc-plugin-remove-references"
-  ],
+  "plugin": ["typedoc-material-theme"],
   "themeColor": "#8956ff",
   "entryPointStrategy": "expand",
   "name": "compyto",
