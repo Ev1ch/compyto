@@ -12,7 +12,7 @@
     "url": "https://github.com/Ev1ch/compyto/issues"
   },
   "scripts": {
-    "build:all": "yarn workspace @compyto/validation build && yarn workspace @compyto/core build && yarn workspace @compyto/utils build && yarn workspace @compyto/connections build && yarn workspaces run build",
+    "build:all": "sh build.sh",
     "build:docs": "typedoc",
     "format": "prettier --check .",
     "format:write": "prettier --write .",

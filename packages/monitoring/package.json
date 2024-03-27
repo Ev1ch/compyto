@@ -8,5 +8,11 @@
   },
   "scripts": {
     "build": "tsc && tsc-alias"
+  },
+  "dependencies": {
+    "@compyto/utils": "^0.0.1",
+    "@compyto/core": "^0.0.1",
+    "@compyto/balancing": "^0.0.1",
+    "@compyto/connections": "^0.0.1"
   }
 }

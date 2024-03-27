@@ -4,5 +4,19 @@
     "baseUrl": "./src",
     "outDir": "./dist",
     "rootDir": "./src"
-  }
+  },
+  "references": [
+    {
+      "path": "../utils"
+    },
+    {
+      "path": "../core"
+    },
+    {
+      "path": "../balancing"
+    },
+    {
+      "path": "../connections"
+    }
+  ]
 }
