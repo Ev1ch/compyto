@@ -5,7 +5,9 @@
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js",
-    "./*": "./dist/*"
+    "./domain": "./dist/domain/index.js",
+    "./logic": "./dist/logic/index.js",
+    "./schemas": "./dist/schemas/index.js"
   },
   "scripts": {
     "build": "tsc && tsc-alias"
