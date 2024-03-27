@@ -3,6 +3,7 @@
   "name": "@compyto/tests",
   "private": true,
   "scripts": {
+    "build": "echo \"No build for tests\"",
     "test": "jest",
     "test:watch": "jest --watch"
   },
