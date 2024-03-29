@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-import { MonitoringEventScope } from '@compyto/monitoring';
+import type { MonitoringEventKeyScope } from '@compyto/monitoring';
 
 import { Color, type Print } from './domain';
 
@@ -8,7 +8,7 @@ export const TYPE_TO_COLOR_MAP = {
   error: Color.RED,
   info: Color.GREEN,
   warning: Color.YELLOW,
-};
+} as const;
 
 export const TIMESTAMP_COLOR = Color.CYAN;
 
@@ -32,8 +32,9 @@ export const COLOR_TO_PRINT_METHOD_MAP: Record<Color, Print> = {
   [Color.GRAY]: chalk.gray.bold,
 };
 
-export const EVENT_SCOPE_TO_COLOR_MAP: Record<MonitoringEventScope, Color> = {
-  balancing: Color.BLUE,
-  runner: Color.MAGENTA,
-  connections: Color.BLACK,
-};
+export const EVENT_SCOPE_TO_COLOR_MAP: Record<MonitoringEventKeyScope, Color> =
+  {
+    balancing: Color.BLUE,
+    runner: Color.MAGENTA,
+    connections: Color.BLACK,
+  };
