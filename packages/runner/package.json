@@ -1,6 +1,7 @@
 {
   "name": "@compyto/runner",
   "version": "0.0.1",
+  "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
   "exports": {
@@ -14,6 +15,7 @@
   },
   "dependencies": {
     "dotenv": "^16.4.5",
+    "@compyto/runtime": "0.0.1",
     "@compyto/connections": "0.0.1",
     "@compyto/core": "0.0.1",
     "@compyto/validation": "0.0.1",
