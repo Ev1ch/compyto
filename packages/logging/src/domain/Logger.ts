@@ -1,7 +1,7 @@
 import type {
   MonitoringEventContext,
-  MonitoringEvents,
-  MonitoringEventsMap,
+  MonitoringEventKeys,
+  MonitoringEventKeysMap,
 } from '@compyto/monitoring';
 
 import type Print from './Print';
@@ -12,10 +12,10 @@ import type Print from './Print';
  * and info messages. Based on {@link logging/src.Print | print}.
  */
 export default interface Logger {
-  event<TEvent extends MonitoringEvents>(
+  event<TEvent extends MonitoringEventKeys>(
     event: TEvent,
     context: MonitoringEventContext,
-    ...args: MonitoringEventsMap[TEvent]
+    ...args: MonitoringEventKeysMap[TEvent]
   ): void;
 
   error: Print;
