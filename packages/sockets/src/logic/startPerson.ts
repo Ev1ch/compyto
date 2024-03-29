@@ -4,7 +4,7 @@ import {
   type Balance,
 } from '@compyto/balancing';
 import type { Device } from '@compyto/connections';
-import { monitoring } from '@compyto/monitoring';
+import { runtime } from '@compyto/runtime';
 import type { Settings } from '@compyto/settings';
 
 import { SocketEvent, type Socket, type SocketConnection } from '../domain';
@@ -29,12 +29,18 @@ export default function startPerson(
   }
 
   io.once(SocketEvent.IDENTIFICATION, (device: Device) => {
-    monitoring.emit('info:connections/person-identification-received', device);
+    runtime.monitoring!.emit(
+      'info:connections/person-identification-received',
+      device,
+    );
     connections.push(createSocketConnection(io, device));
   });
 
   io.once(SocketEvent.BALANCES, (balances: Balance[]) => {
-    monitoring.emit('info:connections/person-balances-received', balances);
+    runtime.monitoring!.emit(
+      'info:connections/person-balances-received',
+      balances,
+    );
 
     const clientBalances = getClientBalancesByDevice(balances, selfDevice);
     const serverBalances = getServerBalancesByDevice(balances, selfDevice);
@@ -71,5 +77,5 @@ export default function startPerson(
 
   // @ts-expect-error Property 'connect' does not exist on type 'Socket'.
   io.connect();
-  monitoring.emit('info:connections/person-started');
+  runtime.monitoring!.emit('info:connections/person-started');
 }

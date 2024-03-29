@@ -6,7 +6,6 @@ import {
   type ProcessWithData,
 } from '@compyto/connections';
 import { createGroup, createProcess, type Process } from '@compyto/core';
-import { monitoring } from '@compyto/monitoring';
 import type { Settings } from '@compyto/settings';
 import { createQueue } from '@compyto/utils';
 
@@ -27,7 +26,6 @@ export default function createSocketCommunicator({
   clients,
   master,
 }: Settings): Communicator {
-  monitoring.emit('info:connections/communicator-creation-started');
   let selfIo: Socket | SocketsServer | null = null;
   const selfProcess = createProcess(selfCode);
   const selfDevice = createDevice(selfUri, selfProcess);
@@ -35,7 +33,6 @@ export default function createSocketCommunicator({
   const selfConnections: SocketConnection[] = [];
   const selfQueue = createQueue<ProcessWithData>();
   let isStarted = false;
-  monitoring.context.process = selfProcess;
 
   function setConnections(connections: SocketConnection[]) {
     const processes = connections.map(({ device: { process } }) => process);
@@ -145,7 +142,6 @@ export default function createSocketCommunicator({
     });
   }
 
-  monitoring.emit('info:connections/communicator-creation-finished');
   return {
     isMaster,
     process: selfProcess,

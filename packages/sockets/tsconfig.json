@@ -8,6 +8,12 @@
   "references": [
     {
       "path": "../connections"
+    },
+    {
+      "path": "../balancing"
+    },
+    {
+      "path": "../runtime"
     }
   ]
 }
