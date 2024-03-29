@@ -1,8 +1,8 @@
 import {
-  getMonitoringEventParts,
+  getMonitoringEventKeyParts,
   SCOPE_DELIMITER,
   TYPE_DELIMITER,
-  type MonitoringEvents,
+  type MonitoringEventKeys,
 } from '@compyto/monitoring';
 
 import {
@@ -11,10 +11,10 @@ import {
   TYPE_TO_COLOR_MAP,
 } from '../constants';
 
-export default function getColoredMonitoringEvent<
-  TEvent extends MonitoringEvents,
->(event: TEvent) {
-  const [type, scope, name] = getMonitoringEventParts(event);
+export default function getColoredMonitoringEventKey<
+  TMonitoringEventKey extends MonitoringEventKeys,
+>(eventKey: TMonitoringEventKey) {
+  const [type, scope, name] = getMonitoringEventKeyParts(eventKey);
 
   const typeColor = TYPE_TO_COLOR_MAP[type];
   const scopeColor = EVENT_SCOPE_TO_COLOR_MAP[scope];

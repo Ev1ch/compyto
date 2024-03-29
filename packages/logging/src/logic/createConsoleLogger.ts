@@ -1,10 +1,12 @@
+import type { Process } from '@compyto/core';
+
 import type { Color, Logger, Print } from '../domain';
 import { COLOR_TO_PRINT_METHOD_MAP, TYPE_TO_COLOR_MAP } from '../constants';
 import getColoredMonitoringContext from './getColoredMonitoringContext';
-import getColoredMonitoringEvent from './getColoredMonitoringEvent';
+import getColoredMonitoringEventKey from './getColoredMonitoringEventKey';
 import getLog from './getLog';
 
-export default function createConsoleLogger(): Logger {
+export default function createConsoleLogger(process: Process): Logger {
   function getColoredPrint(color: Color, method: Print) {
     const getColoredArgs = COLOR_TO_PRINT_METHOD_MAP[color];
     const coloredPrint: Print = (...args) => {
@@ -32,8 +34,8 @@ export default function createConsoleLogger(): Logger {
 
   const event: Logger['event'] = (event, context, ...args) => {
     const log = getLog(
-      getColoredMonitoringContext(),
-      getColoredMonitoringEvent(event),
+      getColoredMonitoringContext(process),
+      getColoredMonitoringEventKey(event),
       'with arguments:',
       args,
       'and context:',
