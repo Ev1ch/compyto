@@ -1,5 +1,5 @@
-export default function getTimestamp() {
-  const date = new Date().toISOString().replace('Z', '');
+export default function getTimestamp(date = new Date()): string {
+  const stringifiedDate = date.toISOString().replace('Z', '');
 
-  return date.substring(date.indexOf('T') + 1);
+  return stringifiedDate.substring(stringifiedDate.indexOf('T') + 1);
 }
