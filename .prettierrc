@@ -6,12 +6,15 @@
   "useTabs": false,
   "tabWidth": 2,
   "trailingComma": "all",
+  "importOrderTypeScriptVersion": "^5.0.0",
   "importOrder": [
     "<BUILTIN_MODULES>",
     "<THIRD_PARTY_MODULES>",
     "",
     "^@compyto/(.*)/domain(.*)$",
     "^@compyto/([^/]+)((?!/domain).)*$",
+    "^@/(.*)/domain(.*)$",
+    "^@/([^/]+)((?!/domain).)*$",
     "",
     "^(\\.\\.?/)+domain*$",
     "^[.]"
