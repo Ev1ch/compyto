@@ -2,47 +2,48 @@ import type { EventListener } from '@compyto/utils';
 
 import type MonitoringContext from './MonitoringContext';
 import type MonitoringEventContext from './MonitoringEventContext';
-import MonitoringEventsMap, { MonitoringEvents } from './MonitoringEventsMap';
+import type MonitoringEventKeys from './MonitoringEventKeys';
+import type MonitoringEventKeysMap from './MonitoringEventKeysMap';
 
 export default interface Monitoring {
   context: MonitoringContext;
 
-  on<TEvent extends MonitoringEvents>(
-    event: TEvent,
+  on<TEventKey extends MonitoringEventKeys>(
+    event: TEventKey,
     listener: EventListener<
-      [MonitoringEventContext, ...MonitoringEventsMap[TEvent]]
+      [MonitoringEventContext, ...MonitoringEventKeysMap[TEventKey]]
     >,
   ): void;
 
   onAny(
     listener: EventListener<
       [
-        MonitoringEvents,
+        MonitoringEventKeys,
         MonitoringEventContext,
-        ...MonitoringEventsMap[MonitoringEvents],
+        ...MonitoringEventKeysMap[MonitoringEventKeys],
       ]
     >,
   ): void;
 
-  off<TEvent extends MonitoringEvents>(
-    event: TEvent,
+  off<TEventKey extends MonitoringEventKeys>(
+    event: TEventKey,
     listener: EventListener<
-      [MonitoringEventContext, ...MonitoringEventsMap[TEvent]]
+      [MonitoringEventContext, ...MonitoringEventKeysMap[TEventKey]]
     >,
   ): void;
 
   offAny(
     listener: EventListener<
       [
-        MonitoringEvents,
+        MonitoringEventKeys,
         MonitoringEventContext,
-        ...MonitoringEventsMap[MonitoringEvents],
+        ...MonitoringEventKeysMap[MonitoringEventKeys],
       ]
     >,
   ): void;
 
-  emit<TEvent extends MonitoringEvents>(
-    event: TEvent,
-    ...args: MonitoringEventsMap[TEvent]
+  emit<TEventKey extends MonitoringEventKeys>(
+    event: TEventKey,
+    ...args: MonitoringEventKeysMap[TEventKey]
   ): void;
 }
