@@ -1,11 +1,14 @@
 import type { Communicator } from '@compyto/connections';
+import { runtime } from '@compyto/runtime';
 
 import { getRandomCommunicators } from '../logic';
+import { monitoringMock } from '../utils';
 
 let communicators: Communicator[];
 
 beforeAll(async () => {
   communicators = await getRandomCommunicators(3);
+  runtime.monitoring = monitoringMock;
 });
 
 test('start', async () => {
