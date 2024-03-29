@@ -10,6 +10,9 @@ import type { Xor } from '@compyto/utils';
 type Settings = {
   code: Code;
   uri: URI;
+  monitoring: {
+    uri: URI;
+  };
 } & Xor<
   { isMaster: true; clients: Process[] },
   {
