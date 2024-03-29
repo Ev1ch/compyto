@@ -1,1 +1,1 @@
-export { default as getMonitoringEventParts } from './getMonitoringEventParts';
+export { default as getMonitoringEventKeyParts } from './getMonitoringEventKeyParts';

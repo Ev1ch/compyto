@@ -12,7 +12,7 @@ type MonitoringEventKey<
     MonitoringEventKeyType = MonitoringEventKeyType,
   TMonitoringEventKeyScope extends
     MonitoringEventKeyScope = MonitoringEventKeyScope,
-  TMonitoringEventName extends string = string,
-> = `${TMonitoringEventKeyType}${typeof TYPE_DELIMITER}${TMonitoringEventKeyScope}${typeof SCOPE_DELIMITER}${TMonitoringEventName}`;
+  TMonitoringEventKeyName extends string = string,
+> = `${TMonitoringEventKeyType}${typeof TYPE_DELIMITER}${TMonitoringEventKeyScope}${typeof SCOPE_DELIMITER}${TMonitoringEventKeyName}`;
 
 export default MonitoringEventKey;
