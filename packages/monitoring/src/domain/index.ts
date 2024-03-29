@@ -1,4 +1,5 @@
 export type { default as Monitoring } from './Monitoring';
+export type { default as MonitoringEvent } from './MonitoringEvent';
 export type { default as MonitoringEventContext } from './MonitoringEventContext';
 export type { default as MonitoringEventKey } from './MonitoringEventKey';
 export type { default as MonitoringEventKeyScope } from './MonitoringEventKeyScope';
