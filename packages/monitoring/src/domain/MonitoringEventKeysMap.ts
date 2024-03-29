@@ -4,14 +4,9 @@ import type { Device } from '@compyto/connections';
 /**
  * The map which matches the full event
  * and its args type. The event must match
- * the {@link monitoring/src.MonitoringEvent | format}.
+ * the {@link monitoring/src.MonitoringEventKey | format}.
  */
-type MonitoringEventsMap = {
-  'info:runner/settings-path-resolved': [string];
-  'info:runner/settings-file-read': [string];
-  'info:runner/settings-file-parsed': [unknown];
-  'info:runner/settings-validated': [];
-
+type MonitoringEventKeysMap = {
   'info:connections/communicator-creation-started': [];
   'info:connections/communicator-creation-finished': [];
   'info:connections/main-person-identification-sent': [];
@@ -28,6 +23,4 @@ type MonitoringEventsMap = {
   'info:connections/person-started': [];
 };
 
-export type MonitoringEvents = keyof MonitoringEventsMap;
-
-export default MonitoringEventsMap;
+export default MonitoringEventKeysMap;
