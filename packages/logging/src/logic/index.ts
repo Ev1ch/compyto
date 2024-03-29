@@ -3,4 +3,4 @@ export { default as getColoredMonitoringContext } from './getColoredMonitoringCo
 export { default as getColoredMonitoringEvent } from './getColoredMonitoringEvent';
 export { default as getColoredTimestamp } from './getColoredTimestamp';
 export { default as getLog } from './getLog';
-export { default as logger } from './logger';
+export { default as getTimestamp } from './getTimestamp';
