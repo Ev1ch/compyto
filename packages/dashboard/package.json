@@ -17,6 +17,7 @@
   "dependencies": {
     "@compyto/logging": "^0.0.1",
     "@compyto/monitoring": "^0.0.1",
+    "@compyto/utils": "^0.0.1",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.14",
