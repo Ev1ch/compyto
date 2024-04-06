@@ -12,6 +12,9 @@
     },
     {
       "path": "../packages/sockets"
+    },
+    {
+      "path": "../packages/runner"
     }
   ]
 }
