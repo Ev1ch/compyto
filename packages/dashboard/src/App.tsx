@@ -1,7 +1,9 @@
-import { Logger } from '#/logging/components/blocks';
-import { LoggerProvider } from '#/logging/contexts';
-import { Head, Providers } from 'components/blocks';
-import { Layout } from 'components/layouts';
+import { Head, Providers } from '@/components/blocks';
+import { Baseline } from '@/components/common';
+import { Layout } from '@/components/layouts';
+import { Palette } from '@/modules/connections/components/blocks';
+import { Logger } from '@/modules/monitoring/components/blocks';
+import { LoggerProvider } from '@/modules/monitoring/contexts';
 
 export default function App() {
   return (
@@ -9,8 +11,9 @@ export default function App() {
       <Head>
         <title>Dashboard</title>
       </Head>
+      <Baseline />
       <Providers providers={[LoggerProvider]}>
-        <Layout logger={<Logger />} />
+        <Layout logger={<Logger />} palette={<Palette />} />
       </Providers>
     </>
   );
