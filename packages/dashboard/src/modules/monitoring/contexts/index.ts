@@ -1,6 +1,4 @@
 export {
-  default as LoggerContext,
-  useLoggerContext,
-  LoggerProvider,
-  type LoggerProviderProps,
-} from './LoggerContext';
+  default as MonitoringContext,
+  type MonitoringContextProps,
+} from './MonitoringContext';
