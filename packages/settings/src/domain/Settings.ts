@@ -1,8 +1,9 @@
 import type { URI } from '@compyto/connections';
-import type { Code, Process } from '@compyto/core';
+import type { Code, Process, Rank } from '@compyto/core';
 import type { Xor } from '@compyto/utils';
 
 interface BaseSettings {
+  rank: Rank;
   code: Code;
   uri: URI;
   monitoring: {

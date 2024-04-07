@@ -25,9 +25,10 @@ export default function createSocketCommunicator({
   uri: selfUri,
   clients,
   master,
+  rank,
 }: Settings): Communicator {
   let selfIo: Socket | SocketsServer | null = null;
-  const selfProcess = createProcess(selfCode);
+  const selfProcess = createProcess(selfCode, rank);
   const selfDevice = createDevice(selfUri, selfProcess);
   const selfGroup = createGroup();
   const selfConnections: SocketConnection[] = [];

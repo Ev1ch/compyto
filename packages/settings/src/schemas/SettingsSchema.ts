@@ -12,6 +12,11 @@ const SettingsSchema = validation
     uri: URISchema,
     monitoring: validation.object().shape({ uri: URISchema }).required(),
     isMaster: validation.boolean(),
+    rank: validation.number().when('isMaster', {
+      is: (value?: boolean) => value === true,
+      then: (schema) => schema.required().equals([0]),
+      otherwise: (schema) => schema.required(),
+    }),
     master: validation
       .object()
       .shape({
