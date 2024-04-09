@@ -3,7 +3,7 @@ import { Baseline } from '@/components/common';
 import { Layout } from '@/components/layouts';
 import { Palette } from '@/modules/connections/components/blocks';
 import { Logger } from '@/modules/monitoring/components/blocks';
-import { LoggerProvider } from '@/modules/monitoring/contexts';
+import { MonitoringContextProvider } from '@/modules/monitoring/components/providers';
 
 export default function App() {
   return (
@@ -11,8 +11,8 @@ export default function App() {
       <Head>
         <title>Dashboard</title>
       </Head>
-      <Baseline />
-      <Providers providers={[LoggerProvider]}>
+      <Providers providers={[MonitoringContextProvider]}>
+        <Baseline />
         <Layout logger={<Logger />} palette={<Palette />} />
       </Providers>
     </>
