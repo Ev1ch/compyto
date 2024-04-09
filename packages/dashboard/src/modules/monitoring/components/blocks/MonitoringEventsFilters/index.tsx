@@ -14,7 +14,7 @@ import { getArrayedSx } from '@/styles/logic';
 
 import type { MonitoringEventsFilter as TMonitoringEventsFilter } from '../../../domain';
 import { MONITORING_EVENTS_FILTER_CRITERION } from '../../../constants';
-import { useLoggerContext } from '../../../contexts';
+import { useMonitoringContext } from '../../../hooks';
 import { MonitoringEventsFilter } from '../../common';
 import AddMonitoringEventsFilterPopper from '../AddMonitoringEventsFilterPopper';
 
@@ -25,7 +25,7 @@ export interface MonitoringEventsFiltersProps {
 export default function MonitoringEventsFilters({
   sx = EMPTY_OBJECT,
 }: MonitoringEventsFiltersProps) {
-  const { filters, removeFilter, addFilter } = useLoggerContext();
+  const { filters, removeFilter, addFilter } = useMonitoringContext();
   const [isAddPopperOpen, setAddPopperOpen] = useState(false);
   const addButtonRef = useRef(null);
   const isAddingFiltersAvailable =
@@ -40,6 +40,7 @@ export default function MonitoringEventsFilters({
 
   const handleAddClick = useCallback(() => {
     setAddPopperOpen(true);
+    console.log('handleAddClick', addButtonRef.current);
   }, []);
 
   const handleAddFilter = useCallback(
@@ -85,24 +86,22 @@ export default function MonitoringEventsFilters({
         )}
       </Stack>
 
-      {filters.length !== 0 && (
-        <Stack sx={{ alignItems: 'center' }} direction="row" spacing={1}>
-          {filters.map((filter) => (
-            <MonitoringEventsFilter
-              key={filter.id}
-              filter={filter}
-              onDelete={handleDelete}
-            />
-          ))}
-          {addButtonRef.current && isAddPopperOpen && (
-            <AddMonitoringEventsFilterPopper
-              onAdd={handleAddFilter}
-              onClose={handleCloseClick}
-              anchor={addButtonRef.current}
-            />
-          )}
-        </Stack>
-      )}
+      <Stack sx={{ alignItems: 'center' }} direction="row" spacing={1}>
+        {filters.map((filter) => (
+          <MonitoringEventsFilter
+            key={filter.id}
+            filter={filter}
+            onDelete={handleDelete}
+          />
+        ))}
+        {addButtonRef.current && isAddPopperOpen && (
+          <AddMonitoringEventsFilterPopper
+            onAdd={handleAddFilter}
+            onClose={handleCloseClick}
+            anchor={addButtonRef.current}
+          />
+        )}
+      </Stack>
     </Stack>
   );
 }

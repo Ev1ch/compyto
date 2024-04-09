@@ -3,7 +3,7 @@ import { ChangeEvent } from 'react';
 
 import { EMPTY_OBJECT } from '@/constants';
 
-import { useLoggerContext } from '../../../contexts';
+import { useMonitoringContext } from '../../../hooks';
 
 export interface MonitoringEventsSearchProps {
   sx?: SxProps;
@@ -12,7 +12,7 @@ export interface MonitoringEventsSearchProps {
 export default function MonitoringEventsSearch({
   sx = EMPTY_OBJECT,
 }: MonitoringEventsSearchProps) {
-  const { search, setSearch } = useLoggerContext();
+  const { search, setSearch } = useMonitoringContext();
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;

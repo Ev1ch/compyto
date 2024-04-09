@@ -3,8 +3,9 @@ import { Box, Stack, type SxProps } from '@mui/material';
 import { EMPTY_OBJECT } from '@/constants';
 import { getArrayedSx } from '@/styles/logic';
 
-import { useLoggerContext } from '../../../contexts';
+import { useMonitoringContext } from '../../../hooks';
 import { MonitoringEvent } from '../../common';
+import MonitoringEventsTransfers from '../MonitoringEventsTransfers';
 
 export interface MonitoringEventsTreeProps {
   readonly sx?: SxProps;
@@ -13,7 +14,7 @@ export interface MonitoringEventsTreeProps {
 export default function MonitoringEventsTree({
   sx = EMPTY_OBJECT,
 }: MonitoringEventsTreeProps) {
-  const { eventsWithPreparers } = useLoggerContext();
+  const { eventsWithPreparers } = useMonitoringContext();
 
   return (
     <Box
@@ -30,6 +31,10 @@ export default function MonitoringEventsTree({
           minHeight: '100%',
         }}
       >
+        <MonitoringEventsTransfers
+          sx={{ position: 'absolute', right: 0, top: 0 }}
+        />
+
         <Stack
           sx={{
             position: 'relative',

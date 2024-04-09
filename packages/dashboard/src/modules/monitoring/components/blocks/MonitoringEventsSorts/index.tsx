@@ -14,7 +14,7 @@ import { getArrayedSx } from '@/styles/logic';
 
 import type { MonitoringEventsSort as TMonitoringEventsSort } from '../../../domain';
 import { MONITORING_EVENTS_SORT_FIELDS } from '../../../constants';
-import { useLoggerContext } from '../../../contexts';
+import { useMonitoringContext } from '../../../hooks';
 import { MonitoringEventsSort } from '../../common';
 import AddSortPopper from '../AddMonitoringEventsSortPopper';
 
@@ -25,7 +25,7 @@ export interface MonitoringEventsSortsProps {
 export default function MonitoringEventsSorts({
   sx = EMPTY_OBJECT,
 }: MonitoringEventsSortsProps) {
-  const { sorts, removeSort, addSort } = useLoggerContext();
+  const { sorts, removeSort, addSort } = useMonitoringContext();
   const [isAddPopperOpen, setAddPopperOpen] = useState(false);
   const addButtonRef = useRef(null);
   const isAddingFiltersAvailable =
@@ -94,14 +94,15 @@ export default function MonitoringEventsSorts({
               onDelete={handleDelete}
             />
           ))}
-          {addButtonRef.current && isAddPopperOpen && (
-            <AddSortPopper
-              onAdd={handleAddSort}
-              onClose={handleCloseClick}
-              anchor={addButtonRef.current}
-            />
-          )}
         </Stack>
+      )}
+
+      {addButtonRef.current && isAddPopperOpen && (
+        <AddSortPopper
+          onAdd={handleAddSort}
+          onClose={handleCloseClick}
+          anchor={addButtonRef.current}
+        />
       )}
     </Stack>
   );

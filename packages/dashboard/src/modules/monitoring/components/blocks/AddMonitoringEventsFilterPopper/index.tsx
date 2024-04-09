@@ -20,9 +20,10 @@ import {
   MonitoringEventsFilterCriteria,
 } from '@/modules/monitoring/domain';
 import { MONITORING_EVENTS_FILTER_CRITERION } from '@/modules/monitoring/constants';
-import { useLoggerContext } from '@/modules/monitoring/contexts';
 import { createMonitoringEventsFilter } from '@/modules/monitoring/logic';
 import { uniq } from '@/utils';
+
+import { useMonitoringContext } from '../../../hooks';
 
 export interface AddMonitoringEventsFilterPopperProps {
   anchor: HTMLElement;
@@ -32,7 +33,7 @@ export interface AddMonitoringEventsFilterPopperProps {
 
 export default forwardRef<HTMLDivElement, AddMonitoringEventsFilterPopperProps>(
   function AddMonitoringEventsFilterPopper({ anchor, onAdd, onClose }, ref) {
-    const { filters, getValuesByCriteria } = useLoggerContext();
+    const { filters, getValuesByCriteria } = useMonitoringContext();
     const [criteria, setCriteria] = useState<
       MonitoringEventsFilterCriteria | ''
     >('');

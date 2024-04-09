@@ -26,7 +26,7 @@ import {
   MONITORING_EVENTS_SORT_FIELDS,
   MONITORING_EVENTS_SORT_ORDERS,
 } from '../../../constants';
-import { useLoggerContext } from '../../../contexts';
+import { useMonitoringContext } from '../../../hooks';
 import { createMonitoringEventsSort } from '../../../logic';
 
 export interface AddMonitoringEventsSortPopperProps {
@@ -37,7 +37,7 @@ export interface AddMonitoringEventsSortPopperProps {
 
 export default forwardRef<HTMLDivElement, AddMonitoringEventsSortPopperProps>(
   function AddMonitoringEventsSortPopper({ anchor, onAdd, onClose }, ref) {
-    const { sorts } = useLoggerContext();
+    const { sorts } = useMonitoringContext();
     const [field, setField] = useState<MonitoringEventsSortField | ''>('');
     const [order, setOrder] = useState<MonitoringEventsSortOrder | ''>('');
     const existingFields = sorts.map((filter) => filter.field);
