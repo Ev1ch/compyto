@@ -79,11 +79,13 @@ export default function MonitoringEventsFilters({
       >
         <Typography>Filters</Typography>
         <Divider orientation="vertical" flexItem />
-        {isAddingFiltersAvailable && (
-          <IconButton ref={addButtonRef} onClick={handleAddClick}>
-            <AddBox />
-          </IconButton>
-        )}
+        <IconButton
+          ref={addButtonRef}
+          onClick={handleAddClick}
+          disabled={!isAddingFiltersAvailable}
+        >
+          <AddBox />
+        </IconButton>
       </Stack>
 
       <Stack sx={{ alignItems: 'center' }} direction="row" spacing={1}>

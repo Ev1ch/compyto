@@ -78,11 +78,13 @@ export default function MonitoringEventsSorts({
       >
         <Typography>Sorts</Typography>
         <Divider orientation="vertical" flexItem />
-        {isAddingFiltersAvailable && (
-          <IconButton ref={addButtonRef} onClick={handleAddClick}>
-            <AddBox />
-          </IconButton>
-        )}
+        <IconButton
+          ref={addButtonRef}
+          onClick={handleAddClick}
+          disabled={!isAddingFiltersAvailable}
+        >
+          <AddBox />
+        </IconButton>
       </Stack>
 
       {sorts.length !== 0 && (
