@@ -1,5 +1,5 @@
 import { FileDownload } from '@mui/icons-material';
-import { IconButton, Stack, SxProps } from '@mui/material';
+import { Button, Stack, SxProps } from '@mui/material';
 
 import { useFileDownload } from '@/modules/downloads/hooks';
 import { useMonitoringContext } from '@/modules/monitoring/hooks';
@@ -19,9 +19,9 @@ export default function MonitoringEventsTransfers({
 
   return (
     <Stack direction="row" sx={sx}>
-      <IconButton onClick={download}>
-        <FileDownload />
-      </IconButton>
+      <Button startIcon={<FileDownload />} onClick={download}>
+        Export
+      </Button>
     </Stack>
   );
 }
