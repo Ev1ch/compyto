@@ -30,6 +30,10 @@ export default function useMonitoringContextLogic() {
     setEvents((prevState) => [...prevState, event]);
   }, []);
 
+  const addEvents = useCallback((events: MonitoringEvent[]) => {
+    setEvents((prevState) => [...prevState, ...events]);
+  }, []);
+
   const removeEvent = useCallback((id: string) => {
     setEvents((prevState) =>
       prevState.filter((event) => event.context.id !== id),
@@ -78,6 +82,7 @@ export default function useMonitoringContextLogic() {
     () => ({
       events,
       addEvent,
+      addEvents,
       removeEvent,
       removeEvents,
 
@@ -101,6 +106,7 @@ export default function useMonitoringContextLogic() {
     [
       events,
       addEvent,
+      addEvents,
       removeEvent,
       removeEvents,
       filters,

@@ -15,6 +15,7 @@ import type {
 export interface MonitoringContextProps {
   events: MonitoringEvent[];
   addEvent: (event: MonitoringEvent) => void;
+  addEvents: (events: MonitoringEvent[]) => void;
   removeEvent: (id: string) => void;
   removeEvents: () => void;
 
