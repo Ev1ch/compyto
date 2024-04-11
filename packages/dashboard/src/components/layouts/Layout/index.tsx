@@ -3,7 +3,6 @@ import type { ReactNode } from 'react';
 
 export interface LayoutProps {
   readonly logger: ReactNode;
-  readonly palette: ReactNode;
 }
 
 const fullHeightChildren = {
@@ -12,7 +11,7 @@ const fullHeightChildren = {
   },
 };
 
-export default function Layout({ logger, palette }: LayoutProps) {
+export default function Layout({ logger }: LayoutProps) {
   return (
     <Grid
       sx={{
@@ -22,11 +21,8 @@ export default function Layout({ logger, palette }: LayoutProps) {
       columnSpacing={3}
       container
     >
-      <Grid sx={fullHeightChildren} xs={9} item>
+      <Grid sx={fullHeightChildren} xs={12} item>
         {logger}
-      </Grid>
-      <Grid sx={fullHeightChildren} xs={3} item>
-        {palette}
       </Grid>
     </Grid>
   );
