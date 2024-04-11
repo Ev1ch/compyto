@@ -5,7 +5,7 @@ import { getArrayedSx } from '@/styles/logic';
 
 import { useMonitoringContext } from '../../../hooks';
 import { MonitoringEvent } from '../../common';
-import MonitoringEventsTransfers from '../MonitoringEventsTransfers';
+import MonitoringEventsTreeHeader from '../MonitoringEventsTreeHeader';
 
 export interface MonitoringEventsTreeProps {
   readonly sx?: SxProps;
@@ -31,8 +31,8 @@ export default function MonitoringEventsTree({
           minHeight: '100%',
         }}
       >
-        <MonitoringEventsTransfers
-          sx={{ position: 'absolute', right: 0, top: 0 }}
+        <MonitoringEventsTreeHeader
+          sx={{ position: 'sticky', mb: 1, top: 0 }}
         />
 
         <Stack
