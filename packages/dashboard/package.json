@@ -5,16 +5,25 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "build": "tsc && vite build"
+    "build": "yarn build:client && yarn build:server",
+    "build:client": "tsc && vite build",
+    "build:server": "tsc --project tsconfig.server.json && tsc-alias --project tsconfig.server.json"
   },
+  "sideEffects": false,
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "main": "dist/index.js",
   "devDependencies": {
     "@types/react": "^18.2.70",
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.2.1",
     "vite": "^5.2.6",
+    "vite-plugin-node-polyfills": "^0.21.0",
     "vite-tsconfig-paths": "^4.3.2"
   },
   "dependencies": {
+    "@compyto/connections": "^0.0.1",
     "@compyto/logging": "^0.0.1",
     "@compyto/monitoring": "^0.0.1",
     "@compyto/utils": "^0.0.1",
@@ -22,6 +31,8 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.14",
     "@mui/material": "^5.15.14",
+    "@types/express": "^4.17.21",
+    "express": "^4.19.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "socket.io-client": "^4.7.5"
