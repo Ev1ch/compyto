@@ -5,6 +5,7 @@ import { getArrayedSx } from '@/styles/logic';
 
 import MonitoringEventsFilters from '../MonitoringEventsFilters';
 import MonitoringEventsSearch from '../MonitoringEventsSearch';
+import MonitoringEventsShow from '../MonitoringEventsShow';
 import MonitoringEventsSorts from '../MonitoringEventsSorts';
 
 export interface MonitoringEventsPreparersProps {
@@ -17,6 +18,8 @@ export default function MonitoringEventsPreparers({
   return (
     <Paper sx={[{ p: 2 }, ...getArrayedSx(sx)]}>
       <Stack gap={4} direction="row">
+        <MonitoringEventsShow />
+
         <MonitoringEventsFilters />
 
         <MonitoringEventsSorts />

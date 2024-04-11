@@ -19,6 +19,9 @@ export interface MonitoringContextProps {
   removeEvent: (id: string) => void;
   removeEvents: () => void;
 
+  showAll: boolean;
+  setShowAll: (showAll: boolean) => void;
+
   filters: MonitoringEventsFilter[];
   addFilter: (filter: MonitoringEventsFilter) => void;
   removeFilter: (id: string) => void;

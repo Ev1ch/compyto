@@ -5,6 +5,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  SxProps,
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
@@ -20,6 +21,8 @@ import {
   TYPE_DELIMITER,
   type MonitoringEvent as TMonitoringEvent,
 } from '@compyto/monitoring';
+import { EMPTY_OBJECT } from '@/constants';
+import { getArrayedSx } from '@/styles/logic';
 
 import {
   COLOR_TO_CHIP_COLOR_MAP,
@@ -28,15 +31,20 @@ import {
 
 export interface MonitoringEventProps {
   readonly event: TMonitoringEvent;
+  readonly sx?: SxProps;
+  readonly unfocused?: boolean;
 }
 
 export default function MonitoringEvent({
   event: { key, context, args },
+  unfocused,
+  sx = EMPTY_OBJECT,
 }: MonitoringEventProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [type, scope, name] = getMonitoringEventKeyParts(key);
   const typeColor = TYPE_TO_COLOR_MAP[type];
   const scopeColor = EVENT_SCOPE_TO_COLOR_MAP[scope];
+  const areArgsPresent = args.length > 0;
 
   function handleExpandToggle() {
     setIsExpanded((prevState) => !prevState);
@@ -44,28 +52,34 @@ export default function MonitoringEvent({
 
   return (
     <Box
-      sx={{
-        display: 'inline-flex',
-        alignItems: 'center',
+      sx={[
+        {
+          display: 'inline-flex',
+          alignItems: 'center',
 
-        '&::before': {
-          order: 1,
-          display: 'block',
-          content: '""',
-          width: 40,
-          height: 2,
-          bgcolor: 'grey.400',
+          '&::before': {
+            order: 1,
+            display: 'block',
+            content: '""',
+            width: 40,
+            height: 2,
+            bgcolor: 'grey.400',
+          },
+          '&::after': {
+            order: 2,
+            display: 'block',
+            content: '""',
+            width: 10,
+            height: 10,
+            borderRadius: '50%',
+            bgcolor: 'grey.400',
+          },
         },
-        '&::after': {
-          order: 2,
-          display: 'block',
-          content: '""',
-          width: 10,
-          height: 10,
-          borderRadius: '50%',
-          bgcolor: 'grey.400',
+        unfocused && {
+          opacity: 0.2,
         },
-      }}
+        ...getArrayedSx(sx),
+      ]}
     >
       <Chip
         sx={{ height: 'auto' }}
@@ -73,7 +87,10 @@ export default function MonitoringEvent({
         color={COLOR_TO_CHIP_COLOR_MAP[typeColor]}
         label={
           <Box>
-            <Typography sx={{ cursor: 'pointer' }} onClick={handleExpandToggle}>
+            <Typography
+              sx={[areArgsPresent && { cursor: 'pointer' }]}
+              onClick={handleExpandToggle}
+            >
               <Typography component="span">
                 [{getTimestamp(context.emittedAt)}]
               </Typography>{' '}
@@ -91,14 +108,16 @@ export default function MonitoringEvent({
               <Typography sx={{ color: 'black' }} component="span">
                 {name}
               </Typography>
-              <ArrowRight
-                sx={[
-                  { verticalAlign: 'middle' },
-                  isExpanded && {
-                    transform: 'rotate(90deg)',
-                  },
-                ]}
-              />
+              {areArgsPresent && (
+                <ArrowRight
+                  sx={[
+                    { verticalAlign: 'middle' },
+                    isExpanded && {
+                      transform: 'rotate(90deg)',
+                    },
+                  ]}
+                />
+              )}
             </Typography>
             {isExpanded && (
               <List dense disablePadding>

@@ -21,6 +21,7 @@ export default function useMonitoringContextLogic() {
   const [filters, setFilters] = useState<MonitoringEventsFilter[]>([]);
   const [search, setSearch] = useState('');
   const [sorts, setSorts] = useState<MonitoringEventsSort[]>([]);
+  const [showAll, setShowAll] = useState(false);
   const eventsWithPreparers = useMemo(
     () => getMonitoringEventsWithPreparers(events, { filters, search, sorts }),
     [events, filters, search, sorts],
@@ -86,6 +87,9 @@ export default function useMonitoringContextLogic() {
       removeEvent,
       removeEvents,
 
+      showAll,
+      setShowAll,
+
       filters,
       addFilter,
       removeFilter,
@@ -109,6 +113,8 @@ export default function useMonitoringContextLogic() {
       addEvents,
       removeEvent,
       removeEvents,
+      showAll,
+      setShowAll,
       filters,
       addFilter,
       removeFilter,

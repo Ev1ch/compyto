@@ -1,2 +1,2 @@
 export { default as Logger } from './Logger';
-export { default as MonitoringEventsTransfers } from './MonitoringEventsTransfers';
+export { default as MonitoringEventsTreeHeader } from './MonitoringEventsTreeHeader';

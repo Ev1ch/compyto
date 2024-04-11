@@ -14,7 +14,8 @@ export interface MonitoringEventsTreeProps {
 export default function MonitoringEventsTree({
   sx = EMPTY_OBJECT,
 }: MonitoringEventsTreeProps) {
-  const { eventsWithPreparers } = useMonitoringContext();
+  const { events, eventsWithPreparers, showAll } = useMonitoringContext();
+  const shownEvents = showAll ? events : eventsWithPreparers;
 
   return (
     <Box
@@ -44,9 +45,19 @@ export default function MonitoringEventsTree({
           }}
           spacing={1}
         >
-          {eventsWithPreparers.map((event) => (
-            <MonitoringEvent key={event.context.id} event={event} />
-          ))}
+          {shownEvents.map((shownEvent) => {
+            const isUnfocused = !eventsWithPreparers.find(
+              (event) => event.context.id === shownEvent.context.id,
+            );
+
+            return (
+              <MonitoringEvent
+                key={shownEvent.context.id}
+                event={shownEvent}
+                unfocused={isUnfocused}
+              />
+            );
+          })}
         </Stack>
         <Box
           sx={{
