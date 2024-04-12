@@ -15,7 +15,7 @@ const SettingsSchema = validation
     rank: validation.number().when('isMaster', {
       is: (value?: boolean) => value === true,
       then: (schema) => schema.required().equals([0]),
-      otherwise: (schema) => schema.required(),
+      otherwise: (schema) => schema.required().integer().min(1),
     }),
     master: validation
       .object()
