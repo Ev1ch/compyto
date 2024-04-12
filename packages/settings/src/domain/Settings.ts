@@ -6,7 +6,7 @@ interface BaseSettings {
   rank: Rank;
   code: Code;
   uri: URI;
-  monitoring: {
+  monitoring?: {
     uri: URI;
   };
 }

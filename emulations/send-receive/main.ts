@@ -5,8 +5,7 @@ export default async function start() {
   await communicator.start();
 
   console.log('Started', communicator.group);
-  2;
-  for (const process of communicator.group) {
+  for (const process of communicator.group.processes) {
     console.log('Sending hello to', process);
     communicator.send(`Hello from ${communicator.process.code}`, [process]);
   }

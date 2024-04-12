@@ -26,7 +26,7 @@ export default function waitForConnections(
       throw new Error('No device found in the socket handshake');
     }
 
-    runtime.monitoring!.emit('info:connections/main-person-got-client', device);
+    runtime.monitoring?.emit('info:connections/main-person-got-client', device);
     const {
       process: { code },
     } = device;

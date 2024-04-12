@@ -1,18 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Server } from 'socket.io';
 
-import type { Settings } from '@compyto/settings';
+import { URI } from '@compyto/connections';
 import { createEventsEmitter } from '@compyto/utils';
 
 import type { Monitoring, MonitoringEventKeysMap } from '../domain';
 import { ANY_MONITORING_EVENT_KEY } from '../constants';
 import getMonitoringEventContext from './getMonitoringEventContext';
 
-export default function createMonitoring({
-  monitoring: {
-    uri: { port },
-  },
-}: Settings): Monitoring {
+export default function createMonitoring({ uri }: { uri: URI }): Monitoring {
+  const { port } = uri;
   const io = new Server();
   const emitter = createEventsEmitter<MonitoringEventKeysMap>();
   const on = emitter.on.bind(emitter) as any;

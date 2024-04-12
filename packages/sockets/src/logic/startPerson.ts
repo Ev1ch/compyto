@@ -29,7 +29,7 @@ export default function startPerson(
   }
 
   io.once(SocketEvent.IDENTIFICATION, (device: Device) => {
-    runtime.monitoring!.emit(
+    runtime.monitoring?.emit(
       'info:connections/person-identification-received',
       device,
     );
@@ -37,7 +37,7 @@ export default function startPerson(
   });
 
   io.once(SocketEvent.BALANCES, (balances: Balance[]) => {
-    runtime.monitoring!.emit(
+    runtime.monitoring?.emit(
       'info:connections/person-balances-received',
       balances,
     );
@@ -77,5 +77,5 @@ export default function startPerson(
 
   // @ts-expect-error Property 'connect' does not exist on type 'Socket'.
   io.connect();
-  runtime.monitoring!.emit('info:connections/person-started');
+  runtime.monitoring?.emit('info:connections/person-started');
 }

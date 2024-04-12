@@ -6,7 +6,7 @@ import * as path from 'node:path';
 import { createConsoleLogger } from '@compyto/logging';
 import { createMonitoring } from '@compyto/monitoring';
 import { runtime } from '@compyto/runtime';
-import { SettingsSchema } from '@compyto/settings';
+import { Settings, SettingsSchema } from '@compyto/settings';
 import { createSocketCommunicator } from '@compyto/sockets';
 
 import type { Runner } from '../domain';
@@ -17,17 +17,19 @@ export default async function createRunner(): Promise<Runner> {
     process.env.SETTINGS_PATH ?? DEFAULT_SETTINGS_PATH,
   );
   const string = (await readFile(settingsPath)).toString();
-  const settings = JSON.parse(string);
+  const settings: Settings = JSON.parse(string);
   await SettingsSchema.validate(settings);
-  const monitoring = createMonitoring(settings);
   const communicator = createSocketCommunicator(settings);
   const logger = createConsoleLogger(communicator.process);
 
   runtime.settings = settings;
-  runtime.monitoring = monitoring;
   runtime.logger = logger;
 
-  monitoring.onAny(logger.event);
+  if (settings.monitoring) {
+    const monitoring = createMonitoring(settings.monitoring);
+    runtime.monitoring = monitoring;
+    monitoring.onAny(logger.event);
+  }
 
   return {
     settings,

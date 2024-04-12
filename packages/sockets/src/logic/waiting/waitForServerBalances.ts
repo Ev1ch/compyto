@@ -24,7 +24,7 @@ export default function waitForServerBalances(
       throw new Error('No device found in the socket handshake');
     }
 
-    runtime.monitoring!.emit(
+    runtime.monitoring?.emit(
       'info:connections/person-as-server-got-client',
       device,
     );
@@ -33,7 +33,7 @@ export default function waitForServerBalances(
     connections.push(connection);
 
     socket.emit(SocketEvent.IDENTIFICATION, selfDevice);
-    runtime.monitoring!.emit(
+    runtime.monitoring?.emit(
       'info:connections/person-as-server-identification-sent',
       device,
     );

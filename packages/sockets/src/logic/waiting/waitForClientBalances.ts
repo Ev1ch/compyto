@@ -20,7 +20,7 @@ export default function waitForClientBalances(
     const client = createSocketClient(balance.server.uri, selfDevice);
 
     client.once(SocketEvent.IDENTIFICATION, (device: Device) => {
-      runtime.monitoring!.emit(
+      runtime.monitoring?.emit(
         'info:connections/person-as-client-connected',
         device,
       );
@@ -32,7 +32,7 @@ export default function waitForClientBalances(
       }
     });
 
-    runtime.monitoring!.emit(
+    runtime.monitoring?.emit(
       'info:connections/person-as-client-connecting-started',
     );
     // @ts-expect-error Property 'connect' does not exist on type 'Socket'.

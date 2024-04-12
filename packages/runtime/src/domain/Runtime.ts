@@ -5,7 +5,7 @@ import type { Xor } from '@compyto/utils';
 
 type Runtime = Xor<
   {
-    settings: Settings;
+    settings?: Settings;
     monitoring: Monitoring;
     logger: Logger;
   },
