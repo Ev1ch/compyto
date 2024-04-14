@@ -47,8 +47,8 @@ export default interface Communicator {
    */
   broadcast(data: Data, abort?: Abort): Promise<void>;
   /**
-   * Scatterv will take your array and split data equally and share a single part to each process. Some data can be lost. See example:
-   * - If you had an array [1,2,3,4], and you have 3 devices in total, then scatterv will split this array in 3 parts:
+   * Scatter will take your array and split data equally and share a single part to each process. Some data can be lost. See example:
+   * - If you had an array [1,2,3,4], and you have 3 devices in total, then scatter will split this array in 3 parts:
    * - [[1], [2], [3]]
    * - [1] - will be sent to process with rank 0
    * - [2] - will be sent to process with rank 1
@@ -63,7 +63,7 @@ export default interface Communicator {
    * @param root Process rank from which send should be executed
    * @param abort Abort controller for errors
    */
-  scatterv(
+  scatter(
     data: Data[],
     buf: Array<ProcessWithData>,
     root: number,

@@ -141,7 +141,7 @@ export default function createSocketCommunicator({
     await Promise.all(processes.map((process) => send(data, process, abort)));
   }
 
-  async function scatterv(
+  async function scatter(
     data: unknown[],
     buf: Array<ProcessWithData>,
     root: number,
@@ -217,7 +217,7 @@ export default function createSocketCommunicator({
     send,
     receive,
     broadcast,
-    scatterv,
+    scatter,
     finalize,
   };
 }
