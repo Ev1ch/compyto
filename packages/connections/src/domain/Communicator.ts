@@ -15,7 +15,7 @@ export default interface Communicator {
   process: Process;
   group: Group;
   start(): Promise<void>;
-  send(data: Data, processes: Process[], abort?: Abort): Promise<void>;
+  send(data: Data, process: Process, abort?: Abort): Promise<void>;
   receive(abort?: Abort): Promise<ProcessWithData>;
   broadcast(data: Data, abort?: Abort): Promise<void>;
   finalize(): Promise<void>;

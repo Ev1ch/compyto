@@ -100,7 +100,7 @@ export default function createSocketCommunicator({
     }
   }
 
-  async function send(data: unknown, processes: Process[], abort?: Abort) {
+  async function send(data: unknown, process: Process, abort?: Abort) {
     return new Promise<void>((resolve, reject) => {
       function handleAbort() {
         reject(abort?.signal.reason);
@@ -108,25 +108,23 @@ export default function createSocketCommunicator({
 
       abort?.signal.addEventListener('abort', handleAbort, { once: true });
 
-      processes.forEach((process) => {
-        const connection = getConnectionByProcess(selfConnections, process);
+      const connection = getConnectionByProcess(selfConnections, process);
 
-        if (!connection) {
-          throw new Error('Connection not found');
-        }
+      if (!connection) {
+        throw new Error('Connection not found');
+      }
 
-        connection.socket.emit(SocketEvent.SEND, data);
-      });
+      connection.socket.emit(SocketEvent.SEND, data);
 
       abort?.signal.removeEventListener('abort', handleAbort);
       resolve(undefined);
     });
   }
 
-  function broadcast(data: unknown, abort?: Abort) {
+  async function broadcast(data: unknown, abort?: Abort) {
     const processes = selfConnections.map(({ device: { process } }) => process);
 
-    return send(data, processes, abort);
+    await Promise.all(processes.map((process) => send(data, process, abort)));
   }
 
   function receive(abort?: Abort) {
