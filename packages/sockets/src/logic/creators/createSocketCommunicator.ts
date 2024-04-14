@@ -54,6 +54,10 @@ export default function createSocketCommunicator({
     buf.length = 0;
   }
 
+  function areProcessesEqual(a: Process, b: Process) {
+    return a.rank === b.rank;
+  }
+
   function setConnections(connections: SocketConnection[]) {
     const processes = connections.map(({ device: { process } }) => process);
     validateRanks(processes);
@@ -112,13 +116,19 @@ export default function createSocketCommunicator({
 
       abort?.signal.addEventListener('abort', handleAbort, { once: true });
 
-      const connection = getConnectionByProcess(selfConnections, process);
+      if (areProcessesEqual(process, selfProcess)) {
+        selfQueue.enqueue({
+          data,
+          process: selfProcess,
+        });
+      } else {
+        const connection = getConnectionByProcess(selfConnections, process);
 
-      if (!connection) {
-        throw new Error('Connection not found');
+        if (!connection) {
+          throw new Error('Connection not found');
+        }
+        connection.socket.emit(SocketEvent.SEND, data);
       }
-
-      connection.socket.emit(SocketEvent.SEND, data);
 
       abort?.signal.removeEventListener('abort', handleAbort);
       resolve(undefined);
@@ -129,6 +139,35 @@ export default function createSocketCommunicator({
     const processes = selfConnections.map(({ device: { process } }) => process);
 
     await Promise.all(processes.map((process) => send(data, process, abort)));
+  }
+
+  async function scatterv(
+    data: unknown[],
+    buf: Array<ProcessWithData>,
+    root: number,
+    abort?: Abort,
+  ) {
+    const isCalledByRoot = selfProcess.rank === root;
+    if (isCalledByRoot) {
+      // apply split and send to all processes
+      const allDevicesNumber = selfConnections.length + 1;
+      const partSize = Math.ceil(data.length / allDevicesNumber);
+      const splitted = _.chunk(
+        data.slice(0, allDevicesNumber * partSize),
+        partSize,
+      );
+
+      await Promise.all(
+        [...selfGroup.processes, selfProcess].map((process) =>
+          send(splitted[process.rank], process, abort),
+        ),
+      );
+      await receive(buf, abort);
+    } else {
+      await receive(buf, abort);
+    }
+
+    // await Promise.all()
   }
 
   function receive(buf: Array<ProcessWithData>, abort?: Abort) {
@@ -178,6 +217,7 @@ export default function createSocketCommunicator({
     send,
     receive,
     broadcast,
+    scatterv,
     finalize,
   };
 }
