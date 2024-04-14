@@ -50,6 +50,10 @@ export default function createSocketCommunicator({
     }
   }
 
+  function clearBuffer(buf: Array<unknown>) {
+    buf.length = 0;
+  }
+
   function setConnections(connections: SocketConnection[]) {
     const processes = connections.map(({ device: { process } }) => process);
     validateRanks(processes);
@@ -127,8 +131,8 @@ export default function createSocketCommunicator({
     await Promise.all(processes.map((process) => send(data, process, abort)));
   }
 
-  function receive(abort?: Abort) {
-    return new Promise<ProcessWithData>((resolve, reject) => {
+  function receive(buf: Array<ProcessWithData>, abort?: Abort) {
+    return new Promise<void>((resolve, reject) => {
       function handleAbort() {
         selfQueue.off('enqueue', handleEnqueue);
         reject(abort?.signal.reason);
@@ -146,7 +150,14 @@ export default function createSocketCommunicator({
 
         selfQueue.off('enqueue', handleEnqueue);
         abort?.signal.removeEventListener('abort', handleAbort);
-        resolve(selfQueue.dequeue());
+        clearBuffer(buf);
+        const data = selfQueue.dequeue();
+        if (Array.isArray(data)) {
+          buf.push(...data);
+        } else {
+          buf.push(data);
+        }
+        resolve();
       }
 
       abort?.signal.addEventListener('abort', handleAbort, { once: true });

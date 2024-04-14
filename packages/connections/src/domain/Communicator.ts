@@ -2,7 +2,7 @@ import type { Group, Process } from '@compyto/core';
 
 import type Abort from './Abort';
 import type Data from './Data';
-import type { ProcessWithData } from './Data';
+import { ProcessWithData } from './Data';
 
 /**
  * Core network abstraction which allows to
@@ -16,7 +16,7 @@ export default interface Communicator {
   group: Group;
   start(): Promise<void>;
   send(data: Data, process: Process, abort?: Abort): Promise<void>;
-  receive(abort?: Abort): Promise<ProcessWithData>;
+  receive(buf: Array<ProcessWithData>, abort?: Abort): Promise<void>;
   broadcast(data: Data, abort?: Abort): Promise<void>;
   finalize(): Promise<void>;
 }
