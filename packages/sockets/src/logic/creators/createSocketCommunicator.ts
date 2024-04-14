@@ -143,6 +143,8 @@ export default function createSocketCommunicator({
 
   async function scatter(
     data: unknown[],
+    startIndex: number,
+    sendCount: number,
     buf: Array<ProcessWithData>,
     root: number,
     abort?: Abort,
@@ -151,23 +153,21 @@ export default function createSocketCommunicator({
     if (isCalledByRoot) {
       // apply split and send to all processes
       const allDevicesNumber = selfConnections.length + 1;
-      const partSize = Math.ceil(data.length / allDevicesNumber);
+      const sliced = data.slice(startIndex);
       const splitted = _.chunk(
-        data.slice(0, allDevicesNumber * partSize),
-        partSize,
+        sliced.slice(0, allDevicesNumber * sendCount),
+        sendCount,
       );
 
       await Promise.all(
         [...selfGroup.processes, selfProcess].map((process) =>
-          send(splitted[process.rank], process, abort),
+          send(splitted[process.rank] || [], process, abort),
         ),
       );
       await receive(buf, abort);
     } else {
       await receive(buf, abort);
     }
-
-    // await Promise.all()
   }
 
   function receive(buf: Array<ProcessWithData>, abort?: Abort) {

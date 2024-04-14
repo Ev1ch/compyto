@@ -65,6 +65,8 @@ export default interface Communicator {
    */
   scatter(
     data: Data[],
+    startIndex: number,
+    sendCount: number,
     buf: Array<ProcessWithData>,
     root: number,
     abort?: Abort,
