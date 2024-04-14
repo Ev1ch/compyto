@@ -17,6 +17,15 @@
     },
     {
       "path": "../settings"
+    },
+    {
+      "path": "../monitoring"
+    },
+    {
+      "path": "../sockets"
+    },
+    {
+      "path": "../runtime"
     }
   ]
 }

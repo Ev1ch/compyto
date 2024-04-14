@@ -1,8 +1,10 @@
 {
   "name": "@compyto/sockets",
   "version": "0.0.1",
+  "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
+  "sideEffects": false,
   "exports": {
     ".": "./dist/index.js",
     "./domain": "./dist/domain/index.js",
@@ -13,6 +15,7 @@
   },
   "dependencies": {
     "@compyto/connections": "^0.0.1",
-    "@compyto/balancing": "^0.0.1"
+    "@compyto/balancing": "^0.0.1",
+    "@compyto/runtime": "^0.0.1"
   }
 }

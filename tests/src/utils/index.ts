@@ -1,3 +1,4 @@
+export * from './mocks';
 export { default as getRandomClient } from './getRandomClient';
 export { default as getRandomCode } from './getRandomCode';
 export { default as getRandomFreePort } from './getRandomFreePort';

@@ -1,6 +1,6 @@
 import type { Balance } from '@compyto/balancing';
 import type { Device } from '@compyto/connections';
-import { monitoring } from '@compyto/monitoring';
+import { runtime } from '@compyto/runtime';
 
 import { SocketEvent, type SocketConnection } from '../../domain';
 import { createSocketConnection, createSocketServer } from '../creators';
@@ -24,13 +24,16 @@ export default function waitForServerBalances(
       throw new Error('No device found in the socket handshake');
     }
 
-    monitoring.emit('info:connections/person-as-server-got-client', device);
+    runtime.monitoring?.emit(
+      'info:connections/person-as-server-got-client',
+      device,
+    );
 
     const connection = createSocketConnection(socket, device);
     connections.push(connection);
 
     socket.emit(SocketEvent.IDENTIFICATION, selfDevice);
-    monitoring.emit(
+    runtime.monitoring?.emit(
       'info:connections/person-as-server-identification-sent',
       device,
     );

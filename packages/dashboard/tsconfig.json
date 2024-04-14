@@ -10,9 +10,8 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "./src",
     "paths": {
-      "#/*": ["modules/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src"],
@@ -20,6 +19,12 @@
     { "path": "./tsconfig.node.json" },
     {
       "path": "../monitoring"
+    },
+    {
+      "path": "../logging"
+    },
+    {
+      "path": "../utils"
     }
   ]
 }

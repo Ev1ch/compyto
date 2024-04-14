@@ -1,0 +1,23 @@
+{
+  "name": "@compyto/runtime",
+  "version": "0.0.1",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "sideEffects": false,
+  "exports": {
+    ".": "./dist/index.js",
+    "./domain": "./dist/domain/index.js",
+    "./logic": "./dist/logic/index.js"
+  },
+  "scripts": {
+    "build": "tsc && tsc-alias"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "@compyto/settings": "0.0.1",
+    "@compyto/monitoring": "0.0.1",
+    "@compyto/logging": "0.0.1",
+    "@compyto/utils": "0.0.1"
+  }
+}

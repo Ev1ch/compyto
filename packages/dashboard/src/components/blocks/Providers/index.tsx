@@ -1,5 +1,6 @@
-import type { Provider } from 'contexts/domain';
 import type { ReactNode } from 'react';
+
+import type { Provider } from '@/contexts/domain';
 
 export interface ProvidersProps {
   providers: Provider[];

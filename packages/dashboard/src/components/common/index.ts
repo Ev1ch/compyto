@@ -1,1 +1,1 @@
-export {} from '@mui/material';
+export { CssBaseline as Baseline } from '@mui/material';

@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.common.json",
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../settings"
+    },
+    {
+      "path": "../monitoring"
+    },
+    {
+      "path": "../logging"
+    },
+    {
+      "path": "../utils"
+    }
+  ]
+}

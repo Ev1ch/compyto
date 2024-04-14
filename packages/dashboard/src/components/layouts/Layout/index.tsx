@@ -1,15 +1,33 @@
-import { Unstable_Grid2 } from '@mui/material';
+import { Grid } from '@mui/material';
 import type { ReactNode } from 'react';
 
 export interface LayoutProps {
-  logger: ReactNode;
+  readonly logger: ReactNode;
+  readonly palette: ReactNode;
 }
 
-export default function Layout({ logger }: LayoutProps) {
+const fullHeightChildren = {
+  '> *': {
+    height: '100%',
+  },
+};
+
+export default function Layout({ logger, palette }: LayoutProps) {
   return (
-    <Unstable_Grid2 sx={{ height: '100vh' }} container>
-      <Unstable_Grid2 xs={4}>{logger}</Unstable_Grid2>
-      <Unstable_Grid2 xs={8}></Unstable_Grid2>
-    </Unstable_Grid2>
+    <Grid
+      sx={{
+        height: '100vh',
+        ...fullHeightChildren,
+      }}
+      columnSpacing={3}
+      container
+    >
+      <Grid sx={fullHeightChildren} xs={9} item>
+        {logger}
+      </Grid>
+      <Grid sx={fullHeightChildren} xs={3} item>
+        {palette}
+      </Grid>
+    </Grid>
   );
 }

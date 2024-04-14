@@ -1,8 +1,10 @@
 {
   "name": "@compyto/logging",
   "version": "0.0.1",
+  "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
+  "sideEffects": false,
   "exports": {
     ".": "./dist/index.js",
     "./domain": "./dist/domain/index.js",

@@ -1,8 +1,10 @@
 {
   "name": "@compyto/monitoring",
   "version": "0.0.1",
+  "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
+  "sideEffects": false,
   "exports": {
     ".": "./dist/index.js",
     "./domain": "./dist/domain/index.js",
@@ -14,9 +16,11 @@
     "build": "tsc && tsc-alias"
   },
   "dependencies": {
-    "@compyto/utils": "^0.0.1",
-    "@compyto/core": "^0.0.1",
     "@compyto/balancing": "^0.0.1",
-    "@compyto/connections": "^0.0.1"
+    "@compyto/connections": "^0.0.1",
+    "@compyto/core": "^0.0.1",
+    "@compyto/settings": "^0.0.1",
+    "@compyto/utils": "^0.0.1",
+    "socket.io": "^4.7.5"
   }
 }

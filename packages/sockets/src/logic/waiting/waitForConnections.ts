@@ -1,5 +1,5 @@
 import type { Device } from '@compyto/connections';
-import { monitoring } from '@compyto/monitoring';
+import { runtime } from '@compyto/runtime';
 
 import {
   SocketEvent,
@@ -26,7 +26,7 @@ export default function waitForConnections(
       throw new Error('No device found in the socket handshake');
     }
 
-    monitoring.emit('info:connections/main-person-got-client', device);
+    runtime.monitoring?.emit('info:connections/main-person-got-client', device);
     const {
       process: { code },
     } = device;

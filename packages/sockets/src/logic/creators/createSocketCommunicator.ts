@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import {
   createDevice,
   getConnectionByProcess,
@@ -6,7 +8,6 @@ import {
   type ProcessWithData,
 } from '@compyto/connections';
 import { createGroup, createProcess, type Process } from '@compyto/core';
-import { monitoring } from '@compyto/monitoring';
 import type { Settings } from '@compyto/settings';
 import { createQueue } from '@compyto/utils';
 
@@ -26,19 +27,32 @@ export default function createSocketCommunicator({
   uri: selfUri,
   clients,
   master,
+  rank,
 }: Settings): Communicator {
-  monitoring.emit('info:connections/communicator-creation-started');
   let selfIo: Socket | SocketsServer | null = null;
-  const selfProcess = createProcess(selfCode);
+  const selfProcess = createProcess(selfCode, rank);
   const selfDevice = createDevice(selfUri, selfProcess);
   const selfGroup = createGroup();
   const selfConnections: SocketConnection[] = [];
   const selfQueue = createQueue<ProcessWithData>();
   let isStarted = false;
-  monitoring.context.process = selfProcess;
+
+  function validateRanks(processes: Process[]) {
+    const ranks = processes.map((p) => p.rank);
+    const uniqueRanks = _.uniq(ranks);
+    const unique = uniqueRanks.length === processes.length;
+    if (!unique) {
+      const grouped = _.groupBy(ranks);
+      const dublicates = _.filter(grouped, (items) => items.length > 1).map(
+        (d) => d[0],
+      );
+      throw new Error(`Ranks must be unique. Dublicates: ${dublicates}`);
+    }
+  }
 
   function setConnections(connections: SocketConnection[]) {
     const processes = connections.map(({ device: { process } }) => process);
+    validateRanks(processes);
     selfConnections.push(...connections);
     selfGroup.add(...processes);
     setCommunicationHandlers(selfConnections, selfQueue);
@@ -51,6 +65,8 @@ export default function createSocketCommunicator({
           selfIo = io;
           setConnections(connections);
           io.emit(SocketEvent.CONFIRMATION_RECEIVED);
+          validateRanks(selfGroup.processes);
+
           isStarted = true;
           resolve(undefined);
         });
@@ -145,7 +161,6 @@ export default function createSocketCommunicator({
     });
   }
 
-  monitoring.emit('info:connections/communicator-creation-finished');
   return {
     isMaster,
     process: selfProcess,
