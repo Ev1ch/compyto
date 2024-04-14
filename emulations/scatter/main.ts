@@ -10,7 +10,7 @@ export default async function start() {
 
   const buf = [];
 
-  await communicator.scatter(data, 0, 2, buf, MASTER);
+  await communicator.scatter(data, 0, 2, buf, 0, 2, MASTER);
 
   console.log(
     `Received by ${communicator.process.code} (${communicator.process.rank}): `,

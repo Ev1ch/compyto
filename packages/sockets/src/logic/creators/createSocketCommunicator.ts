@@ -58,6 +58,17 @@ export default function createSocketCommunicator({
     return a.rank === b.rank;
   }
 
+  function writeToBuffer(
+    buf: unknown[],
+    data: ProcessWithData | ProcessWithData[],
+  ) {
+    if (Array.isArray(data)) {
+      buf.push(...data);
+    } else {
+      buf.push(data);
+    }
+  }
+
   function setConnections(connections: SocketConnection[]) {
     const processes = connections.map(({ device: { process } }) => process);
     validateRanks(processes);
@@ -143,9 +154,11 @@ export default function createSocketCommunicator({
 
   async function scatter(
     data: unknown[],
-    startIndex: number,
+    sendStartIndex: number,
     sendCount: number,
     buf: Array<ProcessWithData>,
+    recvStartIndex: number,
+    recvCount: number,
     root: number,
     abort?: Abort,
   ) {
@@ -153,7 +166,7 @@ export default function createSocketCommunicator({
     if (isCalledByRoot) {
       // apply split and send to all processes
       const allDevicesNumber = selfConnections.length + 1;
-      const sliced = data.slice(startIndex);
+      const sliced = data.slice(sendStartIndex);
       const splitted = _.chunk(
         sliced.slice(0, allDevicesNumber * sendCount),
         sendCount,
@@ -164,10 +177,27 @@ export default function createSocketCommunicator({
           send(splitted[process.rank] || [], process, abort),
         ),
       );
-      await receive(buf, abort);
+      await receiveArrayPart(buf, recvStartIndex, recvCount, abort);
     } else {
-      await receive(buf, abort);
+      await receiveArrayPart(buf, recvStartIndex, recvCount, abort);
     }
+  }
+
+  // Use only for receiving arrays
+  async function receiveArrayPart(
+    buf: unknown[],
+    startIndex: number,
+    recvCount: number,
+    abort?: Abort,
+  ) {
+    const temp: ProcessWithData<unknown[]>[] = [];
+    await receive(temp, abort);
+
+    const process = temp[0].process;
+    const data = temp[0].data;
+
+    const res = data.slice(startIndex, startIndex + recvCount);
+    writeToBuffer(buf, { data: res, process });
   }
 
   function receive(buf: Array<ProcessWithData>, abort?: Abort) {
@@ -191,11 +221,7 @@ export default function createSocketCommunicator({
         abort?.signal.removeEventListener('abort', handleAbort);
         clearBuffer(buf);
         const data = selfQueue.dequeue();
-        if (Array.isArray(data)) {
-          buf.push(...data);
-        } else {
-          buf.push(data);
-        }
+        writeToBuffer(buf, data);
         resolve();
       }
 
