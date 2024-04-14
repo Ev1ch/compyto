@@ -59,7 +59,11 @@ export default interface Communicator {
    *
    * Sending operation will be called only on process with rank `root`. Receive will be called on every process.
    * @param data Array of data to send
+   * @param sendStartIndex From which index should start your send buffer. Use 0 to begin from very start
+   * @param sendCount How many elements should go into each process
    * @param buf Receiving buffer
+   * @param recvStartIndex From which index should start received buffer (Received array will be sliced). Use 0 to get all data
+   * @param recvCount How many elements should go from received data to buffer
    * @param root Process rank from which send should be executed
    * @param abort Abort controller for errors
    */
