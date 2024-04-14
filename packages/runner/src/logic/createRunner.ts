@@ -25,6 +25,7 @@ export default async function createRunner(): Promise<Runner> {
   runtime.settings = settings;
   runtime.logger = logger;
 
+  // Monitoring is optional
   if (settings.monitoring) {
     const monitoring = createMonitoring(settings.monitoring);
     runtime.monitoring = monitoring;
