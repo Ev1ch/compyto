@@ -177,10 +177,8 @@ export default function createSocketCommunicator({
           send(splitted[process.rank] || [], process, abort),
         ),
       );
-      await receiveArrayPart(buf, recvStartIndex, recvCount, abort);
-    } else {
-      await receiveArrayPart(buf, recvStartIndex, recvCount, abort);
     }
+    await receiveArrayPart(buf, recvStartIndex, recvCount, abort);
   }
 
   // Use only for receiving arrays
