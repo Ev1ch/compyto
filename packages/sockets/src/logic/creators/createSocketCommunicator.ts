@@ -191,7 +191,7 @@ export default function createSocketCommunicator({
     await receive(temp, abort);
 
     const { process, data } = temp[0];
-
+    if (data.length > startIndex + recvCount) throw new Error('Wrong indexes');
     const res = data.slice(startIndex, startIndex + recvCount);
     writeToBuffer(buf, { data: res, process });
   }
