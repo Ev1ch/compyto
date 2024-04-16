@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import {
   createDevice,
   getConnectionByProcess,
@@ -7,9 +5,14 @@ import {
   type Communicator,
   type ProcessWithData,
 } from '@compyto/connections';
-import { createGroup, createProcess, type Process } from '@compyto/core';
+import {
+  areProcessesEqual,
+  createGroup,
+  createProcess,
+  type Process,
+} from '@compyto/core';
 import type { Settings } from '@compyto/settings';
-import { createQueue } from '@compyto/utils';
+import { lodash as _, createQueue } from '@compyto/utils';
 
 import {
   SocketEvent,
@@ -51,11 +54,7 @@ export default function createSocketCommunicator({
   }
 
   function clearBuffer(buf: Array<unknown>) {
-    buf.length = 0;
-  }
-
-  function areProcessesEqual(a: Process, b: Process) {
-    return a.rank === b.rank;
+    _.remove(buf);
   }
 
   function writeToBuffer(
@@ -191,8 +190,7 @@ export default function createSocketCommunicator({
     const temp: ProcessWithData<unknown[]>[] = [];
     await receive(temp, abort);
 
-    const process = temp[0].process;
-    const data = temp[0].data;
+    const { process, data } = temp[0];
 
     const res = data.slice(startIndex, startIndex + recvCount);
     writeToBuffer(buf, { data: res, process });
