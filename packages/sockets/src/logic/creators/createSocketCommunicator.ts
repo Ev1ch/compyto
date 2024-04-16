@@ -68,6 +68,16 @@ export default function createSocketCommunicator({
     }
   }
 
+  function sliceSendData(
+    data: unknown[],
+    startIndex: number,
+    sendCount: number,
+    partsNumber: number,
+  ) {
+    const sliced = data.slice(startIndex);
+    return sliced.slice(0, partsNumber * sendCount);
+  }
+
   function setConnections(connections: SocketConnection[]) {
     const processes = connections.map(({ device: { process } }) => process);
     validateRanks(processes);
@@ -165,11 +175,13 @@ export default function createSocketCommunicator({
     if (isCalledByRoot) {
       // apply split and send to all processes
       const allDevicesNumber = selfConnections.length + 1;
-      const sliced = data.slice(sendStartIndex);
-      const splitted = _.chunk(
-        sliced.slice(0, allDevicesNumber * sendCount),
+      const sliced = sliceSendData(
+        data,
+        sendStartIndex,
         sendCount,
+        allDevicesNumber,
       );
+      const splitted = _.chunk(sliced, sendCount);
 
       await Promise.all(
         [...selfGroup.processes, selfProcess].map((process) =>
@@ -178,6 +190,71 @@ export default function createSocketCommunicator({
       );
     }
     await receiveArrayPart(buf, recvStartIndex, recvCount, abort);
+  }
+
+  async function gather(
+    data: unknown[],
+    sendStartIndex: number,
+    sendCount: number,
+    buf: Array<ProcessWithData>,
+    recvStartIndex: number,
+    recvCount: number,
+    root: number,
+    abort?: Abort,
+  ) {
+    const isMe = root === selfProcess.rank;
+    // from all processes send to root
+    if (!isMe) {
+      const rootProcess = selfGroup.processes.find((p) => p.rank === root);
+      if (!rootProcess) throw new Error('Can`t find process by rank');
+      const allDevicesNumber = selfConnections.length + 1;
+      const sliced = sliceSendData(
+        data,
+        sendStartIndex,
+        sendCount,
+        allDevicesNumber,
+      );
+      await send(sliced, rootProcess, abort);
+    }
+
+    // on root receive all data from other processes
+    if (isMe) {
+      await Promise.all(
+        selfGroup.processes.map(async () => {
+          const temp: ProcessWithData<unknown[]>[] = [];
+
+          await receiveArrayPart(temp, recvStartIndex, recvCount, abort);
+          const { data, process } = temp[0];
+          const senderRank = process.rank;
+          for (
+            let receivingBufferIndex = senderRank * recvCount,
+              dataBufferIndex = 0;
+            receivingBufferIndex < (senderRank + 1) * recvCount &&
+            dataBufferIndex < data.length;
+            receivingBufferIndex++, dataBufferIndex++
+          ) {
+            buf[receivingBufferIndex] = {
+              data: data[dataBufferIndex],
+              process,
+            };
+          }
+        }),
+      );
+    }
+
+    if (isMe) {
+      for (
+        let receivingBufferIndex = root * recvCount, dataBufferIndex = 0;
+        receivingBufferIndex < (root + 1) * recvCount &&
+        dataBufferIndex < data.length;
+        receivingBufferIndex++, dataBufferIndex++
+      ) {
+        buf[receivingBufferIndex] = {
+          data: data[dataBufferIndex],
+          process: selfProcess,
+        };
+      }
+    }
   }
 
   // Use only for receiving arrays
@@ -191,7 +268,7 @@ export default function createSocketCommunicator({
     await receive(temp, abort);
 
     const { process, data } = temp[0];
-    if (data.length > startIndex + recvCount) throw new Error('Wrong indexes');
+    if (data.length < startIndex + recvCount) throw new Error('Wrong indexes');
     const res = data.slice(startIndex, startIndex + recvCount);
     writeToBuffer(buf, { data: res, process });
   }
@@ -240,6 +317,7 @@ export default function createSocketCommunicator({
     receive,
     broadcast,
     scatter,
+    gather,
     finalize,
   };
 }
