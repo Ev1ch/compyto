@@ -10,7 +10,8 @@ const SettingsSchema = validation
   .shape({
     code: CodeSchema,
     uri: URISchema,
-    monitoring: validation.object().shape({ uri: URISchema }).required(),
+    monitoring: validation.object().shape({ uri: URISchema }),
+    dashboard: validation.object().shape({ uri: URISchema }),
     isMaster: validation.boolean(),
     master: validation
       .object()
