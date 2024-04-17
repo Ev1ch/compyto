@@ -47,7 +47,7 @@ export default interface Communicator {
    */
   broadcast(data: Data, abort?: Abort): Promise<void>;
   /**
-   * Scatter will take your array and split data equally and share a single part to each process. Some data can be lost. See example:
+   * Scatter will take your array and split data equally and share a single part to each process in group. Some data can be lost. See example:
    * - If you had an array [1,2,3,4], and you have 3 devices in total, then scatter will split this array in 3 parts:
    * - [[1], [2], [3]]
    * - [1] - will be sent to process with rank 0
@@ -77,6 +77,28 @@ export default interface Communicator {
     root: number,
     abort?: Abort,
   ): Promise<void>;
+  /**
+   * Gather will take your data from every process inside of the group and send it to one process
+   * to collect data into one array. Order of data depends on the process rank. Example:
+   * - On process with rank 0 we have data [1,2]
+   * - On process with rank 1 we have data [3,4]
+   * - On process with rank 2 we have data [5,6]
+   * - Let's gather all this data into master process with rank 0.
+   * - Use `gather(data, 0, 2, result, 0, 2, 0, abort)`
+   * - On process with rank 0, in variable called `result` you will find data [1,2,3,4,5,6]
+   * - On other processes variable `result` is empty
+   *
+   * Remember that by using params sendStartIndex, sendCount, recvStartIndex, recvCount you can operate sending and receiving data easily
+   *
+   * @param data Array of data to gather
+   * @param sendStartIndex From which index should start your send buffer. Use 0 to begin from very start
+   * @param sendCount How many elements should be sent
+   * @param buf Array where all data will be gathered
+   * @param recvStartIndex From which index should start received buffer (Received array will be sliced). Use 0 to get all data
+   * @param recvCount How many elements should go from received data to buffer
+   * @param root Process rank where result data will be gathered
+   * @param abort Abort controller for errors
+   */
   gather(
     data: Data[],
     sendStartIndex: number,
@@ -85,6 +107,7 @@ export default interface Communicator {
     recvStartIndex: number,
     recvCount: number,
     root: number,
+    abort?: Abort,
   ): Promise<void>;
   /**
    * Finish the app

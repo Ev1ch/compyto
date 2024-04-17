@@ -47,6 +47,7 @@ export default function createSocketCommunicator({
   const selfQueue = createQueue<ProcessWithData>();
   let isStarted = false;
 
+  // Validate ranks for being unique
   function validateRanks(processes: Process[]) {
     const ranks = processes.map((p) => p.rank);
     const uniqueRanks = uniq(ranks);
@@ -60,6 +61,7 @@ export default function createSocketCommunicator({
     }
   }
 
+  // write data to buffer 'buf'
   function writeToBuffer(
     buf: unknown[],
     data: ProcessWithData | ProcessWithData[],
@@ -71,6 +73,8 @@ export default function createSocketCommunicator({
     }
   }
 
+  // In many methods we need to send only a part of data from index A and only length B
+  // Use this method to keep code DRY
   function sliceSendData(
     data: unknown[],
     startIndex: number,
