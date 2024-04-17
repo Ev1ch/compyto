@@ -18,6 +18,7 @@
     "@compyto/settings": "0.0.1",
     "@compyto/monitoring": "0.0.1",
     "@compyto/logging": "0.0.1",
-    "@compyto/utils": "0.0.1"
+    "@compyto/utils": "0.0.1",
+    "@compyto/dashboard": "0.0.1"
   }
 }
