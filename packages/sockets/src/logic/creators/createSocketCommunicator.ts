@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import {
   createDevice,
   getConnectionByProcess,
@@ -7,9 +5,21 @@ import {
   type Communicator,
   type ProcessWithData,
 } from '@compyto/connections';
-import { createGroup, createProcess, type Process } from '@compyto/core';
+import {
+  areProcessesEqual,
+  createGroup,
+  createProcess,
+  type Process,
+} from '@compyto/core';
 import type { Settings } from '@compyto/settings';
-import { createQueue } from '@compyto/utils';
+import {
+  chunk,
+  createQueue,
+  filter,
+  groupBy,
+  remove,
+  uniq,
+} from '@compyto/utils';
 
 import {
   SocketEvent,
@@ -39,14 +49,25 @@ export default function createSocketCommunicator({
 
   function validateRanks(processes: Process[]) {
     const ranks = processes.map((p) => p.rank);
-    const uniqueRanks = _.uniq(ranks);
+    const uniqueRanks = uniq(ranks);
     const unique = uniqueRanks.length === processes.length;
     if (!unique) {
-      const grouped = _.groupBy(ranks);
-      const dublicates = _.filter(grouped, (items) => items.length > 1).map(
+      const grouped = groupBy(ranks);
+      const dublicates = filter(grouped, (items) => items.length > 1).map(
         (d) => d[0],
       );
       throw new Error(`Ranks must be unique. Dublicates: ${dublicates}`);
+    }
+  }
+
+  function writeToBuffer(
+    buf: unknown[],
+    data: ProcessWithData | ProcessWithData[],
+  ) {
+    if (Array.isArray(data)) {
+      buf.push(...data);
+    } else {
+      buf.push(data);
     }
   }
 
@@ -100,7 +121,7 @@ export default function createSocketCommunicator({
     }
   }
 
-  async function send(data: unknown, processes: Process[], abort?: Abort) {
+  async function send(data: unknown, process: Process, abort?: Abort) {
     return new Promise<void>((resolve, reject) => {
       function handleAbort() {
         reject(abort?.signal.reason);
@@ -108,29 +129,78 @@ export default function createSocketCommunicator({
 
       abort?.signal.addEventListener('abort', handleAbort, { once: true });
 
-      processes.forEach((process) => {
+      if (areProcessesEqual(process, selfProcess)) {
+        selfQueue.enqueue({
+          data,
+          process: selfProcess,
+        });
+      } else {
         const connection = getConnectionByProcess(selfConnections, process);
 
         if (!connection) {
           throw new Error('Connection not found');
         }
-
         connection.socket.emit(SocketEvent.SEND, data);
-      });
+      }
 
       abort?.signal.removeEventListener('abort', handleAbort);
       resolve(undefined);
     });
   }
 
-  function broadcast(data: unknown, abort?: Abort) {
+  async function broadcast(data: unknown, abort?: Abort) {
     const processes = selfConnections.map(({ device: { process } }) => process);
 
-    return send(data, processes, abort);
+    await Promise.all(processes.map((process) => send(data, process, abort)));
   }
 
-  function receive(abort?: Abort) {
-    return new Promise<ProcessWithData>((resolve, reject) => {
+  async function scatter(
+    data: unknown[],
+    sendStartIndex: number,
+    sendCount: number,
+    buf: Array<ProcessWithData>,
+    recvStartIndex: number,
+    recvCount: number,
+    root: number,
+    abort?: Abort,
+  ) {
+    const isCalledByRoot = selfProcess.rank === root;
+    if (isCalledByRoot) {
+      // apply split and send to all processes
+      const allDevicesNumber = selfConnections.length + 1;
+      const sliced = data.slice(sendStartIndex);
+      const splitted = chunk(
+        sliced.slice(0, allDevicesNumber * sendCount),
+        sendCount,
+      );
+
+      await Promise.all(
+        [...selfGroup.processes, selfProcess].map((process) =>
+          send(splitted[process.rank] || [], process, abort),
+        ),
+      );
+    }
+    await receiveArrayPart(buf, recvStartIndex, recvCount, abort);
+  }
+
+  // Use only for receiving arrays
+  async function receiveArrayPart(
+    buf: unknown[],
+    startIndex: number,
+    recvCount: number,
+    abort?: Abort,
+  ) {
+    const temp: ProcessWithData<unknown[]>[] = [];
+    await receive(temp, abort);
+
+    const { process, data } = temp[0];
+    if (data.length > startIndex + recvCount) throw new Error('Wrong indexes');
+    const res = data.slice(startIndex, startIndex + recvCount);
+    writeToBuffer(buf, { data: res, process });
+  }
+
+  function receive(buf: Array<ProcessWithData>, abort?: Abort) {
+    return new Promise<void>((resolve, reject) => {
       function handleAbort() {
         selfQueue.off('enqueue', handleEnqueue);
         reject(abort?.signal.reason);
@@ -148,7 +218,10 @@ export default function createSocketCommunicator({
 
         selfQueue.off('enqueue', handleEnqueue);
         abort?.signal.removeEventListener('abort', handleAbort);
-        resolve(selfQueue.dequeue());
+        remove(buf);
+        const data = selfQueue.dequeue();
+        writeToBuffer(buf, data);
+        resolve();
       }
 
       abort?.signal.addEventListener('abort', handleAbort, { once: true });
@@ -169,6 +242,7 @@ export default function createSocketCommunicator({
     send,
     receive,
     broadcast,
+    scatter,
     finalize,
   };
 }
