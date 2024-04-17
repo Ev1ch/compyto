@@ -2,6 +2,7 @@ import { SxProps, TextField } from '@mui/material';
 import { ChangeEvent } from 'react';
 
 import { EMPTY_OBJECT } from '@/constants';
+import { getArrayedSx } from '@/styles/logic';
 
 import { useMonitoringContext } from '../../../hooks';
 
@@ -21,7 +22,7 @@ export default function MonitoringEventsSearch({
 
   return (
     <TextField
-      sx={sx}
+      sx={[{ width: 300 }, ...getArrayedSx(sx)]}
       label="Search"
       size="small"
       value={search}
