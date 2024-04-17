@@ -221,7 +221,7 @@ export default function createSocketCommunicator({
         sendCount,
         allDevicesNumber,
       );
-      await send(sliced, rootProcess, abort);
+      send(sliced, rootProcess, abort);
     }
 
     // on root receive all data from other processes
@@ -261,6 +261,67 @@ export default function createSocketCommunicator({
           process: selfProcess,
         };
       }
+    }
+  }
+
+  async function allGather(
+    data: unknown[],
+    sendStartIndex: number,
+    sendCount: number,
+    buf: Array<ProcessWithData>,
+    recvStartIndex: number,
+    recvCount: number,
+    abort?: Abort,
+  ) {
+    const allDevicesNumber = selfConnections.length + 1;
+
+    Promise.all(
+      selfGroup.processes.map((p) => {
+        const sliced = sliceSendData(
+          data,
+          sendStartIndex,
+          sendCount,
+          allDevicesNumber,
+        );
+        return send(sliced, p, abort);
+      }),
+    );
+
+    // REPEATED CODE WITH GATHER
+    await Promise.all(
+      selfGroup.processes.map(async () => {
+        const temp: ProcessWithData<unknown[]>[] = [];
+
+        await receiveArrayPart(temp, recvStartIndex, recvCount, abort);
+        const { data, process } = temp[0];
+        const senderRank = process.rank;
+        for (
+          let receivingBufferIndex = senderRank * recvCount,
+            dataBufferIndex = 0;
+          receivingBufferIndex < (senderRank + 1) * recvCount &&
+          dataBufferIndex < data.length;
+          receivingBufferIndex++, dataBufferIndex++
+        ) {
+          buf[receivingBufferIndex] = {
+            data: data[dataBufferIndex],
+            process,
+          };
+        }
+      }),
+    );
+
+    // REPEATED CODE WITH GATHER
+    for (
+      let receivingBufferIndex = selfProcess.rank * recvCount,
+        dataBufferIndex = 0;
+      receivingBufferIndex < (selfProcess.rank + 1) * recvCount &&
+      dataBufferIndex < data.length;
+      receivingBufferIndex++, dataBufferIndex++
+    ) {
+      buf[receivingBufferIndex] = {
+        data: data[dataBufferIndex],
+        process: selfProcess,
+      };
     }
   }
 
@@ -325,6 +386,7 @@ export default function createSocketCommunicator({
     broadcast,
     scatter,
     gather,
+    allGather,
     finalize,
   };
 }
