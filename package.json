@@ -4,6 +4,7 @@
     "packages/*",
     "tests"
   ],
+  "type": "module",
   "license": "MIT",
   "repository": {
     "type": "git",
