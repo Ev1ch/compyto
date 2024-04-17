@@ -5,6 +5,8 @@ import type MonitoringEventKeys from './MonitoringEventKeys';
 import type MonitoringEventKeysMap from './MonitoringEventKeysMap';
 
 export default interface Monitoring {
+  start(): void;
+
   on<TEventKey extends MonitoringEventKeys>(
     event: TEventKey,
     listener: EventListener<
@@ -43,4 +45,6 @@ export default interface Monitoring {
     event: TEventKey,
     ...args: MonitoringEventKeysMap[TEventKey]
   ): void;
+
+  waitForDashboard(): Promise<void>;
 }
