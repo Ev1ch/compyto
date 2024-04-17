@@ -12,7 +12,14 @@ import {
   type Process,
 } from '@compyto/core';
 import type { Settings } from '@compyto/settings';
-import { lodash as _, createQueue } from '@compyto/utils';
+import {
+  chunk,
+  createQueue,
+  filter,
+  groupBy,
+  remove,
+  uniq,
+} from '@compyto/utils';
 
 import {
   SocketEvent,
@@ -42,19 +49,15 @@ export default function createSocketCommunicator({
 
   function validateRanks(processes: Process[]) {
     const ranks = processes.map((p) => p.rank);
-    const uniqueRanks = _.uniq(ranks);
+    const uniqueRanks = uniq(ranks);
     const unique = uniqueRanks.length === processes.length;
     if (!unique) {
-      const grouped = _.groupBy(ranks);
-      const dublicates = _.filter(grouped, (items) => items.length > 1).map(
+      const grouped = groupBy(ranks);
+      const dublicates = filter(grouped, (items) => items.length > 1).map(
         (d) => d[0],
       );
       throw new Error(`Ranks must be unique. Dublicates: ${dublicates}`);
     }
-  }
-
-  function clearBuffer(buf: Array<unknown>) {
-    _.remove(buf);
   }
 
   function writeToBuffer(
@@ -166,7 +169,7 @@ export default function createSocketCommunicator({
       // apply split and send to all processes
       const allDevicesNumber = selfConnections.length + 1;
       const sliced = data.slice(sendStartIndex);
-      const splitted = _.chunk(
+      const splitted = chunk(
         sliced.slice(0, allDevicesNumber * sendCount),
         sendCount,
       );
@@ -215,7 +218,7 @@ export default function createSocketCommunicator({
 
         selfQueue.off('enqueue', handleEnqueue);
         abort?.signal.removeEventListener('abort', handleAbort);
-        clearBuffer(buf);
+        remove(buf);
         const data = selfQueue.dequeue();
         writeToBuffer(buf, data);
         resolve();

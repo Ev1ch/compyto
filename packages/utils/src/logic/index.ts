@@ -1,4 +1,9 @@
+export { default as chunk } from 'lodash/chunk';
+export { default as filter } from 'lodash/filter';
+export { default as groupBy } from 'lodash/groupBy';
+export { default as remove } from 'lodash/remove';
+export { default as sample } from 'lodash/sample';
+export { default as uniq } from 'lodash/uniq';
 export { default as createEventsEmitter } from './createEventsEmitter';
 export { default as createId } from './createId';
 export { default as createQueue } from './createQueue';
-export { default as lodash } from './lodash';
