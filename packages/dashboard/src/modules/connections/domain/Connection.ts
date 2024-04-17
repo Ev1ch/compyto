@@ -1,10 +1,46 @@
-export type EventCallback<TArgs extends unknown[]> = (...args: TArgs) => void;
+import type {
+  MonitoringEventContext,
+  MonitoringEventKeys,
+  MonitoringEventKeysMap,
+} from '@compyto/monitoring';
+import type { EventListener } from '@compyto/utils';
 
-export type EventsMap = Record<string, unknown[]>;
+export default interface Connection {
+  readonly isConnected: boolean;
 
-export default interface Connection<TEventsMap extends EventsMap = EventsMap> {
-  on<TEvent extends keyof TEventsMap>(
-    event: TEvent,
-    callback: EventCallback<TEventsMap[TEvent]>,
+  start(): void;
+
+  on<TEventKey extends MonitoringEventKeys>(
+    event: TEventKey,
+    listener: EventListener<
+      [MonitoringEventContext, ...MonitoringEventKeysMap[TEventKey]]
+    >,
+  ): void;
+
+  onAny(
+    listener: EventListener<
+      [
+        MonitoringEventKeys,
+        MonitoringEventContext,
+        ...MonitoringEventKeysMap[MonitoringEventKeys],
+      ]
+    >,
+  ): void;
+
+  off<TEventKey extends MonitoringEventKeys>(
+    event: TEventKey,
+    listener: EventListener<
+      [MonitoringEventContext, ...MonitoringEventKeysMap[TEventKey]]
+    >,
+  ): void;
+
+  offAny(
+    listener: EventListener<
+      [
+        MonitoringEventKeys,
+        MonitoringEventContext,
+        ...MonitoringEventKeysMap[MonitoringEventKeys],
+      ]
+    >,
   ): void;
 }
