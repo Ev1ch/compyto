@@ -1,7 +1,7 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { MonitoringEvent } from '@compyto/monitoring';
-import getRandomEvent from '@/getRandomEvent';
+import { useConnectionContext } from '@/modules/connections/hooks';
 
 import type {
   MonitoringEventsFilter,
@@ -15,9 +15,8 @@ import {
 } from '../logic';
 
 export default function useMonitoringContextLogic() {
-  const [events, setEvents] = useState<MonitoringEvent[]>(
-    Array.from({ length: 40 }, getRandomEvent),
-  );
+  const { monitoring } = useConnectionContext();
+  const [events, setEvents] = useState<MonitoringEvent[]>([]);
   const [filters, setFilters] = useState<MonitoringEventsFilter[]>([]);
   const [search, setSearch] = useState('');
   const [sorts, setSorts] = useState<MonitoringEventsSort[]>([]);
@@ -77,6 +76,31 @@ export default function useMonitoringContextLogic() {
 
   const removeSorts = useCallback(() => {
     setSorts([]);
+  }, []);
+
+  useEffect(() => {
+    // @ts-expect-error Monitoring event type mismatch
+    function handleAnyEvent(key, context, ...args) {
+      console.log('Monitoring event:', key, context, args);
+      addEvent({
+        key,
+        context: {
+          ...context,
+          emittedAt: new Date(context.emittedAt),
+        },
+        args,
+      });
+    }
+
+    monitoring.onAny(handleAnyEvent);
+
+    return () => {
+      monitoring.offAny(handleAnyEvent);
+    };
+  }, [addEvent, monitoring]);
+
+  useEffect(() => {
+    monitoring.start();
   }, []);
 
   return useMemo<MonitoringContextProps>(
