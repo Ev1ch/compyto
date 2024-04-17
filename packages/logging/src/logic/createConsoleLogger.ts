@@ -32,10 +32,10 @@ export default function createConsoleLogger(process: Process): Logger {
     console.error,
   );
 
-  const event: Logger['event'] = (event, context, ...args) => {
+  const event: Logger['event'] = (key, context, ...args) => {
     const log = getLog(
       getColoredMonitoringContext(process),
-      getColoredMonitoringEventKey(event),
+      getColoredMonitoringEventKey(key),
       'with arguments:',
       args,
       'and context:',
