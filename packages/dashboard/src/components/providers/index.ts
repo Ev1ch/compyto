@@ -1,1 +1,2 @@
-export { type ContextProviderProps } from './ContextProvider';
+export { type ProviderProps } from './Provider';
+export { default as StoreProvider } from './StoreProvider';

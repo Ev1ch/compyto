@@ -1,0 +1,180 @@
+import {
+  createSelector,
+  createSlice,
+  type PayloadAction,
+} from '@reduxjs/toolkit';
+import { sample } from 'lodash';
+
+import type { MonitoringEvent } from '@compyto/monitoring';
+import {
+  MONITORING_EVENT_SCOPE,
+  MONITORING_EVENT_TYPES,
+  SCOPE_DELIMITER,
+  TYPE_DELIMITER,
+} from '@compyto/monitoring';
+import { createId } from '@compyto/utils';
+import type { State } from '@/store/domain';
+
+import type {
+  MonitoringEventsFilter,
+  MonitoringEventsFilterCriteria,
+  MonitoringEventsSort,
+} from '../domain';
+import {
+  MONITORING_EVENTS_FILTER_CRITERION,
+  MONITORING_EVENTS_SORT_FIELDS,
+} from '../constants';
+import {
+  getMonitoringEventsWithPreparers,
+  getValuesByMonitoringEventsFilterCriteria,
+} from '../logic';
+
+function getRandomEvent(): MonitoringEvent {
+  return {
+    key: `${sample(MONITORING_EVENT_TYPES)}${TYPE_DELIMITER}${sample(MONITORING_EVENT_SCOPE)}${SCOPE_DELIMITER}${Math.random()}`,
+    args: ['', 1, { foo: 'bar' }],
+    context: {
+      emittedAt: new Date(),
+      id: createId(),
+    },
+  };
+}
+
+export interface MonitoringState {
+  events: MonitoringEvent[];
+  showAll: boolean;
+  filters: MonitoringEventsFilter[];
+  search: string;
+  sorts: MonitoringEventsSort[];
+}
+
+export const selectEvents = (state: State) => state.monitoring.events;
+
+export const selectSorts = (state: State) => state.monitoring.sorts;
+
+export const selectFilters = (state: State) => state.monitoring.filters;
+
+export const selectExistingCriterion = (state: State) =>
+  state.monitoring.filters.map((filter) => filter.criteria);
+
+export const selectAvailableCriterion = createSelector(
+  [selectExistingCriterion],
+  (existingCriterion) =>
+    MONITORING_EVENTS_FILTER_CRITERION.filter(
+      (criteria) => !existingCriterion.includes(criteria),
+    ),
+);
+
+export const selectSearch = (state: State) => state.monitoring.search;
+
+export const selectShowAll = (state: State) => state.monitoring.showAll;
+
+export const selectExistingSortFields = createSelector(selectSorts, (sorts) =>
+  sorts.map(({ field }) => field),
+);
+
+export const selectAvailableSortFields = createSelector(
+  [selectExistingSortFields],
+  (existingFields) =>
+    MONITORING_EVENTS_SORT_FIELDS.filter(
+      (field) => !existingFields.includes(field),
+    ),
+);
+
+export const selectValuesByCriteria = createSelector(
+  [selectEvents, (state, criteria: MonitoringEventsFilterCriteria) => criteria],
+  (events, criteria) =>
+    getValuesByMonitoringEventsFilterCriteria(events, criteria),
+);
+
+export const selectEventsWithPreparers = createSelector(
+  [selectEvents, selectFilters, selectSearch, selectSorts],
+  (events, filters, search, sorts) =>
+    getMonitoringEventsWithPreparers(events, { search, filters, sorts }),
+);
+
+export const selectIsEventUnfocused = createSelector(
+  [selectEventsWithPreparers, (state, id) => id],
+  (eventsWithPreparers, id) =>
+    !eventsWithPreparers.some((event) => event.context.id === id),
+);
+
+export const selectShownEvents = createSelector(
+  [selectEvents, selectEventsWithPreparers, selectShowAll],
+  (events, eventsWithPreparers, showAll) =>
+    showAll ? events : eventsWithPreparers,
+);
+
+const initialState: MonitoringState = {
+  events: [...Array.from({ length: 10 }, getRandomEvent)],
+  filters: [],
+  sorts: [],
+  showAll: true,
+  search: '',
+};
+
+const slice = createSlice({
+  name: 'monitoring',
+  initialState,
+  reducers: {
+    addEvent: (state, { payload }: PayloadAction<MonitoringEvent>) => {
+      state.events.push(payload);
+    },
+    setShowAll: (state, { payload }: PayloadAction<boolean>) => {
+      state.showAll = payload;
+    },
+    addEvents: (state, { payload }: PayloadAction<MonitoringEvent[]>) => {
+      state.events.push(...payload);
+    },
+    removeEvent: (state, { payload }: PayloadAction<string>) => {
+      state.events = state.events.filter(
+        (event) => event.context.id !== payload,
+      );
+    },
+    removeEvents: (state) => {
+      state.events = [];
+    },
+    addFilter: (state, { payload }: PayloadAction<MonitoringEventsFilter>) => {
+      state.filters.push(payload);
+    },
+    removeFilter: (state, { payload }: PayloadAction<string>) => {
+      state.filters = state.filters.filter((filter) => filter.id !== payload);
+    },
+    removeFilters: (state) => {
+      state.filters = [];
+    },
+    setSearch: (state, { payload }: PayloadAction<string>) => {
+      state.search = payload;
+    },
+    removeSearch: (state) => {
+      state.search = '';
+    },
+    addSort: (state, { payload }: PayloadAction<MonitoringEventsSort>) => {
+      state.sorts.push(payload);
+    },
+    removeSort: (state, { payload }: PayloadAction<string>) => {
+      state.sorts = state.sorts.filter((sort) => sort.id !== payload);
+    },
+    removeSorts: (state) => {
+      state.sorts = [];
+    },
+  },
+});
+
+const { reducer, actions } = slice;
+export const {
+  addEvent,
+  setShowAll,
+  addEvents,
+  removeEvent,
+  removeEvents,
+  addFilter,
+  removeFilter,
+  removeFilters,
+  removeSearch,
+  addSort,
+  removeSort,
+  removeSorts,
+  setSearch,
+} = actions;
+export default reducer;

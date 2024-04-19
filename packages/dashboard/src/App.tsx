@@ -1,9 +1,9 @@
 import { Head, Providers } from '@/components/blocks';
 import { Baseline } from '@/components/common';
 import { Layout } from '@/components/layouts';
+import { StoreProvider } from '@/components/providers';
 import { ConnectionContextProvider } from '@/modules/connections/components/providers';
 import { Logger } from '@/modules/monitoring/components/blocks';
-import { MonitoringContextProvider } from '@/modules/monitoring/components/providers';
 
 export default function App() {
   return (
@@ -11,9 +11,7 @@ export default function App() {
       <Head>
         <title>Dashboard</title>
       </Head>
-      <Providers
-        providers={[ConnectionContextProvider, MonitoringContextProvider]}
-      >
+      <Providers providers={[ConnectionContextProvider, StoreProvider]}>
         <Baseline />
         <Layout logger={<Logger />} />
       </Providers>
