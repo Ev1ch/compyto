@@ -249,20 +249,7 @@ export default function createSocketCommunicator({
     }
 
     if (isMe) {
-      // I didn't send myself data by socket. Just put it in correct place
-      placeDataInBufferByRankAndCount(buf, data, root, recvCount);
-
-      await Promise.all(
-        // For each process in the group receive and place data in buffer
-        selfGroup.processes.map(async () => {
-          const temp: ProcessWithData<unknown[]>[] = [];
-
-          await receiveArrayPart(temp, recvStartIndex, recvCount, abort);
-          const { data, process } = temp[0];
-          const senderRank = process.rank;
-          placeDataInBufferByRankAndCount(buf, data, senderRank, recvCount);
-        }),
-      );
+      await gatherAsRoot(data, buf, recvStartIndex, recvCount, abort);
     }
   }
 
@@ -276,13 +263,23 @@ export default function createSocketCommunicator({
     abort?: Abort,
   ) {
     Promise.all(
-      selfGroup.processes.map((p) => {
-        const sliced = sliceSendData(data, sendStartIndex, sendCount);
-        return send(sliced, p, abort);
-      }),
+      selfGroup.processes.map((p) =>
+        sliceAndSend(data, sendStartIndex, sendCount, p, abort),
+      ),
     );
 
-    // REPEATED CODE WITH GATHER
+    await gatherAsRoot(data, buf, recvStartIndex, recvCount, abort);
+  }
+
+  async function gatherAsRoot(
+    data: unknown[],
+    buf: unknown[],
+    recvStartIndex: number,
+    recvCount: number,
+    abort?: Abort,
+  ) {
+    placeDataInBufferByRankAndCount(buf, data, selfProcess.rank, recvCount);
+
     await Promise.all(
       selfGroup.processes.map(async () => {
         const temp: ProcessWithData<unknown[]>[] = [];
@@ -290,34 +287,9 @@ export default function createSocketCommunicator({
         await receiveArrayPart(temp, recvStartIndex, recvCount, abort);
         const { data, process } = temp[0];
         const senderRank = process.rank;
-        for (
-          let receivingBufferIndex = senderRank * recvCount,
-            dataBufferIndex = 0;
-          receivingBufferIndex < (senderRank + 1) * recvCount &&
-          dataBufferIndex < data.length;
-          receivingBufferIndex++, dataBufferIndex++
-        ) {
-          buf[receivingBufferIndex] = {
-            data: data[dataBufferIndex],
-            process,
-          };
-        }
+        placeDataInBufferByRankAndCount(buf, data, senderRank, recvCount);
       }),
     );
-
-    // REPEATED CODE WITH GATHER
-    for (
-      let receivingBufferIndex = selfProcess.rank * recvCount,
-        dataBufferIndex = 0;
-      receivingBufferIndex < (selfProcess.rank + 1) * recvCount &&
-      dataBufferIndex < data.length;
-      receivingBufferIndex++, dataBufferIndex++
-    ) {
-      buf[receivingBufferIndex] = {
-        data: data[dataBufferIndex],
-        process: selfProcess,
-      };
-    }
   }
 
   // Use only for receiving arrays
