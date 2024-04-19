@@ -1,5 +1,7 @@
 import { createRunner } from '@compyto/runner';
 
+import assert = require('assert');
+
 export default async function start() {
   const { communicator } = await createRunner();
   await communicator.start();
@@ -11,7 +13,11 @@ export default async function start() {
   ];
   const res = [];
 
-  await communicator.gather(data, 1, 2, res, 0, 1, MASTER);
+  await communicator.gather(data, 0, 2, res, 0, 2, MASTER);
 
   console.log(`Received: `, res);
+
+  if (communicator.isMaster) {
+    assert.equal(res.length, 6);
+  }
 }

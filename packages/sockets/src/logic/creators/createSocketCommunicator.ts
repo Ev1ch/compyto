@@ -73,16 +73,35 @@ export default function createSocketCommunicator({
     }
   }
 
+  function getProcessByRank(rank: number) {
+    const rootProcess = selfGroup.processes.find((p) => p.rank === rank);
+    if (!rootProcess) throw new Error('Can`t find process by rank');
+
+    return rootProcess;
+  }
+
   // In many methods we need to send only a part of data from index A and only length B
   // Use this method to keep code DRY
   function sliceSendData(
     data: unknown[],
     startIndex: number,
     sendCount: number,
-    partsNumber: number,
   ) {
     const sliced = data.slice(startIndex);
-    return sliced.slice(0, partsNumber * sendCount);
+    return sliced.slice(0, (selfConnections.length + 1) * sendCount);
+  }
+
+  // Applies slice for send data and sends it to another process
+  function sliceAndSend(
+    data: unknown[],
+    startIndex: number,
+    sendCount: number,
+    process: Process,
+    abort?: Abort,
+  ) {
+    const sliced = sliceSendData(data, startIndex, sendCount);
+
+    return send(sliced, process, abort);
   }
 
   function setConnections(connections: SocketConnection[]) {
@@ -181,13 +200,7 @@ export default function createSocketCommunicator({
     const isCalledByRoot = selfProcess.rank === root;
     if (isCalledByRoot) {
       // apply split and send to all processes
-      const allDevicesNumber = selfConnections.length + 1;
-      const sliced = sliceSendData(
-        data,
-        sendStartIndex,
-        sendCount,
-        allDevicesNumber,
-      );
+      const sliced = sliceSendData(data, sendStartIndex, sendCount);
       const splitted = chunk(sliced, sendCount);
 
       await Promise.all(
@@ -197,6 +210,24 @@ export default function createSocketCommunicator({
       );
     }
     await receiveArrayPart(buf, recvStartIndex, recvCount, abort);
+  }
+
+  function placeDataInBufferByRankAndCount(
+    buf: unknown[],
+    data: unknown[],
+    senderRank: number,
+    recvCount: number,
+  ) {
+    for (
+      let i = senderRank * recvCount, dataBufferIndex = 0;
+      i < (senderRank + 1) * recvCount && dataBufferIndex < data.length;
+      i++, dataBufferIndex++
+    ) {
+      buf[i] = {
+        data: data[dataBufferIndex],
+        process,
+      };
+    }
   }
 
   async function gather(
@@ -210,57 +241,28 @@ export default function createSocketCommunicator({
     abort?: Abort,
   ) {
     const isMe = root === selfProcess.rank;
-    // from all processes send to root
+    const rootProcess = getProcessByRank(root);
     if (!isMe) {
-      const rootProcess = selfGroup.processes.find((p) => p.rank === root);
-      if (!rootProcess) throw new Error('Can`t find process by rank');
-      const allDevicesNumber = selfConnections.length + 1;
-      const sliced = sliceSendData(
-        data,
-        sendStartIndex,
-        sendCount,
-        allDevicesNumber,
-      );
-      await send(sliced, rootProcess, abort);
+      // send to root
+      sliceAndSend(data, sendStartIndex, sendCount, rootProcess, abort);
+      return;
     }
 
-    // on root receive all data from other processes
     if (isMe) {
+      // I didn't send myself data by socket. Just put it in correct place
+      placeDataInBufferByRankAndCount(buf, data, root, recvCount);
+
       await Promise.all(
+        // For each process in the group receive and place data in buffer
         selfGroup.processes.map(async () => {
           const temp: ProcessWithData<unknown[]>[] = [];
 
           await receiveArrayPart(temp, recvStartIndex, recvCount, abort);
           const { data, process } = temp[0];
           const senderRank = process.rank;
-          for (
-            let receivingBufferIndex = senderRank * recvCount,
-              dataBufferIndex = 0;
-            receivingBufferIndex < (senderRank + 1) * recvCount &&
-            dataBufferIndex < data.length;
-            receivingBufferIndex++, dataBufferIndex++
-          ) {
-            buf[receivingBufferIndex] = {
-              data: data[dataBufferIndex],
-              process,
-            };
-          }
+          placeDataInBufferByRankAndCount(buf, data, senderRank, recvCount);
         }),
       );
-    }
-
-    if (isMe) {
-      for (
-        let receivingBufferIndex = root * recvCount, dataBufferIndex = 0;
-        receivingBufferIndex < (root + 1) * recvCount &&
-        dataBufferIndex < data.length;
-        receivingBufferIndex++, dataBufferIndex++
-      ) {
-        buf[receivingBufferIndex] = {
-          data: data[dataBufferIndex],
-          process: selfProcess,
-        };
-      }
     }
   }
 
