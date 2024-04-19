@@ -8,7 +8,7 @@ export default function Logger() {
     <Box sx={{ p: 3, display: 'flex', flexDirection: 'column' }}>
       <Typography variant="h2">Logger</Typography>
 
-      <MonitoringEventsPreparers sx={{ position: 'relative', zIndex: 3 }} />
+      <MonitoringEventsPreparers sx={{ position: 'relative', zIndex: 4 }} />
 
       <MonitoringEventsTree
         sx={{

@@ -1,9 +1,12 @@
-import { FileDownload } from '@mui/icons-material';
+import { Close, FileDownload } from '@mui/icons-material';
 import { Button, Chip, Stack, SxProps } from '@mui/material';
+import { useCallback } from 'react';
 
 import { EMPTY_OBJECT } from '@/constants';
+import { removePair, selectPair } from '@/modules/analysis/store';
 import { useFileDownload } from '@/modules/downloads/hooks';
-import { useMonitoringContext } from '@/modules/monitoring/hooks';
+import { selectEventsWithPreparers } from '@/modules/monitoring/store';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { getArrayedSx } from '@/styles/logic';
 import { pluralize } from '@/utils';
 
@@ -14,16 +17,30 @@ export interface MonitoringEventsTreeHeaderProps {
 export default function MonitoringEventsTreeHeader({
   sx = EMPTY_OBJECT,
 }: MonitoringEventsTreeHeaderProps) {
-  const { eventsWithPreparers } = useMonitoringContext();
+  const dispatch = useDispatch();
+  const eventsWithPreparers = useSelector(selectEventsWithPreparers);
+  const pair = useSelector(selectPair);
   const { download } = useFileDownload(
     JSON.stringify(eventsWithPreparers),
     'events.json',
   );
   const eventsNumber = eventsWithPreparers.length;
 
+  const handleDeselectClick = useCallback(() => {
+    dispatch(removePair());
+  }, [dispatch]);
+
   return (
     <Stack sx={[{ alignItems: 'center' }, ...getArrayedSx(sx)]} direction="row">
       <Stack sx={{ width: 'calc(100% - 184px)' }} direction="row">
+        <Button
+          startIcon={<Close />}
+          onClick={handleDeselectClick}
+          disabled={!pair}
+        >
+          Deselect all
+        </Button>
+
         <Chip
           sx={{
             mx: 'auto',

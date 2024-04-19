@@ -14,7 +14,9 @@ import {
   Typography,
 } from '@mui/material';
 import { forwardRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 
+import { selectAvailableSortFields } from '@/modules/monitoring/store';
 import type { Noop } from '@/utils';
 
 import type {
@@ -22,11 +24,7 @@ import type {
   MonitoringEventsSortField,
   MonitoringEventsSortOrder,
 } from '../../../domain';
-import {
-  MONITORING_EVENTS_SORT_FIELDS,
-  MONITORING_EVENTS_SORT_ORDERS,
-} from '../../../constants';
-import { useMonitoringContext } from '../../../hooks';
+import { MONITORING_EVENTS_SORT_ORDERS } from '../../../constants';
 import { createMonitoringEventsSort } from '../../../logic';
 
 export interface AddMonitoringEventsSortPopperProps {
@@ -37,13 +35,9 @@ export interface AddMonitoringEventsSortPopperProps {
 
 export default forwardRef<HTMLDivElement, AddMonitoringEventsSortPopperProps>(
   function AddMonitoringEventsSortPopper({ anchor, onAdd, onClose }, ref) {
-    const { sorts } = useMonitoringContext();
     const [field, setField] = useState<MonitoringEventsSortField | ''>('');
     const [order, setOrder] = useState<MonitoringEventsSortOrder | ''>('');
-    const existingFields = sorts.map((filter) => filter.field);
-    const availableFields = MONITORING_EVENTS_SORT_FIELDS.filter(
-      (filter) => !existingFields.includes(filter),
-    );
+    const availableFields = useSelector(selectAvailableSortFields);
     const filter =
       field && order ? createMonitoringEventsSort(field, order) : null;
 

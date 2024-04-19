@@ -2,22 +2,24 @@ import { SxProps, TextField } from '@mui/material';
 import { ChangeEvent } from 'react';
 
 import { EMPTY_OBJECT } from '@/constants';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { getArrayedSx } from '@/styles/logic';
 
-import { useMonitoringContext } from '../../../hooks';
+import { selectSearch, setSearch } from '../../../store';
 
 export interface MonitoringEventsSearchProps {
-  sx?: SxProps;
+  readonly sx?: SxProps;
 }
 
 export default function MonitoringEventsSearch({
   sx = EMPTY_OBJECT,
 }: MonitoringEventsSearchProps) {
-  const { search, setSearch } = useMonitoringContext();
+  const dispatch = useDispatch();
+  const search = useSelector(selectSearch);
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;
-    setSearch(value);
+    dispatch(setSearch(value));
   }
 
   return (

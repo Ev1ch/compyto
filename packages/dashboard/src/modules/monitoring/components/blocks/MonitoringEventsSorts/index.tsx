@@ -9,12 +9,13 @@ import {
 import { useCallback, useRef, useState } from 'react';
 
 import { EMPTY_OBJECT } from '@/constants';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { hideScrollbarSx } from '@/styles/constants';
 import { getArrayedSx } from '@/styles/logic';
 
 import type { MonitoringEventsSort as TMonitoringEventsSort } from '../../../domain';
 import { MONITORING_EVENTS_SORT_FIELDS } from '../../../constants';
-import { useMonitoringContext } from '../../../hooks';
+import { addSort, removeSort, selectSorts } from '../../../store';
 import { MonitoringEventsSort } from '../../common';
 import AddSortPopper from '../AddMonitoringEventsSortPopper';
 
@@ -25,7 +26,8 @@ export interface MonitoringEventsSortsProps {
 export default function MonitoringEventsSorts({
   sx = EMPTY_OBJECT,
 }: MonitoringEventsSortsProps) {
-  const { sorts, removeSort, addSort } = useMonitoringContext();
+  const dispatch = useDispatch();
+  const sorts = useSelector(selectSorts);
   const [isAddPopperOpen, setAddPopperOpen] = useState(false);
   const addButtonRef = useRef(null);
   const isAddingFiltersAvailable =
@@ -33,9 +35,9 @@ export default function MonitoringEventsSorts({
 
   const handleDelete = useCallback(
     (sort: TMonitoringEventsSort) => {
-      removeSort(sort.id);
+      dispatch(removeSort(sort.id));
     },
-    [removeSort],
+    [dispatch],
   );
 
   const handleAddClick = useCallback(() => {
@@ -44,10 +46,10 @@ export default function MonitoringEventsSorts({
 
   const handleAddSort = useCallback(
     (sort: TMonitoringEventsSort) => {
-      addSort(sort);
+      dispatch(addSort(sort));
       setAddPopperOpen(false);
     },
-    [addSort],
+    [dispatch],
   );
 
   const handleCloseClick = useCallback(() => {

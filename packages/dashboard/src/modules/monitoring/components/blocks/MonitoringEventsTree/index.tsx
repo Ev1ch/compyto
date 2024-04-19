@@ -1,21 +1,34 @@
 import { Box, Stack, type SxProps } from '@mui/material';
+import { useEffect, useState } from 'react';
 
 import { EMPTY_OBJECT } from '@/constants';
+import { removePair } from '@/modules/analysis/store';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { getArrayedSx } from '@/styles/logic';
 
-import { useMonitoringContext } from '../../../hooks';
-import { MonitoringEvent } from '../../common';
+import { selectShownEvents } from '../../../store';
+import MonitoringEventNode from '../MonitoringEventNode';
 import MonitoringEventsTreeHeader from '../MonitoringEventsTreeHeader';
+import Root from '../Root';
 
 export interface MonitoringEventsTreeProps {
   readonly sx?: SxProps;
 }
 
+const ROOT_SX = {
+  left: 2.5,
+};
+
 export default function MonitoringEventsTree({
   sx = EMPTY_OBJECT,
 }: MonitoringEventsTreeProps) {
-  const { events, eventsWithPreparers, showAll } = useMonitoringContext();
-  const shownEvents = showAll ? events : eventsWithPreparers;
+  const dispatch = useDispatch();
+  const [eventsBlock, setEventsBlock] = useState<HTMLDivElement | null>(null);
+  const shownEvents = useSelector(selectShownEvents);
+
+  useEffect(() => {
+    dispatch(removePair());
+  }, [shownEvents, dispatch]);
 
   return (
     <Box
@@ -33,8 +46,10 @@ export default function MonitoringEventsTree({
         }}
       >
         <MonitoringEventsTreeHeader
-          sx={{ position: 'sticky', mb: 1, top: 0 }}
+          sx={{ position: 'sticky', mb: 1, top: 0, zIndex: 4 }}
         />
+
+        {eventsBlock && <Root sx={ROOT_SX} eventsBlock={eventsBlock} />}
 
         <Stack
           sx={{
@@ -44,20 +59,14 @@ export default function MonitoringEventsTree({
             zIndex: 2,
           }}
           spacing={1}
+          ref={setEventsBlock}
         >
-          {shownEvents.map((shownEvent) => {
-            const isUnfocused = !eventsWithPreparers.find(
-              (event) => event.context.id === shownEvent.context.id,
-            );
-
-            return (
-              <MonitoringEvent
-                key={shownEvent.context.id}
-                event={shownEvent}
-                unfocused={isUnfocused}
-              />
-            );
-          })}
+          {shownEvents.map((shownEvent) => (
+            <MonitoringEventNode
+              key={shownEvent.context.id}
+              event={shownEvent}
+            />
+          ))}
         </Stack>
         <Box
           sx={{
@@ -67,7 +76,6 @@ export default function MonitoringEventsTree({
             bgcolor: 'grey.300',
             position: 'absolute',
             right: 184,
-            zIndex: 1,
           }}
         />
       </Box>

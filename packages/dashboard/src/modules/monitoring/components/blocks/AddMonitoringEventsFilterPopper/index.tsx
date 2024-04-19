@@ -19,32 +19,32 @@ import {
   MonitoringEventsFilter,
   MonitoringEventsFilterCriteria,
 } from '@/modules/monitoring/domain';
-import { MONITORING_EVENTS_FILTER_CRITERION } from '@/modules/monitoring/constants';
-import { createMonitoringEventsFilter } from '@/modules/monitoring/logic';
+import { useSelector } from '@/store/hooks';
 import { uniq } from '@/utils';
 
-import { useMonitoringContext } from '../../../hooks';
+import { createMonitoringEventsFilter } from '../../../logic';
+import {
+  selectAvailableCriterion,
+  selectValuesByCriteria,
+} from '../../../store';
 
 export interface AddMonitoringEventsFilterPopperProps {
-  anchor: HTMLElement;
+  readonly anchor: HTMLElement;
   onAdd?: (filter: MonitoringEventsFilter) => void;
   onClose?: () => void;
 }
 
 export default forwardRef<HTMLDivElement, AddMonitoringEventsFilterPopperProps>(
   function AddMonitoringEventsFilterPopper({ anchor, onAdd, onClose }, ref) {
-    const { filters, getValuesByCriteria } = useMonitoringContext();
     const [criteria, setCriteria] = useState<
       MonitoringEventsFilterCriteria | ''
     >('');
-    const [value, setValue] = useState<string | ''>('');
-    const existingCriterion = filters.map((filter) => filter.criteria);
-    const availableCriterion = MONITORING_EVENTS_FILTER_CRITERION.filter(
-      (filter) => !existingCriterion.includes(filter),
+    const values = useSelector((state) =>
+      selectValuesByCriteria(state, criteria),
     );
-    const availableValues = criteria
-      ? uniq(getValuesByCriteria(criteria))
-      : null;
+    const availableCriterion = useSelector(selectAvailableCriterion);
+    const [value, setValue] = useState<string | ''>('');
+    const availableValues = criteria ? uniq(values) : null;
     const filter =
       criteria && value ? createMonitoringEventsFilter(criteria, value) : null;
 

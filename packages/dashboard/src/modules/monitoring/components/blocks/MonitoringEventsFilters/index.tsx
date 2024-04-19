@@ -9,12 +9,13 @@ import {
 import { useCallback, useRef, useState } from 'react';
 
 import { EMPTY_OBJECT } from '@/constants';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { hideScrollbarSx } from '@/styles/constants';
 import { getArrayedSx } from '@/styles/logic';
 
-import type { MonitoringEventsFilter as TMonitoringEventsFilter } from '../../../domain';
+import { MonitoringEventsFilter as TMonitoringEventsFilter } from '../../../domain';
 import { MONITORING_EVENTS_FILTER_CRITERION } from '../../../constants';
-import { useMonitoringContext } from '../../../hooks';
+import { addFilter, removeFilter, selectFilters } from '../../../store';
 import { MonitoringEventsFilter } from '../../common';
 import AddMonitoringEventsFilterPopper from '../AddMonitoringEventsFilterPopper';
 
@@ -25,7 +26,8 @@ export interface MonitoringEventsFiltersProps {
 export default function MonitoringEventsFilters({
   sx = EMPTY_OBJECT,
 }: MonitoringEventsFiltersProps) {
-  const { filters, removeFilter, addFilter } = useMonitoringContext();
+  const dispatch = useDispatch();
+  const filters = useSelector(selectFilters);
   const [isAddPopperOpen, setAddPopperOpen] = useState(false);
   const addButtonRef = useRef(null);
   const isAddingFiltersAvailable =
@@ -33,22 +35,21 @@ export default function MonitoringEventsFilters({
 
   const handleDelete = useCallback(
     (filter: TMonitoringEventsFilter) => {
-      removeFilter(filter.id);
+      dispatch(removeFilter(filter.id));
     },
-    [removeFilter],
+    [dispatch],
   );
 
   const handleAddClick = useCallback(() => {
     setAddPopperOpen(true);
-    console.log('handleAddClick', addButtonRef.current);
   }, []);
 
   const handleAddFilter = useCallback(
     (filter: TMonitoringEventsFilter) => {
-      addFilter(filter);
+      dispatch(addFilter(filter));
       setAddPopperOpen(false);
     },
-    [addFilter],
+    [dispatch],
   );
 
   const handleCloseClick = useCallback(() => {

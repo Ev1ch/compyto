@@ -8,7 +8,7 @@ import {
   SxProps,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { memo, MouseEvent, useEffect, useRef, useState } from 'react';
 
 import {
   EVENT_SCOPE_TO_COLOR_MAP,
@@ -28,69 +28,74 @@ import {
   COLOR_TO_CHIP_COLOR_MAP,
   COLOR_TO_STYLE_COLOR_MAP,
 } from '../../../constants';
+import { Connector } from '../../blocks';
 
 export interface MonitoringEventProps {
   readonly event: TMonitoringEvent;
   readonly sx?: SxProps;
   readonly unfocused?: boolean;
+  readonly selected?: boolean;
+  readonly onClick?: (event: TMonitoringEvent) => void;
+  readonly onExpandToggle?: (event: TMonitoringEvent) => void;
 }
 
-export default function MonitoringEvent({
-  event: { key, context, args },
-  unfocused,
+export default memo(function MonitoringEvent({
+  event,
+  onClick,
+  onExpandToggle,
+  unfocused = false,
+  selected = false,
   sx = EMPTY_OBJECT,
 }: MonitoringEventProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const isFirstRender = useRef(true);
+  const { key, context, args } = event;
   const [type, scope, name] = getMonitoringEventKeyParts(key);
   const typeColor = TYPE_TO_COLOR_MAP[type];
   const scopeColor = EVENT_SCOPE_TO_COLOR_MAP[scope];
   const areArgsPresent = args.length > 0;
 
-  function handleExpandToggle() {
+  function handleExpandToggle(event: MouseEvent<SVGSVGElement>) {
+    event.stopPropagation();
     setIsExpanded((prevState) => !prevState);
   }
+
+  function handleClick() {
+    onClick?.(event);
+  }
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    onExpandToggle?.(event);
+  }, [isExpanded, onExpandToggle, event]);
 
   return (
     <Box
       sx={[
         {
           display: 'inline-flex',
-          alignItems: 'center',
-
-          '&::before': {
-            order: 1,
-            display: 'block',
-            content: '""',
-            width: 40,
-            height: 2,
-            bgcolor: 'grey.400',
-          },
-          '&::after': {
-            order: 2,
-            display: 'block',
-            content: '""',
-            width: 10,
-            height: 10,
-            borderRadius: '50%',
-            bgcolor: 'grey.400',
-          },
         },
         unfocused && {
           opacity: 0.2,
         },
+        onClick && {
+          cursor: 'pointer',
+        },
         ...getArrayedSx(sx),
       ]}
+      onClick={handleClick}
     >
       <Chip
-        sx={{ height: 'auto' }}
+        sx={[{ height: 'auto' }, selected && { bgcolor: 'grey.200' }]}
         variant="outlined"
         color={COLOR_TO_CHIP_COLOR_MAP[typeColor]}
         label={
           <Box>
-            <Typography
-              sx={[areArgsPresent && { cursor: 'pointer' }]}
-              onClick={handleExpandToggle}
-            >
+            <Typography sx={[areArgsPresent && { cursor: 'pointer' }]}>
               <Typography component="span">
                 [{getTimestamp(context.emittedAt)}]
               </Typography>{' '}
@@ -116,6 +121,7 @@ export default function MonitoringEvent({
                       transform: 'rotate(90deg)',
                     },
                   ]}
+                  onClick={handleExpandToggle}
                 />
               )}
             </Typography>
@@ -131,6 +137,7 @@ export default function MonitoringEvent({
           </Box>
         }
       />
+      <Connector sx={{ mt: 1.25, mb: 'auto' }} width={200} />
     </Box>
   );
-}
+});
