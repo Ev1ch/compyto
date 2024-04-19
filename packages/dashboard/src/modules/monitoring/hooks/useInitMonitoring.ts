@@ -6,7 +6,7 @@ import { useDispatch } from '@/store/hooks';
 
 import { addEvent } from '../store';
 
-export default function useMonitoringInit() {
+export default function useInitMonitoring() {
   const dispatch = useDispatch();
   const { monitoring } = useConnectionContext();
 
@@ -14,12 +14,14 @@ export default function useMonitoringInit() {
     // @ts-expect-error Monitoring event type mismatch
     function handleAnyEvent(key, context, ...args) {
       console.log('Monitoring event:', key, context, args);
+      const emittedAt = new Date(context.emittedAt);
+
       dispatch(
         addEvent({
           key,
           context: {
             ...context,
-            emittedAt: new Date(context.emittedAt),
+            emittedAt,
           },
           args,
         }),

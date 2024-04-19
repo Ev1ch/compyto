@@ -18,7 +18,6 @@ export default function Layout({ logger }: LayoutProps) {
         height: '100vh',
         ...fullHeightChildren,
       }}
-      columnSpacing={3}
       container
     >
       <Grid sx={fullHeightChildren} xs={12} item>

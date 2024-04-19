@@ -1,1 +1,1 @@
-export { default as useMonitoringInit } from './useMonitoringInit';
+export { default as useInitMonitoring } from './useInitMonitoring';

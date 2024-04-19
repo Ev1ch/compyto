@@ -1,14 +1,14 @@
 import type { ReactNode } from 'react';
 
-import type { Provider } from '@/store/domain';
+import { StoreProvider } from '@/components/providers';
+import { ConnectionContextProvider } from '@/modules/connections/components/providers';
 
 export interface ProvidersProps {
-  providers: Provider[];
   children: ReactNode;
 }
 
-export default function Providers({ providers, children }: ProvidersProps) {
-  return providers.reduceRight(
+export default function Providers({ children }: ProvidersProps) {
+  return [ConnectionContextProvider, StoreProvider].reduceRight(
     (providerChildren, Provider) => <Provider>{providerChildren}</Provider>,
     children,
   );

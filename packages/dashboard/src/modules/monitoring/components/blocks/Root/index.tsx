@@ -3,10 +3,10 @@ import { Box, IconButton, Stack, SxProps, Typography } from '@mui/material';
 import { useCallback } from 'react';
 
 import { getTimestamp } from '@compyto/logging';
-import { MonitoringEvent } from '@compyto/monitoring';
+import type { MonitoringEvent } from '@compyto/monitoring';
 import { getDatesDifference } from '@compyto/utils';
+import type { Position } from '@/modules/analysis/domain';
 import { EMPTY_OBJECT } from '@/constants';
-import { useAnalysisContext } from '@/modules/analysis/hooks';
 import {
   removeEventsFromPair,
   selectPair,
@@ -35,7 +35,7 @@ export default function Root({ sx = EMPTY_OBJECT }: RootProps) {
     [dispatch],
   );
 
-  const getTopAndHeight = useCallback((a, b) => {
+  const getTopAndHeight = useCallback((a: Position, b: Position) => {
     const top = a.top + 15;
     const height = b.top - a.top;
 
