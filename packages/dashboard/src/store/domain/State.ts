@@ -1,5 +1,9 @@
-import store from '../logic/store';
+import type { AnalysisState } from '@/modules/analysis/store';
+import type { MonitoringState } from '@/modules/monitoring/store';
 
-type State = ReturnType<typeof store.getState>;
+type State = {
+  monitoring: MonitoringState;
+  analysis: AnalysisState;
+};
 
 export default State;

@@ -46,7 +46,7 @@ export default forwardRef<HTMLDivElement, AddMonitoringEventsFilterPopperProps>(
       MonitoringEventsFilterCriteria | ''
     >('');
     const values = useSelector((state) =>
-      selectValuesByCriteria(state, criteria),
+      criteria ? selectValuesByCriteria(state, criteria) : [],
     );
     const availableCriterion = useSelector(selectAvailableCriterion);
     const [value, setValue] = useState<string | ''>('');

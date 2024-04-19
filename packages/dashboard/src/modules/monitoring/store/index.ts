@@ -30,7 +30,7 @@ import {
 } from '../logic';
 import getMonitoringEventsWithSorts from '../logic/preparers/getMonitoringEventsWithSorts';
 
-function getRandomEvent(): MonitoringEvent {
+function getRandomEvent() {
   return {
     key: `${sample(MONITORING_EVENT_TYPES)}${TYPE_DELIMITER}${sample(MONITORING_EVENT_SCOPE)}${SCOPE_DELIMITER}${Math.random()}`,
     args: ['', 1, { foo: 'bar' }],
@@ -129,6 +129,7 @@ export const selectShownEvents = createSelector(
 );
 
 const initialState: MonitoringState = {
+  // @ts-expect-error - Expect for random events
   events: [...Array.from({ length: 5 }, getRandomEvent)],
   filters: [],
   sorts: [],

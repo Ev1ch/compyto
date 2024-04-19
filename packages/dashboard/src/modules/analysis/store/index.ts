@@ -7,12 +7,12 @@ import createAsyncThunk from '@/store/logic/createAsyncThunk';
 
 import type { Pair, Position } from '../domain';
 
-export interface AnalysisContextProps {
+export interface AnalysisState {
   pair: Pair | null;
   positions: Position[];
 }
 
-const initialState: AnalysisContextProps = {
+const initialState: AnalysisState = {
   pair: null,
   positions: [],
 };
@@ -75,7 +75,9 @@ export const selectIsEventSelected = createSelector(
 export const addEventToPair = createAsyncThunk(
   'analysis/addEventToPair',
   (event: string, { getState, dispatch }) => {
+    // @ts-expect-error - ???
     const pair = selectPair(getState());
+    // @ts-expect-error - ???
     const shownEvents = selectShownEvents(getState());
 
     if (!pair) {
