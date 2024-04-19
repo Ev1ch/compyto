@@ -36,7 +36,6 @@ export default memo(function Selections({ sx = EMPTY_OBJECT }: RootProps) {
       sx={[
         {
           position: 'absolute',
-          height: '100%',
         },
         ...getArrayedSx(sx),
       ]}
