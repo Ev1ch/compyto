@@ -1,11 +1,11 @@
 import { Box, Checkbox, FormControlLabel } from '@mui/material';
-import { ChangeEvent } from 'react';
+import { memo, type ChangeEvent } from 'react';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 
 import { selectShowAll, setShowAll } from '../../../store';
 
-export default function MonitoringEventsShow() {
+export default memo(function MonitoringEventsShow() {
   const dispatch = useDispatch();
   const showAll = useSelector(selectShowAll);
 
@@ -16,9 +16,10 @@ export default function MonitoringEventsShow() {
   return (
     <Box>
       <FormControlLabel
+        sx={{ whiteSpace: 'nowrap' }}
         control={<Checkbox onChange={handleChange} checked={showAll} />}
         label="Show all"
       />
     </Box>
   );
-}
+});

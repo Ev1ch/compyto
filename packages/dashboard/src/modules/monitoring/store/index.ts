@@ -28,13 +28,16 @@ import {
   getMonitoringEventsWithPreparers,
   getValuesByMonitoringEventsFilterCriteria,
 } from '../logic';
+import getMonitoringEventsWithSorts from '../logic/preparers/getMonitoringEventsWithSorts';
 
 function getRandomEvent(): MonitoringEvent {
   return {
     key: `${sample(MONITORING_EVENT_TYPES)}${TYPE_DELIMITER}${sample(MONITORING_EVENT_SCOPE)}${SCOPE_DELIMITER}${Math.random()}`,
     args: ['', 1, { foo: 'bar' }],
     context: {
-      emittedAt: new Date(),
+      emittedAt: new Date(
+        new Date().getTime() + Math.random() * 10000,
+      ).toISOString(),
       id: createId(),
     },
   };
@@ -48,7 +51,22 @@ export interface MonitoringState {
   sorts: MonitoringEventsSort[];
 }
 
-export const selectEvents = (state: State) => state.monitoring.events;
+const selectRawEvents = (state: State) => state.monitoring.events;
+
+export const selectEvents = createSelector([selectRawEvents], (events) =>
+  events.map((event) => ({
+    ...event,
+    context: {
+      ...event.context,
+      emittedAt: new Date(event.context.emittedAt),
+    },
+  })),
+);
+
+export const selectEvent = createSelector(
+  [selectEvents, (state, id: string) => id],
+  (events, id) => events.find((event) => event.context.id === id),
+);
 
 export const selectSorts = (state: State) => state.monitoring.sorts;
 
@@ -69,7 +87,7 @@ export const selectSearch = (state: State) => state.monitoring.search;
 
 export const selectShowAll = (state: State) => state.monitoring.showAll;
 
-export const selectExistingSortFields = createSelector(selectSorts, (sorts) =>
+export const selectExistingSortFields = createSelector([selectSorts], (sorts) =>
   sorts.map(({ field }) => field),
 );
 
@@ -93,6 +111,11 @@ export const selectEventsWithPreparers = createSelector(
     getMonitoringEventsWithPreparers(events, { search, filters, sorts }),
 );
 
+export const selectEventsWithSorts = createSelector(
+  [selectEvents, selectSorts],
+  (events, sorts) => getMonitoringEventsWithSorts(events, sorts),
+);
+
 export const selectIsEventUnfocused = createSelector(
   [selectEventsWithPreparers, (state, id) => id],
   (eventsWithPreparers, id) =>
@@ -100,13 +123,13 @@ export const selectIsEventUnfocused = createSelector(
 );
 
 export const selectShownEvents = createSelector(
-  [selectEvents, selectEventsWithPreparers, selectShowAll],
+  [selectEventsWithSorts, selectEventsWithPreparers, selectShowAll],
   (events, eventsWithPreparers, showAll) =>
     showAll ? events : eventsWithPreparers,
 );
 
 const initialState: MonitoringState = {
-  events: [...Array.from({ length: 10 }, getRandomEvent)],
+  events: [...Array.from({ length: 5 }, getRandomEvent)],
   filters: [],
   sorts: [],
   showAll: true,
@@ -118,7 +141,14 @@ const slice = createSlice({
   initialState,
   reducers: {
     addEvent: (state, { payload }: PayloadAction<MonitoringEvent>) => {
-      state.events.push(payload);
+      state.events.push({
+        ...payload,
+        context: {
+          ...payload.context,
+          // @ts-expect-error emittedAt is a string in Redux
+          emittedAt: payload.context.emittedAt.toISOString(),
+        },
+      });
     },
     setShowAll: (state, { payload }: PayloadAction<boolean>) => {
       state.showAll = payload;

@@ -1,21 +1,29 @@
 import { Box, Typography } from '@mui/material';
+import { memo } from 'react';
 
 import MonitoringEventsPreparers from '../MonitoringEventsPreparers';
 import MonitoringEventsTree from '../MonitoringEventsTree';
 
-export default function Logger() {
+const PREPARERS_SX = {
+  position: 'relative',
+  zIndex: 5,
+};
+
+const TREE_SX = {
+  height: '100%',
+  overflowY: 'auto',
+};
+
+export default memo(function Logger() {
   return (
     <Box sx={{ p: 3, display: 'flex', flexDirection: 'column' }}>
-      <Typography variant="h2">Logger</Typography>
+      <Typography sx={{ mb: 3 }} variant="h3" component="h1">
+        Dashboard
+      </Typography>
 
-      <MonitoringEventsPreparers sx={{ position: 'relative', zIndex: 4 }} />
+      <MonitoringEventsPreparers sx={PREPARERS_SX} />
 
-      <MonitoringEventsTree
-        sx={{
-          height: '100%',
-          overflowY: 'auto',
-        }}
-      />
+      <MonitoringEventsTree sx={TREE_SX} />
     </Box>
   );
-}
+});

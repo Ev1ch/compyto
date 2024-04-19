@@ -79,9 +79,9 @@ export default memo(function MonitoringEventNode({
       return;
     }
 
-    dispatch(addEventToPair(event));
+    dispatch(addEventToPair(eventId));
     handleMutation();
-  }, [isSelected, dispatch, event, handleMutation, eventId]);
+  }, [isSelected, dispatch, handleMutation, eventId]);
 
   useEffect(() => {
     if (!position) {
@@ -106,7 +106,7 @@ export default memo(function MonitoringEventNode({
     <Box
       sx={[
         {
-          display: 'inline-flex',
+          display: 'flex',
           width: '100%',
         },
       ]}
@@ -130,6 +130,7 @@ export default memo(function MonitoringEventNode({
         unfocused={isUnfocused}
         selected={isSelected}
       />
+      <Connector sx={{ mt: 1.25, mb: 'auto', flexShrink: 0 }} width={200} />
     </Box>
   );
 });

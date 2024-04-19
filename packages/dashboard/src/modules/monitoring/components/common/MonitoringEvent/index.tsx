@@ -1,34 +1,17 @@
-import { ArrowRight } from '@mui/icons-material';
-import {
-  Box,
-  Chip,
-  List,
-  ListItem,
-  ListItemText,
-  SxProps,
-  Typography,
-} from '@mui/material';
+import { Box, Chip, SxProps } from '@mui/material';
 import { memo, MouseEvent, useEffect, useRef, useState } from 'react';
 
-import {
-  EVENT_SCOPE_TO_COLOR_MAP,
-  getTimestamp,
-  TYPE_TO_COLOR_MAP,
-} from '@compyto/logging';
+import { TYPE_TO_COLOR_MAP } from '@compyto/logging';
 import {
   getMonitoringEventKeyParts,
-  SCOPE_DELIMITER,
-  TYPE_DELIMITER,
   type MonitoringEvent as TMonitoringEvent,
 } from '@compyto/monitoring';
 import { EMPTY_OBJECT } from '@/constants';
 import { getArrayedSx } from '@/styles/logic';
 
-import {
-  COLOR_TO_CHIP_COLOR_MAP,
-  COLOR_TO_STYLE_COLOR_MAP,
-} from '../../../constants';
-import { Connector } from '../../blocks';
+import { COLOR_TO_CHIP_COLOR_MAP } from '../../../constants';
+import MonitoringEventArgs from '../MonitoringEventArgs';
+import MonitoringEventKey from '../MonitoringEventKey';
 
 export interface MonitoringEventProps {
   readonly event: TMonitoringEvent;
@@ -50,9 +33,8 @@ export default memo(function MonitoringEvent({
   const [isExpanded, setIsExpanded] = useState(false);
   const isFirstRender = useRef(true);
   const { key, context, args } = event;
-  const [type, scope, name] = getMonitoringEventKeyParts(key);
+  const [type] = getMonitoringEventKeyParts(key);
   const typeColor = TYPE_TO_COLOR_MAP[type];
-  const scopeColor = EVENT_SCOPE_TO_COLOR_MAP[scope];
   const areArgsPresent = args.length > 0;
 
   function handleExpandToggle(event: MouseEvent<SVGSVGElement>) {
@@ -76,9 +58,6 @@ export default memo(function MonitoringEvent({
   return (
     <Box
       sx={[
-        {
-          display: 'inline-flex',
-        },
         unfocused && {
           opacity: 0.2,
         },
@@ -95,49 +74,16 @@ export default memo(function MonitoringEvent({
         color={COLOR_TO_CHIP_COLOR_MAP[typeColor]}
         label={
           <Box>
-            <Typography sx={[areArgsPresent && { cursor: 'pointer' }]}>
-              <Typography component="span">
-                [{getTimestamp(context.emittedAt)}]
-              </Typography>{' '}
-              <Typography component="span">
-                {type}
-                {TYPE_DELIMITER}
-              </Typography>
-              <Typography
-                sx={{ color: COLOR_TO_STYLE_COLOR_MAP[scopeColor] }}
-                component="span"
-              >
-                {scope}
-                {SCOPE_DELIMITER}
-              </Typography>
-              <Typography sx={{ color: 'black' }} component="span">
-                {name}
-              </Typography>
-              {areArgsPresent && (
-                <ArrowRight
-                  sx={[
-                    { verticalAlign: 'middle' },
-                    isExpanded && {
-                      transform: 'rotate(90deg)',
-                    },
-                  ]}
-                  onClick={handleExpandToggle}
-                />
-              )}
-            </Typography>
-            {isExpanded && (
-              <List dense disablePadding>
-                {args.map((arg, index) => (
-                  <ListItem key={index} disablePadding disableGutters>
-                    <ListItemText primary={JSON.stringify(arg, null, 2)} />
-                  </ListItem>
-                ))}
-              </List>
-            )}
+            <MonitoringEventKey
+              eventKey={event.key}
+              emittedAt={context.emittedAt}
+              onExpandToggle={handleExpandToggle}
+              withArgs={areArgsPresent}
+            />
+            {isExpanded && <MonitoringEventArgs args={args} />}
           </Box>
         }
       />
-      <Connector sx={{ mt: 1.25, mb: 'auto' }} width={200} />
     </Box>
   );
 });

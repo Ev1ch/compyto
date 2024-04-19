@@ -12,10 +12,12 @@ import {
   SelectChangeEvent,
   Stack,
   Typography,
+  type SxProps,
 } from '@mui/material';
 import { forwardRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
+import { EMPTY_OBJECT } from '@/constants';
 import { selectAvailableSortFields } from '@/modules/monitoring/store';
 import type { Noop } from '@/utils';
 
@@ -28,13 +30,17 @@ import { MONITORING_EVENTS_SORT_ORDERS } from '../../../constants';
 import { createMonitoringEventsSort } from '../../../logic';
 
 export interface AddMonitoringEventsSortPopperProps {
+  readonly sx?: SxProps;
   readonly anchor: HTMLElement;
   readonly onAdd?: (sort: MonitoringEventsSort) => void;
   readonly onClose?: Noop;
 }
 
 export default forwardRef<HTMLDivElement, AddMonitoringEventsSortPopperProps>(
-  function AddMonitoringEventsSortPopper({ anchor, onAdd, onClose }, ref) {
+  function AddMonitoringEventsSortPopper(
+    { anchor, onAdd, onClose, sx = EMPTY_OBJECT },
+    ref,
+  ) {
     const [field, setField] = useState<MonitoringEventsSortField | ''>('');
     const [order, setOrder] = useState<MonitoringEventsSortOrder | ''>('');
     const availableFields = useSelector(selectAvailableSortFields);
@@ -63,6 +69,7 @@ export default forwardRef<HTMLDivElement, AddMonitoringEventsSortPopperProps>(
 
     return (
       <Popper
+        sx={sx}
         placement="bottom-start"
         anchorEl={anchor}
         ref={ref}

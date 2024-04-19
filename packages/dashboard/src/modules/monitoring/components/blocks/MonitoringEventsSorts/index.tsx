@@ -6,7 +6,7 @@ import {
   Typography,
   type SxProps,
 } from '@mui/material';
-import { useCallback, useRef, useState } from 'react';
+import { memo, useCallback, useRef, useState } from 'react';
 
 import { EMPTY_OBJECT } from '@/constants';
 import { useDispatch, useSelector } from '@/store/hooks';
@@ -23,7 +23,7 @@ export interface MonitoringEventsSortsProps {
   readonly sx?: SxProps;
 }
 
-export default function MonitoringEventsSorts({
+export default memo(function MonitoringEventsSorts({
   sx = EMPTY_OBJECT,
 }: MonitoringEventsSortsProps) {
   const dispatch = useDispatch();
@@ -59,7 +59,12 @@ export default function MonitoringEventsSorts({
   return (
     <Stack
       sx={[
-        { alignItems: 'center', minHeight: 32, overflowX: 'auto' },
+        {
+          alignItems: 'center',
+          minHeight: 32,
+          overflowX: 'auto',
+          minWidth: 95,
+        },
         hideScrollbarSx,
         ...getArrayedSx(sx),
       ]}
@@ -110,4 +115,4 @@ export default function MonitoringEventsSorts({
       )}
     </Stack>
   );
-}
+});

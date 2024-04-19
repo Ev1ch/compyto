@@ -9,16 +9,18 @@ import {
   Paper,
   Popper,
   Select,
-  SelectChangeEvent,
   Stack,
+  SxProps,
   Typography,
+  type SelectChangeEvent,
 } from '@mui/material';
 import { forwardRef, useState } from 'react';
 
 import {
-  MonitoringEventsFilter,
   MonitoringEventsFilterCriteria,
+  type MonitoringEventsFilter,
 } from '@/modules/monitoring/domain';
+import { EMPTY_OBJECT } from '@/constants';
 import { useSelector } from '@/store/hooks';
 import { uniq } from '@/utils';
 
@@ -30,12 +32,16 @@ import {
 
 export interface AddMonitoringEventsFilterPopperProps {
   readonly anchor: HTMLElement;
+  readonly sx?: SxProps;
   onAdd?: (filter: MonitoringEventsFilter) => void;
   onClose?: () => void;
 }
 
 export default forwardRef<HTMLDivElement, AddMonitoringEventsFilterPopperProps>(
-  function AddMonitoringEventsFilterPopper({ anchor, onAdd, onClose }, ref) {
+  function AddMonitoringEventsFilterPopper(
+    { anchor, onAdd, onClose, sx = EMPTY_OBJECT },
+    ref,
+  ) {
     const [criteria, setCriteria] = useState<
       MonitoringEventsFilterCriteria | ''
     >('');
@@ -68,6 +74,7 @@ export default forwardRef<HTMLDivElement, AddMonitoringEventsFilterPopperProps>(
 
     return (
       <Popper
+        sx={sx}
         placement="bottom-start"
         anchorEl={anchor}
         ref={ref}

@@ -1,5 +1,5 @@
 import { Box, SxProps } from '@mui/material';
-import { forwardRef } from 'react';
+import { memo } from 'react';
 
 import { EMPTY_OBJECT } from '@/constants';
 import { getArrayedSx } from '@/styles/logic';
@@ -13,17 +13,14 @@ export interface ConnectorProps {
   readonly size?: number;
 }
 
-export default forwardRef<HTMLDivElement, ConnectorProps>(function Connector(
-  {
-    direction,
-    width,
-    sx = EMPTY_OBJECT,
-    rounded = false,
-    thickness = 2,
-    size = 10,
-  },
-  ref,
-) {
+export default memo(function Connector({
+  direction,
+  width,
+  sx = EMPTY_OBJECT,
+  rounded = false,
+  thickness = 2,
+  size = 10,
+}: ConnectorProps) {
   return (
     <Box
       sx={[
@@ -57,7 +54,6 @@ export default forwardRef<HTMLDivElement, ConnectorProps>(function Connector(
         },
         ...getArrayedSx(sx),
       ]}
-      ref={ref}
     />
   );
 });

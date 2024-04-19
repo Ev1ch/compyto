@@ -1,9 +1,9 @@
 import { Close, FileDownload } from '@mui/icons-material';
 import { Button, Chip, Stack, SxProps } from '@mui/material';
-import { useCallback } from 'react';
+import { memo, useCallback } from 'react';
 
 import { EMPTY_OBJECT } from '@/constants';
-import { removePair, selectPair } from '@/modules/analysis/store';
+import { removePair, selectIsPairPresent } from '@/modules/analysis/store';
 import { useFileDownload } from '@/modules/downloads/hooks';
 import { selectEventsWithPreparers } from '@/modules/monitoring/store';
 import { useDispatch, useSelector } from '@/store/hooks';
@@ -14,12 +14,12 @@ export interface MonitoringEventsTreeHeaderProps {
   readonly sx?: SxProps;
 }
 
-export default function MonitoringEventsTreeHeader({
+export default memo(function MonitoringEventsTreeHeader({
   sx = EMPTY_OBJECT,
 }: MonitoringEventsTreeHeaderProps) {
   const dispatch = useDispatch();
   const eventsWithPreparers = useSelector(selectEventsWithPreparers);
-  const pair = useSelector(selectPair);
+  const isPairPresent = useSelector(selectIsPairPresent);
   const { download } = useFileDownload(
     JSON.stringify(eventsWithPreparers),
     'events.json',
@@ -36,7 +36,7 @@ export default function MonitoringEventsTreeHeader({
         <Button
           startIcon={<Close />}
           onClick={handleDeselectClick}
-          disabled={!pair}
+          disabled={!isPairPresent}
         >
           Deselect all
         </Button>
@@ -59,4 +59,4 @@ export default function MonitoringEventsTreeHeader({
       </Button>
     </Stack>
   );
-}
+});

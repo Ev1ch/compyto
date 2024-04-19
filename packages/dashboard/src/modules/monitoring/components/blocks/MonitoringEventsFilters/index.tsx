@@ -6,7 +6,7 @@ import {
   Typography,
   type SxProps,
 } from '@mui/material';
-import { useCallback, useRef, useState } from 'react';
+import { memo, useCallback, useRef, useState } from 'react';
 
 import { EMPTY_OBJECT } from '@/constants';
 import { useDispatch, useSelector } from '@/store/hooks';
@@ -23,7 +23,7 @@ export interface MonitoringEventsFiltersProps {
   readonly sx?: SxProps;
 }
 
-export default function MonitoringEventsFilters({
+export default memo(function MonitoringEventsFilters({
   sx = EMPTY_OBJECT,
 }: MonitoringEventsFiltersProps) {
   const dispatch = useDispatch();
@@ -59,7 +59,11 @@ export default function MonitoringEventsFilters({
   return (
     <Stack
       sx={[
-        { alignItems: 'center', minHeight: 32, overflowX: 'auto' },
+        {
+          alignItems: 'center',
+          minHeight: 32,
+          overflowX: 'auto',
+        },
         hideScrollbarSx,
         ...getArrayedSx(sx),
       ]}
@@ -74,6 +78,7 @@ export default function MonitoringEventsFilters({
           bgcolor: 'white',
           alignSelf: 'stretch',
           zIndex: 1,
+          minWidth: 101,
         }}
         direction="row"
         spacing={1}
@@ -107,4 +112,4 @@ export default function MonitoringEventsFilters({
       </Stack>
     </Stack>
   );
-}
+});

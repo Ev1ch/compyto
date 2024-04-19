@@ -1,6 +1,5 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import type { MonitoringEvent } from '@compyto/monitoring';
 import { createId } from '@compyto/utils';
 import type { State } from '@/store/domain';
 import { selectShownEvents } from '@/modules/monitoring/store';
@@ -20,9 +19,14 @@ const initialState: AnalysisContextProps = {
 
 export const selectPair = (state: State) => state.analysis.pair;
 
-export const selectPairEvents = createSelector(
+export const selectIsPairPresent = createSelector(
   [selectPair],
-  (pair) => pair?.events || [],
+  (pair) => !!pair,
+);
+
+export const selectPairEventIds = createSelector(
+  [selectPair],
+  (pair) => pair?.eventIds ?? [],
 );
 
 export const selectPositions = (state: State) => state.analysis.positions;
@@ -30,6 +34,11 @@ export const selectPositions = (state: State) => state.analysis.positions;
 export const selectPosition = createSelector(
   [selectPositions, (state, id: string) => id],
   (positions, id) => positions.find((position) => position.id === id),
+);
+
+export const selectPositionIndex = createSelector(
+  [selectPositions, selectPosition],
+  (positions, position) => positions.findIndex((p) => p.id === position?.id),
 );
 
 export const selectPreviousPosition = createSelector(
@@ -59,13 +68,13 @@ export const selectNextPosition = createSelector(
 );
 
 export const selectIsEventSelected = createSelector(
-  [selectPairEvents, (state, id: string) => id],
-  (events, id) => events.some((event) => event.context.id === id),
+  [selectPairEventIds, (state, id: string) => id],
+  (events, id) => events.includes(id),
 );
 
 export const addEventToPair = createAsyncThunk(
   'analysis/addEventToPair',
-  (event: MonitoringEvent, { getState, dispatch }) => {
+  (event: string, { getState, dispatch }) => {
     const pair = selectPair(getState());
     const shownEvents = selectShownEvents(getState());
 
@@ -73,18 +82,18 @@ export const addEventToPair = createAsyncThunk(
       dispatch(
         setPair({
           id: createId(),
-          events: [event],
+          eventIds: [event],
         }),
       );
       return;
     }
 
-    const events = [...pair.events, event].sort((a, b) => {
+    const eventIds = [...pair.eventIds, event].sort((a, b) => {
       const aIndex = shownEvents.findIndex(
-        (shownEvent) => shownEvent.context.id === a.context.id,
+        (shownEvent) => shownEvent.context.id === a,
       );
       const bIndex = shownEvents.findIndex(
-        (shownEvent) => shownEvent.context.id === b.context.id,
+        (shownEvent) => shownEvent.context.id === b,
       );
 
       return aIndex - bIndex;
@@ -93,7 +102,7 @@ export const addEventToPair = createAsyncThunk(
     dispatch(
       setPair({
         ...pair,
-        events,
+        eventIds,
       }),
     );
   },
@@ -124,18 +133,16 @@ const slice = createSlice({
         return;
       }
 
-      const events = state.pair.events.filter(
-        (event) => event.context.id !== payload,
-      );
+      const eventIds = state.pair.eventIds.filter((event) => event !== payload);
 
-      if (events.length === 0) {
+      if (!eventIds.length) {
         state.pair = null;
         return;
       }
 
       state.pair = {
         ...state.pair,
-        events,
+        eventIds,
       };
     },
 

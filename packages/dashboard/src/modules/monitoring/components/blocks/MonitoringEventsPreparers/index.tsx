@@ -1,4 +1,5 @@
 import { Paper, Stack, type SxProps } from '@mui/material';
+import { memo } from 'react';
 
 import { EMPTY_OBJECT } from '@/constants';
 import { getArrayedSx } from '@/styles/logic';
@@ -12,7 +13,11 @@ export interface MonitoringEventsPreparersProps {
   readonly sx?: SxProps;
 }
 
-export default function MonitoringEventsPreparers({
+const SEARCH_SX = {
+  ml: 'auto',
+};
+
+export default memo(function MonitoringEventsPreparers({
   sx = EMPTY_OBJECT,
 }: MonitoringEventsPreparersProps) {
   return (
@@ -24,8 +29,8 @@ export default function MonitoringEventsPreparers({
 
         <MonitoringEventsSorts />
 
-        <MonitoringEventsSearch sx={{ ml: 'auto' }} />
+        <MonitoringEventsSearch sx={SEARCH_SX} />
       </Stack>
     </Paper>
   );
-}
+});
