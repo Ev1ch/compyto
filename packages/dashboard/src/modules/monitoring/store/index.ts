@@ -3,7 +3,6 @@ import {
   createSlice,
   type PayloadAction,
 } from '@reduxjs/toolkit';
-import { sample } from 'lodash';
 
 import type { MonitoringEvent } from '@compyto/monitoring';
 import {
@@ -14,6 +13,7 @@ import {
 } from '@compyto/monitoring';
 import { createId } from '@compyto/utils';
 import type { State } from '@/store/domain';
+import { sample } from '@/utils';
 
 import type {
   MonitoringEventsFilter,
