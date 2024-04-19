@@ -1,5 +1,5 @@
 import type { MonitoringEvent } from '@compyto/monitoring';
-import { get } from '@/utils';
+import { get } from '@compyto/utils';
 
 import type { MonitoringEventsSortField } from '../../domain';
 

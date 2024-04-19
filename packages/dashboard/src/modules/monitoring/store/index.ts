@@ -11,9 +11,8 @@ import {
   SCOPE_DELIMITER,
   TYPE_DELIMITER,
 } from '@compyto/monitoring';
-import { createId } from '@compyto/utils';
+import { createId, sample } from '@compyto/utils';
 import type { State } from '@/store/domain';
-import { sample } from '@/utils';
 
 import type {
   MonitoringEventsFilter,

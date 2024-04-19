@@ -16,13 +16,13 @@ import {
 } from '@mui/material';
 import { forwardRef, useState } from 'react';
 
+import { uniq } from '@compyto/utils';
 import {
   MonitoringEventsFilterCriteria,
   type MonitoringEventsFilter,
 } from '@/modules/monitoring/domain';
 import { EMPTY_OBJECT } from '@/constants';
 import { useSelector } from '@/store/hooks';
-import { uniq } from '@/utils';
 
 import { createMonitoringEventsFilter } from '../../../logic';
 import {
