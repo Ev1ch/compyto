@@ -62,10 +62,9 @@ export default function createSocketCommunicator({
   }
 
   // write data to buffer 'buf'
-  function writeToBuffer(
-    buf: unknown[],
-    data: ProcessWithData | ProcessWithData[],
-  ) {
+  function writeToBuffer(buf: unknown[], data: unknown) {
+    remove(buf);
+
     if (Array.isArray(data)) {
       buf.push(...data);
     } else {
@@ -87,8 +86,8 @@ export default function createSocketCommunicator({
     startIndex: number,
     sendCount: number,
   ) {
-    const sliced = data.slice(startIndex);
-    return sliced.slice(0, (selfConnections.length + 1) * sendCount);
+    const sliced = data.slice(startIndex, sendCount);
+    return sliced;
   }
 
   // Applies slice for send data and sends it to another process
@@ -181,10 +180,26 @@ export default function createSocketCommunicator({
     });
   }
 
-  async function broadcast(data: unknown, abort?: Abort) {
-    const processes = selfConnections.map(({ device: { process } }) => process);
+  async function broadcast(
+    data: unknown[],
+    sendStartIndex: number,
+    sendCount: number,
+    root: number,
+    abort?: Abort,
+  ) {
+    const sliced = sliceSendData(data, sendStartIndex, sendCount);
+    const isMe = root === selfProcess.rank;
 
-    await Promise.all(processes.map((process) => send(data, process, abort)));
+    if (isMe) {
+      const processes = selfConnections.map(
+        ({ device: { process } }) => process,
+      );
+      Promise.all(processes.map((process) => send(sliced, process, abort)));
+      writeToBuffer(data, sliced);
+      return;
+    }
+
+    await receive(data, abort);
   }
 
   async function scatter(
@@ -308,7 +323,7 @@ export default function createSocketCommunicator({
     writeToBuffer(buf, { data: res, process });
   }
 
-  function receive(buf: Array<ProcessWithData>, abort?: Abort) {
+  function receive(buf: Array<unknown>, abort?: Abort) {
     return new Promise<void>((resolve, reject) => {
       function handleAbort() {
         selfQueue.off('enqueue', handleEnqueue);
@@ -327,9 +342,8 @@ export default function createSocketCommunicator({
 
         selfQueue.off('enqueue', handleEnqueue);
         abort?.signal.removeEventListener('abort', handleAbort);
-        remove(buf);
         const data = selfQueue.dequeue();
-        writeToBuffer(buf, data);
+        writeToBuffer(buf, data.data);
         resolve();
       }
 

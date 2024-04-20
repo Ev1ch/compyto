@@ -1,4 +1,4 @@
-import type { Group, Process } from '@compyto/core';
+import type { Group, Process, Rank } from '@compyto/core';
 
 import type Abort from './Abort';
 import type Data from './Data';
@@ -45,7 +45,13 @@ export default interface Communicator {
   receive(buf: Array<ProcessWithData>, abort?: Abort): Promise<void>;
   /** Send data to every process in Communicator group.
    */
-  broadcast(data: Data, abort?: Abort): Promise<void>;
+  broadcast(
+    data: Data,
+    sendStartIndex: number,
+    sendCount: number,
+    root: Rank,
+    abort?: Abort,
+  ): Promise<void>;
   /**
    * Scatter will take your array and split data equally and share a single part to each process in group. Some data can be lost. See example:
    * - If you had an array [1,2,3,4], and you have 3 devices in total, then scatter will split this array in 3 parts:
@@ -74,7 +80,7 @@ export default interface Communicator {
     buf: Array<ProcessWithData>,
     recvStartIndex: number,
     recvCount: number,
-    root: number,
+    root: Rank,
     abort?: Abort,
   ): Promise<void>;
   /**
@@ -106,7 +112,7 @@ export default interface Communicator {
     buf: Array<ProcessWithData>,
     recvStartIndex: number,
     recvCount: number,
-    root: number,
+    root: Rank,
     abort?: Abort,
   ): Promise<void>;
 
