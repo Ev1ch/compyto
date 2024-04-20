@@ -42,7 +42,7 @@ export default interface Communicator {
    * Receiving buffer `MUST` be an array, as in Javascript we can operate on it by address (without overwriting)
    * Before writing data to buffer it will be cleaned.
    */
-  receive(buf: Array<ProcessWithData>, abort?: Abort): Promise<void>;
+  receive(buf: Array<Data>, abort?: Abort): Promise<void>;
   /** Send data to every process in Communicator group.
    */
   broadcast(
@@ -77,7 +77,7 @@ export default interface Communicator {
     data: Data[],
     sendStartIndex: number,
     sendCount: number,
-    buf: Array<ProcessWithData>,
+    buf: Array<Data>,
     recvStartIndex: number,
     recvCount: number,
     root: Rank,

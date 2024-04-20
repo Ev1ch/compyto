@@ -86,8 +86,8 @@ export default function createSocketCommunicator({
     startIndex: number,
     sendCount: number,
   ) {
-    const sliced = data.slice(startIndex, sendCount);
-    return sliced;
+    const sliced = data.slice(startIndex);
+    return sliced.slice(0, (selfConnections.length + 1) * sendCount);
   }
 
   // Applies slice for send data and sends it to another process
@@ -314,13 +314,12 @@ export default function createSocketCommunicator({
     recvCount: number,
     abort?: Abort,
   ) {
-    const temp: ProcessWithData<unknown[]>[] = [];
-    await receive(temp, abort);
+    const res: unknown[] = [];
+    await receive(res, abort);
 
-    const { process, data } = temp[0];
-    if (data.length < startIndex + recvCount) throw new Error('Wrong indexes');
-    const res = data.slice(startIndex, startIndex + recvCount);
-    writeToBuffer(buf, { data: res, process });
+    if (res.length < startIndex + recvCount) throw new Error('Wrong indexes');
+    const sliced = res.slice(startIndex, startIndex + recvCount);
+    writeToBuffer(buf, sliced);
   }
 
   function receive(buf: Array<unknown>, abort?: Abort) {

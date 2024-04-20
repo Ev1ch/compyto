@@ -1,4 +1,3 @@
-import { ProcessWithData } from '@compyto/connections';
 import { createRunner } from '@compyto/runner';
 
 import 'node:test';
@@ -8,8 +7,8 @@ import assert = require('assert');
 export default async function start() {
   const { communicator } = await createRunner();
   await communicator.start();
-  const data1: ProcessWithData<number>[] = [];
-  const data2: ProcessWithData<number>[] = [];
+  const data1: number[] = [];
+  const data2: number[] = [];
   console.log('Started', communicator.group);
   for (const process of communicator.group.processes) {
     console.log('Sending hello to', process);
@@ -22,7 +21,7 @@ export default async function start() {
   console.log('Received', data1, data2);
 
   // testing
-  const allData = [data1[0], data2[0]].map((i) => i.data).sort((a, b) => a - b);
+  const allData = [...data1, ...data2].sort((a, b) => a - b);
   switch (communicator.process.rank) {
     case 0:
       assert.equal(allData[0], 1);
