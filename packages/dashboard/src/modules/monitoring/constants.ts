@@ -38,3 +38,15 @@ export const MONITORING_EVENTS_SORT_ORDERS = [
   MonitoringEventsSortOrder.ASCENDING,
   MonitoringEventsSortOrder.DESCENDING,
 ];
+
+export const IMPORT_FILE_OPTIONS = {
+  accept: '.json',
+} as const;
+
+export enum ImportStatus {
+  PENDING = 'pending',
+  SUCCESS = 'success',
+  ERROR = 'error',
+}
+
+export const EXPORT_EVENTS_FILE_NAME = 'events.json';
