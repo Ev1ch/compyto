@@ -5,13 +5,6 @@ import {
 } from '@reduxjs/toolkit';
 
 import type { MonitoringEvent } from '@compyto/monitoring';
-import {
-  MONITORING_EVENT_SCOPE,
-  MONITORING_EVENT_TYPES,
-  SCOPE_DELIMITER,
-  TYPE_DELIMITER,
-} from '@compyto/monitoring';
-import { createId, sample } from '@compyto/utils';
 import type { State } from '@/store/domain';
 
 import type {
@@ -28,19 +21,6 @@ import {
   getValuesByMonitoringEventsFilterCriteria,
 } from '../logic';
 import getMonitoringEventsWithSorts from '../logic/preparers/getMonitoringEventsWithSorts';
-
-function getRandomEvent() {
-  return {
-    key: `${sample(MONITORING_EVENT_TYPES)}${TYPE_DELIMITER}${sample(MONITORING_EVENT_SCOPE)}${SCOPE_DELIMITER}${Math.random()}`,
-    args: ['', 1, { foo: 'bar' }],
-    context: {
-      emittedAt: new Date(
-        new Date().getTime() + Math.random() * 10000,
-      ).toISOString(),
-      id: createId(),
-    },
-  };
-}
 
 export interface MonitoringState {
   events: MonitoringEvent[];
@@ -128,8 +108,7 @@ export const selectShownEvents = createSelector(
 );
 
 const initialState: MonitoringState = {
-  // @ts-expect-error - Expect for random events
-  events: [...Array.from({ length: 5 }, getRandomEvent)],
+  events: [],
   filters: [],
   sorts: [],
   showAll: true,
@@ -149,6 +128,16 @@ const slice = createSlice({
           emittedAt: payload.context.emittedAt.toISOString(),
         },
       });
+    },
+    setEvents(state, { payload }: PayloadAction<MonitoringEvent[]>) {
+      // @ts-expect-error emittedAt is a string in Redux
+      state.events = payload.map((event) => ({
+        ...event,
+        context: {
+          ...event.context,
+          emittedAt: event.context.emittedAt.toISOString(),
+        },
+      }));
     },
     setShowAll: (state, { payload }: PayloadAction<boolean>) => {
       state.showAll = payload;
@@ -206,5 +195,6 @@ export const {
   removeSort,
   removeSorts,
   setSearch,
+  setEvents,
 } = actions;
 export default reducer;
