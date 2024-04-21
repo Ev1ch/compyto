@@ -70,11 +70,9 @@ export default memo(function MonitoringEventsTreeHeader({
       }
 
       const events = await parseJsonMonitoringEvents(string);
-      console.log(events);
       dispatch(setEvents(events));
       setImportStatus(ImportStatus.SUCCESS);
     } catch (error) {
-      console.error(error);
       setImportStatus(ImportStatus.ERROR);
     }
   }, [input, dispatch]);

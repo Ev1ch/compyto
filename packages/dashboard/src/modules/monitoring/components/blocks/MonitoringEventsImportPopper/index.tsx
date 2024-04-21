@@ -46,7 +46,7 @@ export default memo(function MonitoringEventsImportPopper({
             <Button onClick={onCancel} size="small">
               Cancel
             </Button>
-            <Button onClick={onConfirm} color="warning" size="small">
+            <Button onClick={onConfirm} color="warning" size="small" autoFocus>
               Confirm
             </Button>
           </Stack>
