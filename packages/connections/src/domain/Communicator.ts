@@ -122,7 +122,7 @@ export default interface Communicator {
     abort?: Abort,
   ): Promise<void>;
   /**
-   * Finish the app
+   * Finish the app. NOT WORKING RIGHT NOW, JUST DONT USE TO PREVENT ERRORS
    */
   finalize(): Promise<void>;
 }

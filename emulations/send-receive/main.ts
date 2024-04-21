@@ -26,5 +26,5 @@ export default async function start() {
 
   console.log(gatherRes.length);
 
-  await communicator.finalize();
+  // await communicator.finalize();
 }
