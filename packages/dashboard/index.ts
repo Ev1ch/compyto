@@ -8,6 +8,10 @@ import { Settings } from '@compyto/settings';
 // @ts-expect-error Node modules versions differ
 const PUBLIC_PATH = path.resolve(import.meta.dirname, './client');
 
+/**
+ * Interface which defines the dashboard.
+ * Allow us to start the tool.
+ */
 export interface Dashboard {
   start(): Promise<void>;
 }
