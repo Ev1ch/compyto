@@ -9,6 +9,7 @@ import {
 import { useDispatch, useSelector } from '@/store/hooks';
 import { getArrayedSx } from '@/styles/logic';
 
+import { useInitSelections } from '../../../hooks';
 import Selection from '../Selection';
 
 export interface RootProps {
@@ -26,6 +27,8 @@ export default memo(function Selections({ sx = EMPTY_OBJECT }: RootProps) {
     },
     [dispatch],
   );
+
+  useInitSelections();
 
   if (!areEventsPresent) {
     return null;

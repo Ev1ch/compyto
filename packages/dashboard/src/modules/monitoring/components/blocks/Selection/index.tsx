@@ -23,18 +23,17 @@ export default function Selection({
   const startEventPosition = useSelector((state) =>
     selectPosition(state, startEventId),
   );
-
-  if (!startEvent || !startEventPosition) {
-    throw new Error();
-  }
-
   const endEvent = useSelector((state) => selectEvent(state, endEventId));
   const endEventPosition = useSelector((state) =>
     selectPosition(state, endEventId),
   );
 
+  if (!startEvent || !startEventPosition) {
+    return null;
+  }
+
   if (!endEvent || !endEventPosition) {
-    throw new Error();
+    return null;
   }
 
   const { top, height } = getTopAndHeight(startEventPosition, endEventPosition);

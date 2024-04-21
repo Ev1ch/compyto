@@ -1,15 +1,14 @@
 import { Box, Stack, type SxProps } from '@mui/material';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 
 import { EMPTY_OBJECT } from '@/constants';
-import { removePair } from '@/modules/analysis/store';
-import { useDispatch, useSelector } from '@/store/hooks';
+import { useSelector } from '@/store/hooks';
 import { getArrayedSx } from '@/styles/logic';
 
 import { selectShownEvents } from '../../../store';
 import MonitoringEventNode from '../MonitoringEventNode';
 import MonitoringEventsTreeHeader from '../MonitoringEventsTreeHeader';
-import Root from '../Selections';
+import Selections from '../Selections';
 
 export interface MonitoringEventsTreeProps {
   readonly sx?: SxProps;
@@ -22,12 +21,7 @@ const ROOT_SX = {
 export default memo(function MonitoringEventsTree({
   sx = EMPTY_OBJECT,
 }: MonitoringEventsTreeProps) {
-  const dispatch = useDispatch();
   const shownEvents = useSelector(selectShownEvents);
-
-  useEffect(() => {
-    dispatch(removePair());
-  }, [shownEvents, dispatch]);
 
   return (
     <Box
@@ -49,7 +43,7 @@ export default memo(function MonitoringEventsTree({
           sx={{ position: 'sticky', mb: 1, top: 0, zIndex: 4 }}
         />
 
-        <Root sx={ROOT_SX} />
+        <Selections sx={ROOT_SX} />
 
         <Stack
           sx={{
