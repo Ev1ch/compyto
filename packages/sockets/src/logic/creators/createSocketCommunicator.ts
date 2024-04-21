@@ -175,17 +175,6 @@ export default function createSocketCommunicator({
           throw new Error('Connection not found');
         }
 
-        if (Array.isArray(data)) {
-          console.log(
-            'SEND SOCKET EMIT',
-            connection.device,
-            'FROM',
-            selfProcess.code,
-            'DATA LENGTH',
-            data.length,
-          );
-        }
-
         connection.socket.emit(SocketEvent.SEND, data);
       }
 
@@ -382,7 +371,6 @@ export default function createSocketCommunicator({
         );
 
         const { data, process } = processWithData;
-        console.log(`RECEIVED ${data.length} data FROM ${process.rank}`);
         const senderRank = process.rank;
         return placeDataInBufferByRankAndCount(
           buf,
