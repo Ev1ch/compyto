@@ -130,7 +130,13 @@ export default memo(function MonitoringEventNode({
         unfocused={isUnfocused}
         selected={isSelected}
       />
-      <Connector sx={{ mt: 1.25, mb: 'auto', flexShrink: 0 }} width={200} />
+      <Connector
+        sx={[
+          { mt: 1.25, mb: 'auto', flexShrink: 0 },
+          isUnfocused && { opacity: 0.2 },
+        ]}
+        width={200}
+      />
     </Box>
   );
 });
