@@ -73,7 +73,9 @@ export default function createSocketCommunicator({
   }
 
   function getProcessByRank(rank: number) {
-    const rootProcess = selfGroup.processes.find((p) => p.rank === rank);
+    // TODO: check myself first - it is faster way
+    let rootProcess = selfGroup.processes.find((p) => p.rank === rank);
+    if (!rootProcess && rank === selfProcess.rank) rootProcess = selfProcess;
     if (!rootProcess) throw new Error('Can`t find process by rank');
 
     return rootProcess;
@@ -87,7 +89,7 @@ export default function createSocketCommunicator({
     sendCount: number,
   ) {
     const sliced = data.slice(startIndex);
-    return sliced.slice(0, (selfConnections.length + 1) * sendCount);
+    return sliced.slice(0, sendCount);
   }
 
   // Applies slice for send data and sends it to another process
@@ -180,6 +182,77 @@ export default function createSocketCommunicator({
     });
   }
 
+  // Use only for receiving arrays
+  async function _receiveArrayPart(
+    startIndex: number,
+    recvCount: number,
+    abort?: Abort,
+  ): Promise<ProcessWithData<unknown[]>> {
+    const processWithData = await _receive(abort);
+
+    const { data, process } = processWithData;
+    if (!Array.isArray(data)) throw new Error('Received data is not array');
+
+    if (data.length < startIndex + recvCount) throw new Error('Wrong indexes');
+    const sliced = data.slice(startIndex, startIndex + recvCount);
+
+    return { data: sliced, process };
+  }
+
+  async function receiveArrayPart(
+    buf: unknown[],
+    startIndex: number,
+    recvCount: number,
+    abort?: Abort,
+  ) {
+    const processWithData = await _receiveArrayPart(
+      startIndex,
+      recvCount,
+      abort,
+    );
+
+    writeToBuffer(buf, processWithData.data);
+  }
+
+  function _receive(abort?: Abort) {
+    return new Promise<ProcessWithData<unknown>>((resolve, reject) => {
+      function handleAbort() {
+        selfQueue.off('enqueue', handleEnqueue);
+        reject(abort?.signal.reason);
+      }
+
+      function handleEnqueue() {
+        /**
+         * Prevent race condition, when
+         * there are multiple `receive` calls,
+         * and the previous one took the value.
+         */
+        if (!selfQueue.length) {
+          return;
+        }
+
+        selfQueue.off('enqueue', handleEnqueue);
+        abort?.signal.removeEventListener('abort', handleAbort);
+        const data = selfQueue.dequeue();
+        resolve(data);
+      }
+
+      abort?.signal.addEventListener('abort', handleAbort, { once: true });
+
+      if (selfQueue.length) {
+        return handleEnqueue();
+      }
+
+      selfQueue.on('enqueue', handleEnqueue);
+    });
+  }
+
+  async function receive(buf: Array<unknown>, abort?: Abort) {
+    const processWithData = await _receive(abort);
+
+    writeToBuffer(buf, processWithData.data);
+  }
+
   async function broadcast(
     data: unknown[],
     sendStartIndex: number,
@@ -189,6 +262,7 @@ export default function createSocketCommunicator({
   ) {
     const sliced = sliceSendData(data, sendStartIndex, sendCount);
     const isMe = root === selfProcess.rank;
+    console.log('sliced', sliced);
 
     if (isMe) {
       const processes = selfConnections.map(
@@ -215,7 +289,11 @@ export default function createSocketCommunicator({
     const isCalledByRoot = selfProcess.rank === root;
     if (isCalledByRoot) {
       // apply split and send to all processes
-      const sliced = sliceSendData(data, sendStartIndex, sendCount);
+      const sliced = sliceSendData(
+        data,
+        sendStartIndex,
+        (selfConnections.length + 1) * sendCount,
+      );
       const splitted = chunk(sliced, sendCount);
 
       await Promise.all(
@@ -238,10 +316,7 @@ export default function createSocketCommunicator({
       i < (senderRank + 1) * recvCount && dataBufferIndex < data.length;
       i++, dataBufferIndex++
     ) {
-      buf[i] = {
-        data: data[dataBufferIndex],
-        process,
-      };
+      buf[i] = data[dataBufferIndex];
     }
   }
 
@@ -297,63 +372,16 @@ export default function createSocketCommunicator({
 
     await Promise.all(
       selfGroup.processes.map(async () => {
-        const temp: ProcessWithData<unknown[]>[] = [];
-
-        await receiveArrayPart(temp, recvStartIndex, recvCount, abort);
-        const { data, process } = temp[0];
+        const processWithData = await _receiveArrayPart(
+          recvStartIndex,
+          recvCount,
+          abort,
+        );
+        const { data, process } = processWithData;
         const senderRank = process.rank;
         placeDataInBufferByRankAndCount(buf, data, senderRank, recvCount);
       }),
     );
-  }
-
-  // Use only for receiving arrays
-  async function receiveArrayPart(
-    buf: unknown[],
-    startIndex: number,
-    recvCount: number,
-    abort?: Abort,
-  ) {
-    const res: unknown[] = [];
-    await receive(res, abort);
-
-    if (res.length < startIndex + recvCount) throw new Error('Wrong indexes');
-    const sliced = res.slice(startIndex, startIndex + recvCount);
-    writeToBuffer(buf, sliced);
-  }
-
-  function receive(buf: Array<unknown>, abort?: Abort) {
-    return new Promise<void>((resolve, reject) => {
-      function handleAbort() {
-        selfQueue.off('enqueue', handleEnqueue);
-        reject(abort?.signal.reason);
-      }
-
-      function handleEnqueue() {
-        /**
-         * Prevent race condition, when
-         * there are multiple `receive` calls,
-         * and the previous one took the value.
-         */
-        if (!selfQueue.length) {
-          return;
-        }
-
-        selfQueue.off('enqueue', handleEnqueue);
-        abort?.signal.removeEventListener('abort', handleAbort);
-        const data = selfQueue.dequeue();
-        writeToBuffer(buf, data.data);
-        resolve();
-      }
-
-      abort?.signal.addEventListener('abort', handleAbort, { once: true });
-
-      if (selfQueue.length) {
-        return handleEnqueue();
-      }
-
-      selfQueue.on('enqueue', handleEnqueue);
-    });
   }
 
   return {
