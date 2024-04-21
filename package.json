@@ -6,6 +6,7 @@
     "speedtest/*"
   ],
   "license": "MIT",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/Ev1ch/compyto.git"
