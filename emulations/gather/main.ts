@@ -17,6 +17,7 @@ export default async function start() {
 
   console.log(`Received: `, res);
 
+  await communicator.finalize();
   if (communicator.isMaster) {
     assert.equal(res.length, 6);
   }

@@ -16,4 +16,6 @@ export default async function start() {
     `Received by ${communicator.process.code} (${communicator.process.rank}): `,
     buf,
   );
+
+  await communicator.finalize();
 }

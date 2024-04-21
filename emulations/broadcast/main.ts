@@ -1,5 +1,7 @@
 import { createRunner } from '@compyto/runner';
 
+import assert = require('assert');
+
 export default async function start() {
   const { communicator } = await createRunner();
   await communicator.start();
@@ -12,7 +14,13 @@ export default async function start() {
   }
   console.log('Start', data);
 
-  await communicator.broadcast(data, 0, 3, MASTER);
+  await communicator.broadcast(data, 1, 3, MASTER);
 
   console.log('Result', data);
+  await communicator.finalize();
+
+  assert.equal(data.length, 3);
+  assert.equal(data[0], 2);
+  assert.equal(data[1], 3);
+  assert.equal(data[2], 4);
 }

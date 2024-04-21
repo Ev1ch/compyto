@@ -19,7 +19,7 @@ export default async function start() {
   await communicator.receive(data2);
 
   console.log('Received', data1, data2);
-
+  await communicator.finalize();
   // testing
   const allData = [...data1, ...data2].sort((a, b) => a - b);
   switch (communicator.process.rank) {
