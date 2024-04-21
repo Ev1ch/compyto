@@ -1,4 +1,4 @@
 {
-  "*.ts": ["prettier --check", "eslint"],
+  "*.{ts,tsx}": ["prettier --check", "eslint"],
   "*.json": ["prettier --check"]
 }
