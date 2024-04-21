@@ -20,20 +20,27 @@ export default async function createRunner(): Promise<Runner> {
   const string = (await readFile(settingsPath)).toString();
   const settings = JSON.parse(string);
   await SettingsSchema.validate(settings);
-  const monitoring = createMonitoring(settings);
-  const communicator = createSocketCommunicator(settings);
-  const logger = createConsoleLogger(communicator.process);
-  const dashboard = createDashboard(settings);
-
   runtime.settings = settings;
-  runtime.monitoring = monitoring;
-  runtime.logger = logger;
-  runtime.dashboard = dashboard;
+  const communicator = createSocketCommunicator(settings);
 
-  monitoring.onAny(logger.event);
-  await monitoring.start();
-  await dashboard.start();
-  await monitoring.waitForDashboard();
+  if (settings.monitoring) {
+    runtime.monitoring = createMonitoring(settings);
+    runtime.logger = createConsoleLogger(communicator.process);
+    runtime.monitoring.onAny(runtime.logger!.event);
+    await runtime.monitoring.start();
+  }
+
+  if (settings.dashboard) {
+    if (!runtime.monitoring) {
+      throw new Error(
+        'Monitoring settings are required to start the dashboard.',
+      );
+    }
+
+    runtime.dashboard = createDashboard(settings);
+    await runtime.dashboard.start();
+    await runtime.monitoring.waitForDashboard();
+  }
 
   return {
     settings,

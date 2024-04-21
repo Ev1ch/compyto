@@ -16,10 +16,16 @@ export interface Dashboard {
   start(): Promise<void>;
 }
 
-export function createDashboard({
-  dashboard,
-  monitoring,
-}: Settings): Dashboard {
+export function createDashboard(settings: Settings): Dashboard {
+  if (!settings.dashboard) {
+    throw new Error('Dashboard settings are required to start the dashboard.');
+  }
+
+  if (!settings.monitoring) {
+    throw new Error('Monitoring settings are required to start the dashboard.');
+  }
+
+  const { dashboard, monitoring } = settings;
   const app = express();
 
   app.use(express.static(PUBLIC_PATH));

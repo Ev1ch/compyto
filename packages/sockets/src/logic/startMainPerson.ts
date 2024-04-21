@@ -32,19 +32,19 @@ export default function startMainPerson(
     connections.forEach((connection) => {
       const { socket, device } = connection;
       socket.emit(SocketEvent.IDENTIFICATION, selfDevice);
-      runtime.monitoring!.emit(
+      runtime.monitoring?.emit(
         'info:connections/main-person-identification-sent',
       );
 
       const deviceBalances = getBalancesByDevice(balances, device);
       socket.emit(SocketEvent.BALANCES, deviceBalances);
-      runtime.monitoring!.emit(
+      runtime.monitoring?.emit(
         'info:connections/main-person-balances-sent',
         deviceBalances,
       );
 
       socket.once(SocketEvent.CONFIRMATION, () => {
-        runtime.monitoring!.emit(
+        runtime.monitoring?.emit(
           'info:connections/main-person-confirmation-received',
           connection.device,
         );
@@ -58,5 +58,5 @@ export default function startMainPerson(
   });
 
   io.listen(port);
-  runtime.monitoring!.emit('info:connections/main-person-started');
+  runtime.monitoring?.emit('info:connections/main-person-started');
 }

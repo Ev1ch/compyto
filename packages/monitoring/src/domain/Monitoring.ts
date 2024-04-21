@@ -5,7 +5,7 @@ import type MonitoringEventKeys from './MonitoringEventKeys';
 import type MonitoringEventKeysMap from './MonitoringEventKeysMap';
 
 export default interface Monitoring {
-  start(): void;
+  start(): Promise<void>;
 
   on<TEventKey extends MonitoringEventKeys>(
     event: TEventKey,

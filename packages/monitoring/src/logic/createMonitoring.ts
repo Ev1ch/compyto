@@ -11,27 +11,36 @@ import { ANY_MONITORING_EVENT_KEY } from '../constants';
 import getMonitoringEventContext from './getMonitoringEventContext';
 
 export default function createMonitoring({
-  monitoring: {
-    uri: { port },
-  },
+  monitoring,
   dashboard,
 }: Settings): Monitoring {
-  const io = new Server({ cors: { origin: getStringURI(dashboard.uri) } });
+  if (!monitoring) {
+    throw new Error(
+      'Monitoring settings are required to start the monitoring.',
+    );
+  }
+
+  const {
+    uri: { port },
+  } = monitoring;
+  const io = dashboard
+    ? new Server({ cors: { origin: getStringURI(dashboard.uri) } })
+    : null;
   const emitter = createEventsEmitter<MonitoringEventKeysMap>();
   const on = emitter.on.bind(emitter) as any;
   const off = emitter.off.bind(emitter) as any;
 
-  io.on('connection', (socket) => {
+  io?.on('connection', (socket) => {
     const code = socket.handshake.auth.code as Code | undefined;
 
-    if (!code || code !== dashboard.code) {
+    if (!code || code !== dashboard!.code) {
       throw new Error('Unauthorized connection');
     }
   });
 
   const emit: Monitoring['emit'] = (eventKey, ...args) => {
     const eventContext = getMonitoringEventContext();
-    io.emit(eventKey, eventContext, ...args);
+    io?.emit(eventKey, eventContext, ...args);
     // @ts-expect-error Argument of type...
     emitter.emit(eventKey, eventContext, ...(args as any));
     // @ts-expect-error Argument of type...
@@ -48,12 +57,16 @@ export default function createMonitoring({
     emitter.off(ANY_MONITORING_EVENT_KEY, listener);
   };
 
-  const start: Monitoring['start'] = () => {
-    io.listen(port);
+  const start: Monitoring['start'] = async () => {
+    io?.listen(port);
   };
 
   const waitForDashboard = () =>
-    new Promise<void>((resolve) => {
+    new Promise<void>((resolve, reject) => {
+      if (!io) {
+        return reject(new Error('Socket server is not created.'));
+      }
+
       function handleConnection() {
         resolve();
       }
