@@ -75,10 +75,8 @@ export default interface Communicator {
    */
   scatter(
     data: Data[],
-    sendStartIndex: number,
     sendCount: number,
     buf: Array<Data>,
-    recvStartIndex: number,
     recvCount: number,
     root: Rank,
     abort?: Abort,
@@ -107,10 +105,8 @@ export default interface Communicator {
    */
   gather(
     data: Data[],
-    sendStartIndex: number,
     sendCount: number,
     buf: Array<ProcessWithData>,
-    recvStartIndex: number,
     recvCount: number,
     root: Rank,
     abort?: Abort,

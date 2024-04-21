@@ -161,7 +161,7 @@ export default function createSocketCommunicator({
         reject(abort?.signal.reason);
       }
 
-      abort?.signal.addEventListener('abort', handleAbort, { once: true });
+      abort?.signal?.addEventListener('abort', handleAbort, { once: true });
 
       if (areProcessesEqual(process, selfProcess)) {
         selfQueue.enqueue({
@@ -174,6 +174,18 @@ export default function createSocketCommunicator({
         if (!connection) {
           throw new Error('Connection not found');
         }
+
+        if (Array.isArray(data)) {
+          console.log(
+            'SEND SOCKET EMIT',
+            connection.device,
+            'FROM',
+            selfProcess.code,
+            'DATA LENGTH',
+            data.length,
+          );
+        }
+
         connection.socket.emit(SocketEvent.SEND, data);
       }
 
@@ -237,7 +249,7 @@ export default function createSocketCommunicator({
         resolve(data);
       }
 
-      abort?.signal.addEventListener('abort', handleAbort, { once: true });
+      abort?.signal?.addEventListener('abort', handleAbort, { once: true });
 
       if (selfQueue.length) {
         return handleEnqueue();
@@ -262,7 +274,6 @@ export default function createSocketCommunicator({
   ) {
     const sliced = sliceSendData(data, sendStartIndex, sendCount);
     const isMe = root === selfProcess.rank;
-    console.log('sliced', sliced);
 
     if (isMe) {
       const processes = selfConnections.map(
@@ -278,10 +289,8 @@ export default function createSocketCommunicator({
 
   async function scatter(
     data: unknown[],
-    sendStartIndex: number,
     sendCount: number,
     buf: Array<ProcessWithData>,
-    recvStartIndex: number,
     recvCount: number,
     root: number,
     abort?: Abort,
@@ -289,11 +298,7 @@ export default function createSocketCommunicator({
     const isCalledByRoot = selfProcess.rank === root;
     if (isCalledByRoot) {
       // apply split and send to all processes
-      const sliced = sliceSendData(
-        data,
-        sendStartIndex,
-        (selfConnections.length + 1) * sendCount,
-      );
+      const sliced = data.slice(0, (selfConnections.length + 1) * sendCount);
       const splitted = chunk(sliced, sendCount);
 
       await Promise.all(
@@ -302,7 +307,7 @@ export default function createSocketCommunicator({
         ),
       );
     }
-    await receiveArrayPart(buf, recvStartIndex, recvCount, abort);
+    await receiveArrayPart(buf, 0, recvCount, abort);
   }
 
   function placeDataInBufferByRankAndCount(
@@ -322,10 +327,8 @@ export default function createSocketCommunicator({
 
   async function gather(
     data: unknown[],
-    sendStartIndex: number,
     sendCount: number,
     buf: Array<ProcessWithData>,
-    recvStartIndex: number,
     recvCount: number,
     root: number,
     abort?: Abort,
@@ -334,12 +337,12 @@ export default function createSocketCommunicator({
     const rootProcess = getProcessByRank(root);
     if (!isMe) {
       // send to root
-      sliceAndSend(data, sendStartIndex, sendCount, rootProcess, abort);
+      await sliceAndSend(data, 0, sendCount, rootProcess, abort);
       return;
     }
 
     if (isMe) {
-      await gatherAsRoot(data, buf, recvStartIndex, recvCount, abort);
+      await gatherAsRoot(data, buf, 0, recvCount, abort);
     }
   }
 
@@ -377,9 +380,16 @@ export default function createSocketCommunicator({
           recvCount,
           abort,
         );
+
         const { data, process } = processWithData;
+        console.log(`RECEIVED ${data.length} data FROM ${process.rank}`);
         const senderRank = process.rank;
-        placeDataInBufferByRankAndCount(buf, data, senderRank, recvCount);
+        return placeDataInBufferByRankAndCount(
+          buf,
+          data,
+          senderRank,
+          recvCount,
+        );
       }),
     );
   }

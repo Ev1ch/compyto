@@ -9,6 +9,8 @@ export default function setCommunicationHandlers(
 ) {
   selfConnections.forEach(({ socket, device: { process } }) => {
     socket.on(SocketEvent.SEND, (data) => {
+      console.log('SelfQueue DATA RECEIVED', data);
+
       selfQueue.enqueue({ data, process });
     });
   });
