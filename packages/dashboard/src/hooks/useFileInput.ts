@@ -43,6 +43,9 @@ export default function useFileInput(
       inputElement?.addEventListener('change', () => {
         resolve(inputElement.files);
       });
+      inputElement?.addEventListener('cancel', () => {
+        resolve(null);
+      });
     });
   }, []);
 
