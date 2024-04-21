@@ -1,5 +1,5 @@
 import { Box, Chip, SxProps } from '@mui/material';
-import { memo, MouseEvent, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 import { TYPE_TO_COLOR_MAP } from '@compyto/logging';
 import {
@@ -18,13 +18,13 @@ export interface MonitoringEventProps {
   readonly sx?: SxProps;
   readonly unfocused?: boolean;
   readonly selected?: boolean;
-  readonly onClick?: (event: TMonitoringEvent) => void;
+  readonly onKeyClick?: () => void;
   readonly onExpandToggle?: (event: TMonitoringEvent) => void;
 }
 
 export default memo(function MonitoringEvent({
   event,
-  onClick,
+  onKeyClick,
   onExpandToggle,
   unfocused = false,
   selected = false,
@@ -37,13 +37,8 @@ export default memo(function MonitoringEvent({
   const typeColor = TYPE_TO_COLOR_MAP[type];
   const areArgsPresent = args.length > 0;
 
-  function handleExpandToggle(event: MouseEvent<SVGSVGElement>) {
-    event.stopPropagation();
+  function handleExpandToggle() {
     setIsExpanded((prevState) => !prevState);
-  }
-
-  function handleClick() {
-    onClick?.(event);
   }
 
   useEffect(() => {
@@ -61,15 +56,14 @@ export default memo(function MonitoringEvent({
         unfocused && {
           opacity: 0.2,
         },
-        onClick && {
-          cursor: 'pointer',
-        },
         ...getArrayedSx(sx),
       ]}
-      onClick={handleClick}
     >
       <Chip
-        sx={[{ height: 'auto' }, selected && { bgcolor: 'grey.200' }]}
+        sx={[
+          { minHeight: 34, height: 'auto' },
+          selected && { bgcolor: 'grey.200' },
+        ]}
         variant="outlined"
         color={COLOR_TO_CHIP_COLOR_MAP[typeColor]}
         label={
@@ -78,7 +72,9 @@ export default memo(function MonitoringEvent({
               eventKey={event.key}
               emittedAt={context.emittedAt}
               onExpandToggle={handleExpandToggle}
+              onClick={onKeyClick}
               withArgs={areArgsPresent}
+              expanded={isExpanded}
             />
             {isExpanded && <MonitoringEventArgs args={args} />}
           </Box>

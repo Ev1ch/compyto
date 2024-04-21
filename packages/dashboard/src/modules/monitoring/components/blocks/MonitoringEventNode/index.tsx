@@ -72,7 +72,7 @@ export default memo(function MonitoringEventNode({
     dispatch(updatePosition({ id: eventId, top, height }));
   }, [dispatch, eventId, getPosition]);
 
-  const handleEventClick = useCallback(() => {
+  const handleKeyClick = useCallback(() => {
     if (isSelected) {
       dispatch(removeEventFromPair(eventId));
       dispatch(removePosition(eventId));
@@ -125,7 +125,7 @@ export default memo(function MonitoringEventNode({
       <MonitoringEvent
         sx={monitoringEventSx}
         event={event}
-        onClick={handleEventClick}
+        onKeyClick={handleKeyClick}
         onExpandToggle={handleMutation}
         unfocused={isUnfocused}
         selected={isSelected}
