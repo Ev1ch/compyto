@@ -5,12 +5,6 @@
     "path": "http://localhost",
     "port": 3000
   },
-  "monitoring": {
-    "uri": {
-      "path": "http://localhost",
-      "port": 3010
-    }
-  },
   "code": "master",
   "clients": [
     {
@@ -18,6 +12,21 @@
     },
     {
       "code": "pc-2"
+    },
+    {
+      "code": "pc-3"
+    },
+    {
+      "code": "pc-4"
+    },
+    {
+      "code": "pc-5"
+    },
+    {
+      "code": "pc-6"
+    },
+    {
+      "code": "pc-7"
     }
   ]
 }

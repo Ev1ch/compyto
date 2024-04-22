@@ -4,12 +4,6 @@
     "path": "http://localhost",
     "port": 3003
   },
-  "monitoring": {
-    "uri": {
-      "path": "http://localhost",
-      "port": 3013
-    }
-  },
   "code": "pc-3",
   "master": {
     "uri": {
