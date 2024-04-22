@@ -249,21 +249,47 @@ export default function createSocketCommunicator({
     }
 
     if (isMe) {
-      // I didn't send myself data by socket. Just put it in correct place
-      placeDataInBufferByRankAndCount(buf, data, root, recvCount);
-
-      await Promise.all(
-        // For each process in the group receive and place data in buffer
-        selfGroup.processes.map(async () => {
-          const temp: ProcessWithData<unknown[]>[] = [];
-
-          await receiveArrayPart(temp, recvStartIndex, recvCount, abort);
-          const { data, process } = temp[0];
-          const senderRank = process.rank;
-          placeDataInBufferByRankAndCount(buf, data, senderRank, recvCount);
-        }),
-      );
+      await gatherAsRoot(data, buf, recvStartIndex, recvCount, abort);
     }
+  }
+
+  async function allGather(
+    data: unknown[],
+    sendStartIndex: number,
+    sendCount: number,
+    buf: Array<ProcessWithData>,
+    recvStartIndex: number,
+    recvCount: number,
+    abort?: Abort,
+  ) {
+    Promise.all(
+      selfGroup.processes.map((p) =>
+        sliceAndSend(data, sendStartIndex, sendCount, p, abort),
+      ),
+    );
+
+    await gatherAsRoot(data, buf, recvStartIndex, recvCount, abort);
+  }
+
+  async function gatherAsRoot(
+    data: unknown[],
+    buf: unknown[],
+    recvStartIndex: number,
+    recvCount: number,
+    abort?: Abort,
+  ) {
+    placeDataInBufferByRankAndCount(buf, data, selfProcess.rank, recvCount);
+
+    await Promise.all(
+      selfGroup.processes.map(async () => {
+        const temp: ProcessWithData<unknown[]>[] = [];
+
+        await receiveArrayPart(temp, recvStartIndex, recvCount, abort);
+        const { data, process } = temp[0];
+        const senderRank = process.rank;
+        placeDataInBufferByRankAndCount(buf, data, senderRank, recvCount);
+      }),
+    );
   }
 
   // Use only for receiving arrays
@@ -327,6 +353,7 @@ export default function createSocketCommunicator({
     broadcast,
     scatter,
     gather,
+    allGather,
     finalize,
   };
 }

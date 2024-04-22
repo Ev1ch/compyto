@@ -109,6 +109,16 @@ export default interface Communicator {
     root: number,
     abort?: Abort,
   ): Promise<void>;
+
+  allGather(
+    data: Data[],
+    sendStartIndex: number,
+    sendCount: number,
+    buf: Array<ProcessWithData>,
+    recvStartIndex: number,
+    recvCount: number,
+    abort?: Abort,
+  ): Promise<void>;
   /**
    * Finish the app
    */
