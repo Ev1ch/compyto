@@ -47,6 +47,7 @@ export default function createSocketCommunicator({
   const selfQueue = createQueue<ProcessWithData>();
   let isStarted = false;
 
+  // Validate ranks for being unique
   function validateRanks(processes: Process[]) {
     const ranks = processes.map((p) => p.rank);
     const uniqueRanks = uniq(ranks);
@@ -60,6 +61,7 @@ export default function createSocketCommunicator({
     }
   }
 
+  // write data to buffer 'buf'
   function writeToBuffer(
     buf: unknown[],
     data: ProcessWithData | ProcessWithData[],
@@ -69,6 +71,37 @@ export default function createSocketCommunicator({
     } else {
       buf.push(data);
     }
+  }
+
+  function getProcessByRank(rank: number) {
+    const rootProcess = selfGroup.processes.find((p) => p.rank === rank);
+    if (!rootProcess) throw new Error('Can`t find process by rank');
+
+    return rootProcess;
+  }
+
+  // In many methods we need to send only a part of data from index A and only length B
+  // Use this method to keep code DRY
+  function sliceSendData(
+    data: unknown[],
+    startIndex: number,
+    sendCount: number,
+  ) {
+    const sliced = data.slice(startIndex);
+    return sliced.slice(0, (selfConnections.length + 1) * sendCount);
+  }
+
+  // Applies slice for send data and sends it to another process
+  function sliceAndSend(
+    data: unknown[],
+    startIndex: number,
+    sendCount: number,
+    process: Process,
+    abort?: Abort,
+  ) {
+    const sliced = sliceSendData(data, startIndex, sendCount);
+
+    return send(sliced, process, abort);
   }
 
   function setConnections(connections: SocketConnection[]) {
@@ -167,12 +200,8 @@ export default function createSocketCommunicator({
     const isCalledByRoot = selfProcess.rank === root;
     if (isCalledByRoot) {
       // apply split and send to all processes
-      const allDevicesNumber = selfConnections.length + 1;
-      const sliced = data.slice(sendStartIndex);
-      const splitted = chunk(
-        sliced.slice(0, allDevicesNumber * sendCount),
-        sendCount,
-      );
+      const sliced = sliceSendData(data, sendStartIndex, sendCount);
+      const splitted = chunk(sliced, sendCount);
 
       await Promise.all(
         [...selfGroup.processes, selfProcess].map((process) =>
@@ -181,6 +210,60 @@ export default function createSocketCommunicator({
       );
     }
     await receiveArrayPart(buf, recvStartIndex, recvCount, abort);
+  }
+
+  function placeDataInBufferByRankAndCount(
+    buf: unknown[],
+    data: unknown[],
+    senderRank: number,
+    recvCount: number,
+  ) {
+    for (
+      let i = senderRank * recvCount, dataBufferIndex = 0;
+      i < (senderRank + 1) * recvCount && dataBufferIndex < data.length;
+      i++, dataBufferIndex++
+    ) {
+      buf[i] = {
+        data: data[dataBufferIndex],
+        process,
+      };
+    }
+  }
+
+  async function gather(
+    data: unknown[],
+    sendStartIndex: number,
+    sendCount: number,
+    buf: Array<ProcessWithData>,
+    recvStartIndex: number,
+    recvCount: number,
+    root: number,
+    abort?: Abort,
+  ) {
+    const isMe = root === selfProcess.rank;
+    const rootProcess = getProcessByRank(root);
+    if (!isMe) {
+      // send to root
+      sliceAndSend(data, sendStartIndex, sendCount, rootProcess, abort);
+      return;
+    }
+
+    if (isMe) {
+      // I didn't send myself data by socket. Just put it in correct place
+      placeDataInBufferByRankAndCount(buf, data, root, recvCount);
+
+      await Promise.all(
+        // For each process in the group receive and place data in buffer
+        selfGroup.processes.map(async () => {
+          const temp: ProcessWithData<unknown[]>[] = [];
+
+          await receiveArrayPart(temp, recvStartIndex, recvCount, abort);
+          const { data, process } = temp[0];
+          const senderRank = process.rank;
+          placeDataInBufferByRankAndCount(buf, data, senderRank, recvCount);
+        }),
+      );
+    }
   }
 
   // Use only for receiving arrays
@@ -194,7 +277,7 @@ export default function createSocketCommunicator({
     await receive(temp, abort);
 
     const { process, data } = temp[0];
-    if (data.length > startIndex + recvCount) throw new Error('Wrong indexes');
+    if (data.length < startIndex + recvCount) throw new Error('Wrong indexes');
     const res = data.slice(startIndex, startIndex + recvCount);
     writeToBuffer(buf, { data: res, process });
   }
@@ -243,6 +326,7 @@ export default function createSocketCommunicator({
     receive,
     broadcast,
     scatter,
+    gather,
     finalize,
   };
 }
