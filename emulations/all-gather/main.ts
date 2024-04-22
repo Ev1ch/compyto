@@ -1,5 +1,7 @@
 import { createRunner } from '@compyto/runner';
 
+import assert = require('assert');
+
 export default async function start() {
   const { communicator } = await createRunner();
   await communicator.start();
@@ -13,4 +15,7 @@ export default async function start() {
   await communicator.allGather(data, 0, 2, res, 0, 2);
 
   console.log(`Received: `, res);
+
+  // await communicator.finalize();
+  assert.equal(res.length, 6);
 }

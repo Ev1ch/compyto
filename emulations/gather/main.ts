@@ -7,17 +7,15 @@ export default async function start() {
   await communicator.start();
   const MASTER = 0;
   console.log('Started the app');
-  const data = [
-    communicator.process.rank * 10,
-    communicator.process.rank * 100,
-  ];
+  const TOTAL = 10000;
+  const data = new Array(TOTAL).fill(1);
   const res = [];
 
-  await communicator.gather(data, 0, 2, res, 0, 2, MASTER);
+  await communicator.gather(data, TOTAL, res, TOTAL, MASTER);
 
-  console.log(`Received: `, res);
+  console.log(`Received: `, res.length);
 
   if (communicator.isMaster) {
-    assert.equal(res.length, 6);
+    assert.equal(res.length, TOTAL * 3);
   }
 }

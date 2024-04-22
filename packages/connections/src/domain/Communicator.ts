@@ -1,4 +1,4 @@
-import type { Group, Process } from '@compyto/core';
+import type { Group, Process, Rank } from '@compyto/core';
 
 import type Abort from './Abort';
 import type Data from './Data';
@@ -42,10 +42,16 @@ export default interface Communicator {
    * Receiving buffer `MUST` be an array, as in Javascript we can operate on it by address (without overwriting)
    * Before writing data to buffer it will be cleaned.
    */
-  receive(buf: Array<ProcessWithData>, abort?: Abort): Promise<void>;
+  receive(buf: Array<Data>, abort?: Abort): Promise<void>;
   /** Send data to every process in Communicator group.
    */
-  broadcast(data: Data, abort?: Abort): Promise<void>;
+  broadcast(
+    data: Data,
+    sendStartIndex: number,
+    sendCount: number,
+    root: Rank,
+    abort?: Abort,
+  ): Promise<void>;
   /**
    * Scatter will take your array and split data equally and share a single part to each process in group. Some data can be lost. See example:
    * - If you had an array [1,2,3,4], and you have 3 devices in total, then scatter will split this array in 3 parts:
@@ -69,12 +75,10 @@ export default interface Communicator {
    */
   scatter(
     data: Data[],
-    sendStartIndex: number,
     sendCount: number,
-    buf: Array<ProcessWithData>,
-    recvStartIndex: number,
+    buf: Array<Data>,
     recvCount: number,
-    root: number,
+    root: Rank,
     abort?: Abort,
   ): Promise<void>;
   /**
@@ -101,12 +105,10 @@ export default interface Communicator {
    */
   gather(
     data: Data[],
-    sendStartIndex: number,
     sendCount: number,
     buf: Array<ProcessWithData>,
-    recvStartIndex: number,
     recvCount: number,
-    root: number,
+    root: Rank,
     abort?: Abort,
   ): Promise<void>;
 
@@ -120,7 +122,7 @@ export default interface Communicator {
     abort?: Abort,
   ): Promise<void>;
   /**
-   * Finish the app
+   * Finish the app. NOT WORKING RIGHT NOW, JUST DONT USE TO PREVENT ERRORS
    */
   finalize(): Promise<void>;
 }
