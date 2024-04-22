@@ -237,7 +237,7 @@ export default function createSocketCommunicator({
         const data = selfQueue.dequeue();
         resolve(data);
       }
-
+      // If error happens here maybe some VERY wrong parameters very passed in some function. Check your program
       abort?.signal?.addEventListener('abort', handleAbort, { once: true });
 
       if (selfQueue.length) {

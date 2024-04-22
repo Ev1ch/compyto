@@ -3,12 +3,12 @@ import { createRunner } from '@compyto/runner';
 import {
   generateRandomMatrix,
   multiplyMatrices,
-  printMatrix,
+  // printMatrix,
 } from '../common.js';
 
 export default async function start() {
   // Settings
-  const MATRIX_SIZE = 102; // Change N to whatever size you want
+  const MATRIX_SIZE = 2502; // Change N to whatever size you want
   const MIN_NUMBER = 1; // Lower bound for random integers
   const MAX_NUMBER = 1; // Upper bound for random integers
   const MASTER_RANK = 0;
@@ -25,18 +25,15 @@ export default async function start() {
     matrixA = generateRandomMatrix(MATRIX_SIZE, MIN_NUMBER, MAX_NUMBER);
     matrixB = generateRandomMatrix(MATRIX_SIZE, MIN_NUMBER, MAX_NUMBER);
     startTime = Date.now();
-    console.log('Generated matrices on master');
+    // console.log('Generated matrices on master');
   }
   const matrixC = [];
   const aRows = [];
-
   const sendToEachProcess = Math.floor(MATRIX_SIZE / totalProcesses);
   await communicator.scatter(
     matrixA,
-    0,
     sendToEachProcess,
     aRows,
-    0,
     sendToEachProcess,
     MASTER_RANK,
   );
@@ -48,14 +45,12 @@ export default async function start() {
 
   await communicator.gather(
     cRows,
-    0,
     cRows.length,
     matrixC,
-    0,
     cRows.length,
     MASTER_RANK,
   );
-  console.log('Gather finished', matrixC.length);
+  console.log('Finished gather', cRows.length);
 
   const endTime = Date.now();
   const totalTime = endTime - startTime;
@@ -63,6 +58,4 @@ export default async function start() {
   if (startTime) {
     console.log('Total time:', totalTime);
   }
-
-  await communicator.finalize();
 }
