@@ -35,7 +35,12 @@ export default memo(function MonitoringEventArgs({
           isString || isNumber ? String(arg) : JSON.stringify(arg, null, 2);
 
         return (
-          <ListItem key={index} disablePadding disableGutters>
+          <ListItem
+            sx={{ position: 'relative', minHeight: 32 }}
+            key={index}
+            disablePadding
+            disableGutters
+          >
             <ListItemText
               primary={
                 <Typography
@@ -54,7 +59,7 @@ export default memo(function MonitoringEventArgs({
             />
 
             <IconButton
-              sx={{ mb: 'auto' }}
+              sx={{ position: 'absolute', right: 0, top: 0 }}
               onClick={getCopyClickHandler(content)}
             >
               <ContentCopy sx={{ fontSize: 16 }} />

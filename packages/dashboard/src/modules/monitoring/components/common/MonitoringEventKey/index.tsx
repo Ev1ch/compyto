@@ -39,7 +39,7 @@ export default memo(function MonitoringEventKey({
       }}
     >
       <Typography
-        sx={[!!onClick && { cursor: 'pointer' }]}
+        sx={[!!onClick && { cursor: 'pointer', mr: 'auto' }]}
         onClick={onClick}
         component="span"
       >
@@ -65,7 +65,7 @@ export default memo(function MonitoringEventKey({
       {withArgs && (
         <IconButton
           sx={[
-            { ml: 0.5 },
+            { ml: 0.5, color: 'inherit' },
             expanded && {
               transform: 'rotate(90deg)',
             },
