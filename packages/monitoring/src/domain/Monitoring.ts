@@ -1,10 +1,13 @@
 import type { EventListener } from '@compyto/utils';
 
+import type MonitoringEvent from './MonitoringEvent';
 import type MonitoringEventContext from './MonitoringEventContext';
 import type MonitoringEventKeys from './MonitoringEventKeys';
 import type MonitoringEventKeysMap from './MonitoringEventKeysMap';
 
 export default interface Monitoring {
+  readonly events: MonitoringEvent[];
+
   start(): Promise<void>;
 
   on<TEventKey extends MonitoringEventKeys>(

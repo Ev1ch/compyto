@@ -6,7 +6,11 @@ import type { Code } from '@compyto/core';
 import type { Settings } from '@compyto/settings';
 import { createEventsEmitter } from '@compyto/utils';
 
-import type { Monitoring, MonitoringEventKeysMap } from '../domain';
+import type {
+  Monitoring,
+  MonitoringEvent,
+  MonitoringEventKeysMap,
+} from '../domain';
 import { ANY_MONITORING_EVENT_KEY } from '../constants';
 import getMonitoringEventContext from './getMonitoringEventContext';
 
@@ -29,6 +33,7 @@ export default function createMonitoring({
   const emitter = createEventsEmitter<MonitoringEventKeysMap>();
   const on = emitter.on.bind(emitter) as any;
   const off = emitter.off.bind(emitter) as any;
+  const events: MonitoringEvent[] = [];
 
   io?.on('connection', (socket) => {
     const code = socket.handshake.auth.code as Code | undefined;
@@ -45,6 +50,7 @@ export default function createMonitoring({
     emitter.emit(eventKey, eventContext, ...(args as any));
     // @ts-expect-error Argument of type...
     emitter.emit(ANY_MONITORING_EVENT_KEY, eventKey, eventContext, ...args);
+    events.push({ key: eventKey, context: eventContext, args });
   };
 
   const onAny: Monitoring['onAny'] = (listener) => {
@@ -79,6 +85,8 @@ export default function createMonitoring({
     });
 
   return {
+    events,
+
     start,
     on,
     off,
