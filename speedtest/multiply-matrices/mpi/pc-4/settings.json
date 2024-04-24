@@ -1,0 +1,14 @@
+{
+  "rank": 4,
+  "uri": {
+    "path": "http://localhost",
+    "port": 3004
+  },
+  "code": "pc-4",
+  "master": {
+    "uri": {
+      "path": "http://localhost",
+      "port": 3000
+    }
+  }
+}

@@ -30,8 +30,18 @@ export default function waitForConnections(
     const {
       process: { code },
     } = device;
-    if (!codes.includes(code)) {
+    const isCodeValid = codes.includes(code);
+
+    if (!isCodeValid) {
       throw new Error(`Invalid code: ${code}`);
+    }
+
+    const isCodeUnique = connections.some(
+      (connection) => connection.device.process.code === code,
+    );
+
+    if (isCodeUnique) {
+      throw new Error(`Code already connected: ${code}`);
     }
 
     const connection = createSocketConnection(socket, device);

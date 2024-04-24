@@ -1,4 +1,5 @@
 import type Code from './Code';
+import Rank from './Rank';
 
 /**
  * Core abstraction which represents a process
@@ -7,4 +8,5 @@ import type Code from './Code';
  */
 export default interface Process {
   readonly code: Code;
+  readonly rank: Rank;
 }
