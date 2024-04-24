@@ -1,3 +1,4 @@
+import { Server } from 'http';
 import path from 'path';
 import express from 'express';
 import open from 'open';
@@ -10,10 +11,11 @@ const PUBLIC_PATH = path.resolve(import.meta.dirname, './client');
 
 /**
  * Interface which defines the dashboard.
- * Allow us to start the tool.
+ * Allow us to start and stop the tool.
  */
 export interface Dashboard {
   start(): Promise<void>;
+  stop(): Promise<void>;
 }
 
 export function createDashboard(settings: Settings): Dashboard {
@@ -27,6 +29,7 @@ export function createDashboard(settings: Settings): Dashboard {
 
   const { dashboard, monitoring } = settings;
   const app = express();
+  let server: Server | null = null;
 
   app.use(express.static(PUBLIC_PATH));
 
@@ -38,13 +41,24 @@ export function createDashboard(settings: Settings): Dashboard {
     return new Promise<void>((resolve) => {
       const uri = `${getStringURI(dashboard.uri)}/?uri=${getStringURI(monitoring.uri)}&code=${dashboard.code}`;
 
-      app.listen(dashboard.uri.port, () => {
+      server = app.listen(dashboard.uri.port, () => {
         open(uri).then(() => resolve(undefined));
       });
     });
   }
 
+  function stop() {
+    return new Promise<void>((resolve, reject) => {
+      if (!server) {
+        return reject(new Error('Server is not running.'));
+      }
+
+      server.close(() => resolve(undefined));
+    });
+  }
+
   return {
     start,
+    stop,
   };
 }
