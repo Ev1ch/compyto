@@ -39,6 +39,3 @@ yarn workspace @compyto/serialization build
 
 echo "@compyto/runner"
 yarn workspace @compyto/runner build
-
-echo "@compyto/dashboard"
-yarn workspace @compyto/dashboard build
