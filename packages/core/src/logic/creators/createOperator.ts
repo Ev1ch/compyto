@@ -1,6 +1,7 @@
 import type {
   Operator,
   OperatorType,
+  Type,
   UnknownArgs,
   WorkerWithType,
 } from '../../domain';
@@ -21,8 +22,20 @@ export default function createOperator<
   return {
     type,
     allowedTypes,
-    apply() {
-      throw new Error('Not implemented');
+    apply(args: unknown[]) {
+      const argsType = typeof args[0];
+
+      if (!allowedTypes.includes(argsType as Type))
+        throw new Error(`Not allowed type for operator, ${type}`);
+
+      const workerWithType = workerWithTypes.find((w) => w.type === argsType);
+      if (!workerWithType)
+        throw new Error('Worker for this operator is not specified');
+
+      const { worker } = workerWithType;
+      const result = args.reduce(worker.perform);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return [result] as any;
     },
   };
 }

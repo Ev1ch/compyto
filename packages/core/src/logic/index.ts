@@ -1,2 +1,2 @@
 export * from './creators';
-export * from './operators';
+export { default as OPERATOR } from './operators';

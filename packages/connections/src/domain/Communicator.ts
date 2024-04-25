@@ -1,8 +1,7 @@
-import type { Group, Process, Rank } from '@compyto/core';
+import type { Group, Operator, Process, Rank } from '@compyto/core';
 
 import type Abort from './Abort';
 import type Data from './Data';
-import { ProcessWithData } from './Data';
 
 /**
  * Core network abstraction which allows to
@@ -106,7 +105,7 @@ export default interface Communicator {
   gather(
     data: Data[],
     sendCount: number,
-    buf: Array<ProcessWithData>,
+    buf: Array<Data>,
     recvCount: number,
     root: Rank,
     abort?: Abort,
@@ -116,9 +115,17 @@ export default interface Communicator {
     data: Data[],
     sendStartIndex: number,
     sendCount: number,
-    buf: Array<ProcessWithData>,
+    buf: Array<Data>,
     recvStartIndex: number,
     recvCount: number,
+    abort?: Abort,
+  ): Promise<void>;
+  reduce(
+    data: Data[],
+    buf: Array<Data>,
+    count: number,
+    op: Operator,
+    root: Rank,
     abort?: Abort,
   ): Promise<void>;
   /**

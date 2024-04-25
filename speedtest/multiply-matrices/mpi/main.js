@@ -8,7 +8,7 @@ import {
 
 export default async function start() {
   // Settings
-  const MATRIX_SIZE = 2504; // Change N to whatever size you want
+  const MATRIX_SIZE = 100; // Change N to whatever size you want
   const MIN_NUMBER = 1; // Lower bound for random integers
   const MAX_NUMBER = 1; // Upper bound for random integers
   const MASTER_RANK = 0;
