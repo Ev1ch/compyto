@@ -1,5 +1,6 @@
 import type { Balance } from '@compyto/balancing';
 import type { Device } from '@compyto/connections';
+import type { Process } from '@compyto/core';
 
 /**
  * The map which matches the full event
@@ -21,6 +22,10 @@ type MonitoringEventKeysMap = {
   'info:connections/person-as-server-got-client': [Device];
   'info:connections/person-as-server-identification-sent': [Device];
   'info:connections/person-started': [];
+  'info:connections/communication-handlers-set': [];
+  'info:connections/connected-as-client-to-all-balanced-servers': [];
+  'info:connections/got-all-clients-as-balanced-server': [];
+  'info:connections/sent': [unknown, Process];
 };
 
 export default MonitoringEventKeysMap;

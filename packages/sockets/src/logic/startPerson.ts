@@ -48,6 +48,9 @@ export default function startPerson(
 
     if (clientBalances.length) {
       waitForClientBalances(clientBalances, selfDevice, (c) => {
+        runtime.monitoring?.emit(
+          'info:connections/connected-as-client-to-all-balanced-servers',
+        );
         connections.push(...c);
 
         if (connections.length - 1 === allBalances.length) {
@@ -58,6 +61,9 @@ export default function startPerson(
 
     if (serverBalances.length) {
       waitForServerBalances(serverBalances, selfDevice, (c) => {
+        runtime.monitoring?.emit(
+          'info:connections/got-all-clients-as-balanced-server',
+        );
         connections.push(...c);
 
         if (connections.length - 1 === allBalances.length) {
