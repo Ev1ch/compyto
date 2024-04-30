@@ -23,16 +23,21 @@ export default function createOperator<
     type,
     allowedTypes,
     apply(args: unknown[]) {
-      const argsType = typeof args[0];
+      args.forEach((arg) => {
+        const argsType = typeof arg;
 
-      if (!allowedTypes.includes(argsType as Type))
-        throw new Error(`Not allowed type for operator, ${type}`);
+        if (!allowedTypes.includes(argsType as Type))
+          throw new Error(`Not allowed type for operator, ${type}`);
 
-      const workerWithType = workerWithTypes.find((w) => w.type === argsType);
-      if (!workerWithType)
-        throw new Error('Worker for this operator is not specified');
+        const workerWithType = workerWithTypes.find((w) => w.type === argsType);
+        if (!workerWithType)
+          throw new Error(`Worker for this operator is not specified, ${type}`);
+      });
 
-      const { worker } = workerWithType;
+      const workerWithType = workerWithTypes.find(
+        (w) => w.type === typeof args[0],
+      );
+      const { worker } = workerWithType!;
       const result = args.reduce(worker.perform);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return result as any;
