@@ -11,6 +11,7 @@ import {
   createProcess,
   type Process,
 } from '@compyto/core';
+import { runtime } from '@compyto/runtime';
 import type { Settings } from '@compyto/settings';
 import {
   chunk,
@@ -179,6 +180,7 @@ export default function createSocketCommunicator({
       }
 
       abort?.signal.removeEventListener('abort', handleAbort);
+      runtime.monitoring?.emit('info:connections/sent', data, process);
       resolve(undefined);
     });
   }
