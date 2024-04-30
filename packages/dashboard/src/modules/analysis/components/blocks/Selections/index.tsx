@@ -9,7 +9,7 @@ import {
 import { useDispatch, useSelector } from '@/store/hooks';
 import { getArrayedSx } from '@/styles/logic';
 
-import { useInitSelections } from '../../../hooks';
+import { useInitSelections } from '../../../../monitoring/hooks';
 import Selection from '../Selection';
 
 export interface RootProps {

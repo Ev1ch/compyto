@@ -11,7 +11,7 @@ import { useSelector } from '@/store/hooks';
 export interface SelectionProps {
   readonly startEventId: string;
   readonly endEventId: string;
-  onRemove: (startEventId: string, endEventId: string) => void;
+  readonly onRemove: (startEventId: string, endEventId: string) => void;
 }
 
 export default function Selection({

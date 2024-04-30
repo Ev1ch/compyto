@@ -2,13 +2,13 @@ import { Box, Stack, type SxProps } from '@mui/material';
 import { memo } from 'react';
 
 import { EMPTY_OBJECT } from '@/constants';
+import { Selections } from '@/modules/analysis/components/blocks';
 import { useSelector } from '@/store/hooks';
 import { getArrayedSx } from '@/styles/logic';
 
 import { selectShownEvents } from '../../../store';
 import MonitoringEventNode from '../MonitoringEventNode';
 import MonitoringEventsTreeHeader from '../MonitoringEventsTreeHeader';
-import Selections from '../Selections';
 
 export interface MonitoringEventsTreeProps {
   readonly sx?: SxProps;
