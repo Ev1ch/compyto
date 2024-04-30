@@ -316,7 +316,7 @@ export default function createSocketCommunicator({
 
     if (!isMe) {
       // Just send data to root
-      send(data, rootProcess, abort);
+      return send(data, rootProcess, abort);
     } else {
       // Collect all data
       const received: unknown[] = [];

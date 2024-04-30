@@ -14,5 +14,5 @@ export default interface Operator<
   readonly allowedTypes: Type[];
   apply<TApplyArgs extends TArgs, TApplyValue extends TValue>(
     args: TApplyArgs,
-  ): TApplyValue[];
+  ): TApplyValue;
 }

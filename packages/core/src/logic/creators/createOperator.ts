@@ -35,7 +35,7 @@ export default function createOperator<
       const { worker } = workerWithType;
       const result = args.reduce(worker.perform);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return [result] as any;
+      return result as any;
     },
   };
 }
