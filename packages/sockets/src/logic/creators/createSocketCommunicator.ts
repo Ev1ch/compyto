@@ -313,10 +313,10 @@ export default function createSocketCommunicator({
   ) {
     const isMe = root === selfProcess.rank;
     const rootProcess = getProcessByRank(root);
-
+    const sliced = sliceSendData(data, 0, count);
     if (!isMe) {
       // Just send data to root
-      return send(data, rootProcess, abort);
+      return send(sliced, rootProcess, abort);
     } else {
       // Collect all data
       const received: unknown[] = [];
@@ -327,7 +327,7 @@ export default function createSocketCommunicator({
         }),
       );
 
-      addDataToBuffer(received, data);
+      addDataToBuffer(received, sliced);
       const result = op.apply(received);
       writeToBuffer(buf, result);
     }
