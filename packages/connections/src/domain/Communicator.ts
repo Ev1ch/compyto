@@ -75,7 +75,7 @@ export default interface Communicator {
   scatter(
     data: Data[],
     sendCount: number,
-    buf: Array<Data>,
+    buf: Data[],
     recvCount: number,
     root: Rank,
     abort?: Abort,
@@ -105,7 +105,7 @@ export default interface Communicator {
   gather(
     data: Data[],
     sendCount: number,
-    buf: Array<Data>,
+    buf: Data[],
     recvCount: number,
     root: Rank,
     abort?: Abort,
@@ -115,14 +115,14 @@ export default interface Communicator {
     data: Data[],
     sendStartIndex: number,
     sendCount: number,
-    buf: Array<Data>,
+    buf: Data[],
     recvStartIndex: number,
     recvCount: number,
     abort?: Abort,
   ): Promise<void>;
   reduce(
     data: Data[],
-    buf: Array<Data>,
+    buf: Data[],
     count: number,
     op: Operator,
     root: Rank,
