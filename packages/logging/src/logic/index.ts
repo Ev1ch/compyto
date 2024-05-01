@@ -1,3 +1,5 @@
+export { default as createComposedLogger } from './createComposedLogger';
+export { default as createFileLogger } from './createFileLogger';
 export { default as createConsoleLogger } from './createConsoleLogger';
 export { default as getColoredMonitoringContext } from './getColoredMonitoringContext';
 export { default as getColoredMonitoringEvent } from './getColoredMonitoringEventKey';

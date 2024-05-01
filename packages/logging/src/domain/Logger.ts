@@ -1,4 +1,5 @@
 import type {
+  MonitoringContext,
   MonitoringEventContext,
   MonitoringEventKeys,
   MonitoringEventKeysMap,
@@ -10,7 +11,11 @@ import type {
  * and info messages. Based on {@link logging/src.Print | print}.
  */
 export default interface Logger {
-  event<TEvent extends MonitoringEventKeys>(
+  logContext<TMonitoringContext extends MonitoringContext>(
+    context: TMonitoringContext,
+  ): void;
+
+  logEvent<TEvent extends MonitoringEventKeys>(
     event: TEvent,
     context: MonitoringEventContext,
     ...args: MonitoringEventKeysMap[TEvent]
