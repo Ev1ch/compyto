@@ -33,6 +33,7 @@ export default function createMonitoring({
   const emitter = createEventsEmitter<MonitoringEventKeysMap>();
   const on = emitter.on.bind(emitter) as any;
   const off = emitter.off.bind(emitter) as any;
+  const context = {};
   const events: MonitoringEvent[] = [];
 
   io?.on('connection', (socket) => {
@@ -85,6 +86,7 @@ export default function createMonitoring({
     });
 
   return {
+    context,
     events,
 
     start,

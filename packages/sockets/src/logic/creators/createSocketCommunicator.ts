@@ -11,6 +11,7 @@ import {
   createProcess,
   type Process,
 } from '@compyto/core';
+import { runtime } from '@compyto/runtime';
 import type { Settings } from '@compyto/settings';
 import {
   chunk,
@@ -115,6 +116,14 @@ export default function createSocketCommunicator({
 
   function start() {
     return new Promise<void>((resolve) => {
+      if (runtime.monitoring) {
+        runtime.monitoring.context.process = selfProcess;
+        runtime.monitoring.emit(
+          'info:monitoring/context-set',
+          runtime.monitoring.context,
+        );
+      }
+
       if (isMaster) {
         startMainPerson(clients!, selfUri, selfDevice, (io, connections) => {
           selfIo = io;

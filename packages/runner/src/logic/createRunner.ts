@@ -1,10 +1,14 @@
 import 'dotenv/config';
 
-import { readFile } from 'node:fs/promises';
-import * as path from 'node:path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
 import { createDashboard } from '@compyto/dashboard';
-import { createConsoleLogger } from '@compyto/logging';
+import {
+  createComposedLogger,
+  createConsoleLogger,
+  createFileLogger,
+} from '@compyto/logging';
 import { createMonitoring } from '@compyto/monitoring';
 import { runtime } from '@compyto/runtime';
 import { Settings, SettingsSchema } from '@compyto/settings';
@@ -17,7 +21,7 @@ export default async function createRunner(): Promise<Runner> {
   const settingsPath = path.resolve(
     process.env.SETTINGS_PATH ?? DEFAULT_SETTINGS_PATH,
   );
-  const string = (await readFile(settingsPath)).toString();
+  const string = (await fs.readFile(settingsPath)).toString();
   const settings: Settings = JSON.parse(string);
   await SettingsSchema.validate(settings);
   runtime.settings = settings;
@@ -25,8 +29,16 @@ export default async function createRunner(): Promise<Runner> {
 
   if (settings.monitoring) {
     runtime.monitoring = createMonitoring(settings);
-    runtime.logger = createConsoleLogger(communicator.process);
-    runtime.monitoring.onAny(runtime.logger!.event);
+
+    const consoleLogger = createConsoleLogger();
+    const fileLogger = createFileLogger();
+
+    runtime.logger = createComposedLogger(consoleLogger, fileLogger);
+    runtime.monitoring.onAny(runtime.logger!.logEvent);
+    runtime.monitoring.on(
+      'info:monitoring/context-set',
+      runtime.logger!.logContext,
+    );
     await runtime.monitoring.start();
   }
 
