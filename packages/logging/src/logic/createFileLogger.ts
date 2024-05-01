@@ -19,7 +19,7 @@ export default function createFileLogger(): Logger {
     fs.writeFileSync(logsPath, JSON.stringify(logs));
   };
 
-  const logContext: Logger['logContext'] = (context) => {
+  const logContext: Logger['logContext'] = (_, context) => {
     logs.context = context;
     writeLogs();
   };

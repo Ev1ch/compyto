@@ -12,12 +12,13 @@ import type {
  */
 export default interface Logger {
   logContext<TMonitoringContext extends MonitoringContext>(
+    _: MonitoringEventContext,
     context: TMonitoringContext,
   ): void;
 
-  logEvent<TEvent extends MonitoringEventKeys>(
-    event: TEvent,
+  logEvent<TEventKey extends MonitoringEventKeys>(
+    key: TEventKey,
     context: MonitoringEventContext,
-    ...args: MonitoringEventKeysMap[TEvent]
+    ...args: MonitoringEventKeysMap[TEventKey]
   ): void;
 }
