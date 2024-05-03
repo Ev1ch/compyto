@@ -333,6 +333,32 @@ export default function createSocketCommunicator({
     }
   }
 
+  async function allReduce(
+    data: unknown[],
+    buf: Array<unknown>,
+    count: number,
+    op: Operator,
+    abort?: Abort,
+  ) {
+    const sliced = sliceSendData(data, 0, count);
+    const temp: unknown[] = [];
+    // send to all others
+    for (const process of selfGroup.processes) {
+      send(sliced, process, abort);
+    }
+    // myself data
+    addDataToBuffer(temp, sliced);
+    await Promise.all(
+      selfGroup.processes.map(async () => {
+        const { data } = await _receive(abort);
+        addDataToBuffer(temp, data);
+      }),
+    );
+
+    const result = op.apply(temp);
+    writeToBuffer(buf, result);
+  }
+
   function placeDataInBufferByRankAndCount(
     buf: unknown[],
     data: unknown[],
@@ -427,6 +453,7 @@ export default function createSocketCommunicator({
     scatter,
     gather,
     reduce,
+    allReduce,
     allGather,
     finalize,
   };

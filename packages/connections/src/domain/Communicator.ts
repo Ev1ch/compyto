@@ -128,6 +128,13 @@ export default interface Communicator {
     root: Rank,
     abort?: Abort,
   ): Promise<void>;
+  allReduce(
+    data: Data[],
+    buf: Data[],
+    count: number,
+    op: Operator,
+    abort?: Abort,
+  ): Promise<void>;
   /**
    * Finish the app. NOT WORKING RIGHT NOW, JUST DONT USE TO PREVENT ERRORS
    */
