@@ -1,2 +1,2 @@
 export * from './creators';
-export * from './operators';
+export * as OPERATOR from './operators';

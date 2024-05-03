@@ -9,6 +9,7 @@ import {
   areProcessesEqual,
   createGroup,
   createProcess,
+  Operator,
   type Process,
 } from '@compyto/core';
 import type { Settings } from '@compyto/settings';
@@ -65,6 +66,9 @@ export default function createSocketCommunicator({
   function writeToBuffer(buf: unknown[], data: unknown) {
     remove(buf);
 
+    addDataToBuffer(buf, data);
+  }
+  function addDataToBuffer(buf: unknown[], data: unknown) {
     if (Array.isArray(data)) {
       buf.push(...data);
     } else {
@@ -299,6 +303,36 @@ export default function createSocketCommunicator({
     await receiveArrayPart(buf, 0, recvCount, abort);
   }
 
+  async function reduce(
+    data: unknown[],
+    buf: Array<unknown>,
+    count: number,
+    op: Operator,
+    root: number,
+    abort?: Abort,
+  ) {
+    const isMe = root === selfProcess.rank;
+    const rootProcess = getProcessByRank(root);
+    const sliced = sliceSendData(data, 0, count);
+    if (!isMe) {
+      // Just send data to root
+      return send(sliced, rootProcess, abort);
+    } else {
+      // Collect all data
+      const received: unknown[] = [];
+      await Promise.all(
+        selfGroup.processes.map(async () => {
+          const { data } = await _receive(abort);
+          addDataToBuffer(received, data);
+        }),
+      );
+
+      addDataToBuffer(received, sliced);
+      const result = op.apply(received);
+      writeToBuffer(buf, result);
+    }
+  }
+
   function placeDataInBufferByRankAndCount(
     buf: unknown[],
     data: unknown[],
@@ -392,6 +426,7 @@ export default function createSocketCommunicator({
     broadcast,
     scatter,
     gather,
+    reduce,
     allGather,
     finalize,
   };
