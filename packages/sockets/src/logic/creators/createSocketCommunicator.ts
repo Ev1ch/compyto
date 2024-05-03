@@ -421,6 +421,47 @@ export default function createSocketCommunicator({
     }
   }
 
+  async function gatherv(
+    data: unknown[],
+    sendCount: number,
+    buf: unknown[],
+    recvCounts: number[],
+    recvOffsets: number[],
+    root: number,
+    abort?: Abort,
+  ) {
+    const isMe = root === selfProcess.rank;
+    const rootProcess = getProcessByRank(root);
+    if (!isMe) {
+      await sliceAndSend(data, 0, sendCount, rootProcess, abort);
+    }
+
+    if (isMe) {
+      const writeToBufferByProcess = async (
+        process: Process,
+        received: unknown[],
+      ) => {
+        const { rank } = process;
+        const count = recvCounts[rank];
+        const offset = recvOffsets[rank];
+
+        for (let i = offset, j = 0; i < offset + count; i++, j++) {
+          buf[i] = received[j];
+        }
+      };
+      await Promise.all(
+        selfGroup.processes.map(async (process: Process) => {
+          const { rank } = process;
+          const count = recvCounts[rank];
+          const { data: received } = await _receiveArrayPart(0, count, abort);
+
+          writeToBufferByProcess(process, received);
+        }),
+      );
+      writeToBufferByProcess(selfProcess, data);
+    }
+  }
+
   async function allGather(
     data: unknown[],
     sendStartIndex: number,
@@ -479,6 +520,7 @@ export default function createSocketCommunicator({
     broadcast,
     scatter,
     gather,
+    gatherv,
     reduce,
     allReduce,
     allGather,
