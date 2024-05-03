@@ -80,6 +80,15 @@ export default interface Communicator {
     root: Rank,
     abort?: Abort,
   ): Promise<void>;
+  scatterv(
+    data: Data[],
+    sendCounts: number[],
+    sendOffsets: number[],
+    buf: Data[],
+    recvCount: number,
+    root: Rank,
+    abort?: Abort,
+  ): Promise<void>;
   /**
    * Gather will take your data from every process inside of the group and send it to one process
    * to collect data into one array. Order of data depends on the process rank. Example:

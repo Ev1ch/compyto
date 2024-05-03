@@ -303,6 +303,32 @@ export default function createSocketCommunicator({
     await receiveArrayPart(buf, 0, recvCount, abort);
   }
 
+  async function scatterv(
+    data: unknown[],
+    sendCounts: number[],
+    sendOffsets: number[],
+    buf: unknown[],
+    recvCount: number,
+    root: number,
+    abort?: Abort,
+  ) {
+    const isCalledByRoot = selfProcess.rank === root;
+    if (isCalledByRoot) {
+      await Promise.all(
+        [...selfGroup.processes, selfProcess].map((process) => {
+          const { rank } = process;
+          const sendCount = sendCounts[rank];
+          const sendOffset = sendOffsets[rank];
+          const sendData = data.slice(sendOffset, sendCount + sendOffset);
+
+          send(sendData, process, abort);
+        }),
+      );
+    }
+
+    await receiveArrayPart(buf, 0, recvCount, abort);
+  }
+
   async function reduce(
     data: unknown[],
     buf: Array<unknown>,
@@ -449,6 +475,7 @@ export default function createSocketCommunicator({
     start,
     send,
     receive,
+    scatterv,
     broadcast,
     scatter,
     gather,
