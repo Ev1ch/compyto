@@ -4,7 +4,7 @@ const MonitoringEventContextSchema = validation
   .object()
   .shape({
     id: validation.string().strict().required(),
-    emittedAt: validation.string().strict().iso().required(),
+    emittedAt: validation.number().strict().required(),
   })
   .strict()
   .required();

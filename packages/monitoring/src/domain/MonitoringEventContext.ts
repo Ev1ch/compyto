@@ -7,5 +7,5 @@ import type { Id } from '@compyto/utils';
  */
 export default interface MonitoringEventContext {
   id: Id;
-  emittedAt: Date;
+  emittedAt: number;
 }
