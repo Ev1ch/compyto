@@ -27,7 +27,7 @@ export const selectAvailableSortFields = createSelector(
 );
 
 const initialState: SortingState = {
-  sorts: [createSort('event.context.emittedAt', SortOrder.ASCENDING)],
+  sorts: [createSort('event.context.emittedAt', SortOrder.DESCENDING)],
 };
 
 const slice = createSlice({

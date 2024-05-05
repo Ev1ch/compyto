@@ -58,7 +58,7 @@ export default function Selection({
         top,
         height,
         borderLeft: '1px solid',
-        borderColor: 'grey.300',
+        borderColor: 'divider',
         position: 'absolute',
         display: 'flex',
         alignItems: 'center',

@@ -20,7 +20,12 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { getArrayedSx } from '@/styles/logic';
 import { pluralize, readFile } from '@/utils';
 
-import { addProcess, selectEventsWithPreparers } from '../../../store';
+import {
+  addProcess,
+  addProcesses,
+  selectEventsWithPreparers,
+  selectMonitorings,
+} from '../../../store';
 import { parseJsonMonitoringData } from '../../../utils';
 
 export interface MonitoringEventsTreeHeaderProps {
@@ -32,12 +37,13 @@ export default memo(function MonitoringEventsTreeHeader({
 }: MonitoringEventsTreeHeaderProps) {
   const dispatch = useDispatch();
   const eventsWithPreparers = useSelector(selectEventsWithPreparers);
+  const monitorings = useSelector(selectMonitorings);
   const isPairPresent = useSelector(selectIsPairPresent);
   const [isImportPopperOpen, setIsImportPopperOpen] = useState(false);
   const [importStatus, setImportStatus] = useState<TImportStatus | null>(null);
   const importButtonRef = useRef<HTMLButtonElement | null>(null);
   const { download } = useFileDownload(
-    JSON.stringify(eventsWithPreparers),
+    JSON.stringify(monitorings),
     EXPORT_EVENTS_FILE_NAME,
   );
   const { input } = useFileInput(IMPORT_FILE_OPTIONS);
@@ -67,7 +73,12 @@ export default memo(function MonitoringEventsTreeHeader({
         }
 
         const data = await parseJsonMonitoringData(string);
-        dispatch(addProcess(data));
+
+        if (Array.isArray(data)) {
+          dispatch(addProcesses(data));
+        } else {
+          dispatch(addProcess(data));
+        }
       }
 
       setImportStatus(TImportStatus.SUCCESS);

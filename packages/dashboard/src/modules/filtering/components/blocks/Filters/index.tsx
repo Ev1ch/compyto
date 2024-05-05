@@ -2,6 +2,7 @@ import { AddBox } from '@mui/icons-material';
 import {
   Divider,
   IconButton,
+  Paper,
   Stack,
   Typography,
   type SxProps,
@@ -72,11 +73,11 @@ export default memo(function Filters({ sx = EMPTY_OBJECT }: FiltersProps) {
           alignItems: 'center',
           position: 'sticky',
           left: 0,
-          bgcolor: 'white',
           alignSelf: 'stretch',
           zIndex: 1,
           minWidth: 101,
         }}
+        component={Paper}
         direction="row"
         spacing={1}
       >

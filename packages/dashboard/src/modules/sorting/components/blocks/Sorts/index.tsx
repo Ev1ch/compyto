@@ -2,6 +2,7 @@ import { AddBox } from '@mui/icons-material';
 import {
   Divider,
   IconButton,
+  Paper,
   Stack,
   Typography,
   type SxProps,
@@ -73,10 +74,10 @@ export default memo(function Sorts({ sx = EMPTY_OBJECT }: SortsProps) {
           alignItems: 'center',
           position: 'sticky',
           left: 0,
-          bgcolor: 'white',
           alignSelf: 'stretch',
           zIndex: 1,
         }}
+        component={Paper}
         direction="row"
         spacing={1}
       >

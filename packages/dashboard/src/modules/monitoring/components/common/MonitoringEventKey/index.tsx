@@ -63,7 +63,10 @@ export default memo(function MonitoringEventKey({
           {scope}
           {SCOPE_DELIMITER}
         </Typography>
-        <Typography sx={{ color: 'black' }} component="span">
+        <Typography
+          sx={{ color: COLOR_TO_STYLE_COLOR_MAP[scopeColor] }}
+          component="span"
+        >
           {name}
         </Typography>
       </Typography>

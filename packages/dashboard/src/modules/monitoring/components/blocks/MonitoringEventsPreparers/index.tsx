@@ -4,6 +4,7 @@ import { memo } from 'react';
 import { EMPTY_OBJECT } from '@/constants';
 import { Filters, Search, Show } from '@/modules/filtering/components/blocks';
 import { Sorts } from '@/modules/sorting/components/blocks';
+import { ModeToggler } from '@/styles/components/blocks';
 import { getArrayedSx } from '@/styles/logic';
 
 export interface MonitoringEventsPreparersProps {
@@ -26,7 +27,10 @@ export default memo(function MonitoringEventsPreparers({
 
         <Sorts />
 
-        <Search sx={SEARCH_SX} />
+        <Stack sx={SEARCH_SX} gap={1} direction="row">
+          <ModeToggler />
+          <Search />
+        </Stack>
       </Stack>
     </Paper>
   );

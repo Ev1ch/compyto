@@ -67,7 +67,7 @@ export default memo(function MonitoringEventsTree({
             top: 0,
             bottom: 0,
             width: 5,
-            bgcolor: 'grey.300',
+            bgcolor: 'divider',
             position: 'absolute',
             right: 183.5,
           }}
