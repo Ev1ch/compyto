@@ -32,7 +32,7 @@ export default function ModeToggler({ sx }: ModeTogglerProps) {
 
   return (
     <FormControl size="small" sx={sx} fullWidth>
-      <InputLabel>Mode</InputLabel>
+      <InputLabel>Theme</InputLabel>
       <Select label="Mode" value={mode} onChange={handleChange}>
         {MODES.map((mode) => (
           <MenuItem key={mode} value={mode}>

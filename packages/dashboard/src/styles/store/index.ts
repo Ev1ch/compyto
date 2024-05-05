@@ -11,7 +11,7 @@ export interface StylingState {
 export const selectMode = (state: State) => state.styling.mode;
 
 const initialState = {
-  mode: Mode.LIGHT,
+  mode: Mode.DARK,
 };
 
 const slice = createSlice({
