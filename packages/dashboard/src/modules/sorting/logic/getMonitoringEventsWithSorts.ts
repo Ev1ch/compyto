@@ -16,11 +16,11 @@ export default function getMonitoringEventsWithSorts(
 
       if (typeof aValue !== 'undefined' && typeof bValue !== 'undefined') {
         if (aValue > bValue) {
-          return order === SortOrder.DESCENDING ? 1 : -1;
+          return order === SortOrder.DESCENDING ? -1 : 1;
         }
 
         if (aValue < bValue) {
-          return order === SortOrder.DESCENDING ? -1 : 1;
+          return order === SortOrder.DESCENDING ? 1 : -1;
         }
       }
 
