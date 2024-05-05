@@ -112,25 +112,30 @@ export default forwardRef<HTMLDivElement, AddFilterPopperPopperProps>(
                 ))}
               </Select>
             </FormControl>
-            {availableValues && (
-              <FormControl size="small" required fullWidth>
-                <InputLabel>Value</InputLabel>
-                <Select
-                  label="Value"
-                  value={value}
-                  onChange={handleValueChange}
-                  multiple
-                >
-                  {availableValues.map((value) => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
+            <FormControl
+              size="small"
+              disabled={!availableValues}
+              required
+              fullWidth
+            >
+              <InputLabel>Value</InputLabel>
+              <Select
+                label="Value"
+                value={value}
+                onChange={handleValueChange}
+                multiple
+              >
+                {availableValues?.map((value) => (
+                  <MenuItem key={value} value={value}>
+                    {value}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-            {filter && <Button onClick={handleAdd}>Add</Button>}
+            <Button onClick={handleAdd} disabled={!filter}>
+              Add
+            </Button>
           </Stack>
         </Paper>
       </Popper>

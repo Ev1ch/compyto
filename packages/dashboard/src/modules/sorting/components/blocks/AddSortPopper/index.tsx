@@ -84,7 +84,7 @@ export default forwardRef<HTMLDivElement, AddSortPopperProps>(
               </IconButton>
             </Box>
 
-            <FormControl size="small" fullWidth>
+            <FormControl size="small" required fullWidth>
               <InputLabel>Criteria</InputLabel>
               <Select
                 size="small"
@@ -100,7 +100,7 @@ export default forwardRef<HTMLDivElement, AddSortPopperProps>(
                 ))}
               </Select>
             </FormControl>
-            <FormControl size="small" fullWidth>
+            <FormControl size="small" required fullWidth>
               <InputLabel>Value</InputLabel>
               <Select label="Value" value={order} onChange={handleValueChange}>
                 {SORT_ORDERS.map((order) => (
@@ -111,7 +111,9 @@ export default forwardRef<HTMLDivElement, AddSortPopperProps>(
               </Select>
             </FormControl>
 
-            {filter && <Button onClick={handleAdd}>Add</Button>}
+            <Button onClick={handleAdd} disabled={!filter}>
+              Add
+            </Button>
           </Stack>
         </Paper>
       </Popper>
