@@ -7,19 +7,21 @@ import { EMPTY_OBJECT } from '@/constants';
 import { useFileInput } from '@/hooks';
 import { removePair, selectIsPairPresent } from '@/modules/analysis/store';
 import { useFileDownload } from '@/modules/downloads/hooks';
+import {
+  ImportPopper,
+  ImportStatus,
+} from '@/modules/transfers/components/blocks';
+import {
+  EXPORT_EVENTS_FILE_NAME,
+  IMPORT_FILE_OPTIONS,
+  ImportStatus as TImportStatus,
+} from '@/modules/transfers/constants';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { getArrayedSx } from '@/styles/logic';
 import { pluralize, readFile } from '@/utils';
 
-import {
-  EXPORT_EVENTS_FILE_NAME,
-  IMPORT_FILE_OPTIONS,
-  ImportStatus,
-} from '../../../constants';
-import { selectEventsWithPreparers, setEvents } from '../../../store';
-import { parseJsonMonitoringEvents } from '../../../utils';
-import MonitoringEventsImportPopper from '../MonitoringEventsImportPopper';
-import MonitoringEventsImportStatus from '../MonitoringEventsImportStatus';
+import { addProcess, selectEventsWithPreparers } from '../../../store';
+import { parseJsonMonitoringData } from '../../../utils';
 
 export interface MonitoringEventsTreeHeaderProps {
   readonly sx?: SxProps;
@@ -32,7 +34,7 @@ export default memo(function MonitoringEventsTreeHeader({
   const eventsWithPreparers = useSelector(selectEventsWithPreparers);
   const isPairPresent = useSelector(selectIsPairPresent);
   const [isImportPopperOpen, setIsImportPopperOpen] = useState(false);
-  const [importStatus, setImportStatus] = useState<ImportStatus | null>(null);
+  const [importStatus, setImportStatus] = useState<TImportStatus | null>(null);
   const importButtonRef = useRef<HTMLButtonElement | null>(null);
   const { download } = useFileDownload(
     JSON.stringify(eventsWithPreparers),
@@ -55,25 +57,22 @@ export default memo(function MonitoringEventsTreeHeader({
         return;
       }
 
-      const file = files.item(0);
+      setImportStatus(TImportStatus.PENDING);
 
-      if (!file) {
-        return;
+      for (const file of files) {
+        const string = await readFile(file);
+
+        if (typeof string !== 'string' || !isJson(string)) {
+          throw new Error('Invalid JSON');
+        }
+
+        const data = await parseJsonMonitoringData(string);
+        dispatch(addProcess(data));
       }
 
-      setImportStatus(ImportStatus.PENDING);
-
-      const string = await readFile(file);
-
-      if (typeof string !== 'string' || !isJson(string)) {
-        throw new Error('Invalid JSON');
-      }
-
-      const events = await parseJsonMonitoringEvents(string);
-      dispatch(setEvents(events));
-      setImportStatus(ImportStatus.SUCCESS);
+      setImportStatus(TImportStatus.SUCCESS);
     } catch (error) {
-      setImportStatus(ImportStatus.ERROR);
+      setImportStatus(TImportStatus.ERROR);
     }
   }, [input, dispatch]);
 
@@ -84,13 +83,8 @@ export default memo(function MonitoringEventsTreeHeader({
   const handleImportClick = useCallback(() => {
     setImportStatus(null);
 
-    if (eventsNumber) {
-      setIsImportPopperOpen(true);
-      return;
-    }
-
     handleImportFile();
-  }, [eventsNumber, handleImportFile]);
+  }, [handleImportFile]);
 
   return (
     <Stack sx={[{ alignItems: 'center' }, ...getArrayedSx(sx)]} direction="row">
@@ -117,7 +111,9 @@ export default memo(function MonitoringEventsTreeHeader({
           startIcon={<FileUpload />}
           onClick={handleImportClick}
           ref={importButtonRef}
-          disabled={isImportPopperOpen || importStatus === ImportStatus.PENDING}
+          disabled={
+            isImportPopperOpen || importStatus === TImportStatus.PENDING
+          }
         >
           Import
         </Button>
@@ -132,14 +128,14 @@ export default memo(function MonitoringEventsTreeHeader({
       </Stack>
 
       {importButtonRef.current && isImportPopperOpen && (
-        <MonitoringEventsImportPopper
+        <ImportPopper
           anchor={importButtonRef.current}
           onCancel={handleCancelImport}
           onConfirm={handleImportFile}
         />
       )}
 
-      {!!importStatus && <MonitoringEventsImportStatus status={importStatus} />}
+      {!!importStatus && <ImportStatus status={importStatus} />}
     </Stack>
   );
 });

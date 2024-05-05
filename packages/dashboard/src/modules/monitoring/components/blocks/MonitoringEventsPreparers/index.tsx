@@ -2,12 +2,9 @@ import { Paper, Stack, type SxProps } from '@mui/material';
 import { memo } from 'react';
 
 import { EMPTY_OBJECT } from '@/constants';
+import { Filters, Search, Show } from '@/modules/filtering/components/blocks';
+import { Sorts } from '@/modules/sorting/components/blocks';
 import { getArrayedSx } from '@/styles/logic';
-
-import MonitoringEventsFilters from '../MonitoringEventsFilters';
-import MonitoringEventsSearch from '../MonitoringEventsSearch';
-import MonitoringEventsShow from '../MonitoringEventsShow';
-import MonitoringEventsSorts from '../MonitoringEventsSorts';
 
 export interface MonitoringEventsPreparersProps {
   readonly sx?: SxProps;
@@ -23,13 +20,13 @@ export default memo(function MonitoringEventsPreparers({
   return (
     <Paper sx={[{ p: 2 }, ...getArrayedSx(sx)]}>
       <Stack gap={4} direction="row">
-        <MonitoringEventsShow />
+        <Show />
 
-        <MonitoringEventsFilters />
+        <Filters />
 
-        <MonitoringEventsSorts />
+        <Sorts />
 
-        <MonitoringEventsSearch sx={SEARCH_SX} />
+        <Search sx={SEARCH_SX} />
       </Stack>
     </Paper>
   );

@@ -1,10 +1,5 @@
 import { Color } from '@compyto/logging';
 
-import {
-  MonitoringEventsFilterCriteria,
-  MonitoringEventsSortOrder,
-} from './domain';
-
 export const COLOR_TO_STYLE_COLOR_MAP: Record<Color, string> = {
   [Color.BLACK]: 'black',
   [Color.RED]: 'red',
@@ -22,31 +17,3 @@ export const COLOR_TO_CHIP_COLOR_MAP = {
   [Color.YELLOW]: 'warning',
   [Color.RED]: 'error',
 } as const;
-
-export const MONITORING_EVENTS_FILTER_CRITERION = [
-  MonitoringEventsFilterCriteria.TYPE,
-  MonitoringEventsFilterCriteria.SCOPE,
-] as const;
-
-export const MONITORING_EVENTS_SORT_FIELDS = [
-  'key',
-  'context.id',
-  'context.emittedAt',
-] as const;
-
-export const MONITORING_EVENTS_SORT_ORDERS = [
-  MonitoringEventsSortOrder.ASCENDING,
-  MonitoringEventsSortOrder.DESCENDING,
-];
-
-export const IMPORT_FILE_OPTIONS = {
-  accept: '.json',
-} as const;
-
-export enum ImportStatus {
-  PENDING = 'pending',
-  SUCCESS = 'success',
-  ERROR = 'error',
-}
-
-export const EXPORT_EVENTS_FILE_NAME = 'events.json';

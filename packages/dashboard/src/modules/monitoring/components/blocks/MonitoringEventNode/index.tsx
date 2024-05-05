@@ -1,7 +1,10 @@
 import { Box } from '@mui/material';
 import { memo, useCallback, useEffect, useRef } from 'react';
 
-import type { MonitoringEvent as TMonitoringEvent } from '@compyto/monitoring';
+import type {
+  MonitoringContext,
+  MonitoringEvent as TMonitoringEvent,
+} from '@compyto/monitoring';
 import {
   addEventToPair,
   removeEventFromPair,
@@ -15,11 +18,12 @@ import {
 import { selectIsEventUnfocused } from '@/modules/monitoring/store';
 import { useDispatch, useSelector } from '@/store/hooks';
 
-import { MonitoringEvent } from '../../common';
 import Connector from '../Connector';
+import MonitoringEvent from '../MonitoringEvent';
 
 export interface MonitoringEventNodeProps {
   readonly event: TMonitoringEvent;
+  readonly context: MonitoringContext;
 }
 
 const monitoringEventSx = {
@@ -28,6 +32,7 @@ const monitoringEventSx = {
 
 export default memo(function MonitoringEventNode({
   event,
+  context,
 }: MonitoringEventNodeProps) {
   const dispatch = useDispatch();
   const eventId = event.context.id;
@@ -125,6 +130,7 @@ export default memo(function MonitoringEventNode({
       <MonitoringEvent
         sx={monitoringEventSx}
         event={event}
+        context={context}
         onKeyClick={handleKeyClick}
         onExpandToggle={handleMutation}
         unfocused={isUnfocused}

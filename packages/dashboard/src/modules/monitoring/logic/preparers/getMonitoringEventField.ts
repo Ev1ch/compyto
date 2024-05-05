@@ -1,11 +1,10 @@
-import type { MonitoringEvent } from '@compyto/monitoring';
+import type { MonitoringEventWithContext } from '@compyto/monitoring';
 import { get } from '@compyto/utils';
+import type { SortField } from '@/modules/sorting/domain';
 
-import type { MonitoringEventsSortField } from '../../domain';
-
-export default function getMonitoringEventField(
-  event: MonitoringEvent,
-  field: MonitoringEventsSortField,
+export default function getMonitoringEventWithContextField(
+  eventWithContext: MonitoringEventWithContext,
+  field: SortField,
 ) {
-  return get(event, field);
+  return get(eventWithContext, field);
 }

@@ -8,11 +8,15 @@ import {
   SCOPE_DELIMITER,
   TYPE_DELIMITER,
   type MonitoringEventKey,
+  type MonitoringContext as TMonitoringContext,
 } from '@compyto/monitoring';
 import { COLOR_TO_STYLE_COLOR_MAP } from '@/modules/monitoring/constants';
 
+import MonitoringContext from '../MonitoringContext';
+
 export interface MonitoringEventKeyProps {
-  readonly eventKey: MonitoringEventKey;
+  readonly context?: TMonitoringContext;
+  readonly Key: MonitoringEventKey;
   readonly emittedAt: Date;
   readonly withArgs?: boolean;
   readonly expanded?: boolean;
@@ -21,14 +25,15 @@ export interface MonitoringEventKeyProps {
 }
 
 export default memo(function MonitoringEventKey({
-  eventKey,
+  context,
+  Key,
   emittedAt,
   onClick,
   onExpandToggle,
   withArgs = false,
   expanded = false,
 }: MonitoringEventKeyProps) {
-  const [type, scope, name] = getMonitoringEventKeyParts(eventKey);
+  const [type, scope, name] = getMonitoringEventKeyParts(Key);
   const scopeColor = EVENT_SCOPE_TO_COLOR_MAP[scope];
 
   return (
@@ -44,7 +49,8 @@ export default memo(function MonitoringEventKey({
         component="span"
       >
         <Typography component="span">
-          [<Box component="time">{getTimestamp(emittedAt)}</Box>]
+          [<Box component="time">{getTimestamp(emittedAt)}</Box>]{' '}
+          {context?.process && <MonitoringContext process={context.process} />}
         </Typography>{' '}
         <Typography component="span">
           {type}

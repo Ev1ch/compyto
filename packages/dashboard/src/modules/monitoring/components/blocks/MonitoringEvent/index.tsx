@@ -4,17 +4,18 @@ import { memo, useEffect, useRef, useState } from 'react';
 import { TYPE_TO_COLOR_MAP } from '@compyto/logging';
 import {
   getMonitoringEventKeyParts,
+  MonitoringContext,
   type MonitoringEvent as TMonitoringEvent,
 } from '@compyto/monitoring';
 import { EMPTY_OBJECT } from '@/constants';
 import { getArrayedSx } from '@/styles/logic';
 
 import { COLOR_TO_CHIP_COLOR_MAP } from '../../../constants';
-import MonitoringEventArgs from '../MonitoringEventArgs';
-import MonitoringEventKey from '../MonitoringEventKey';
+import { MonitoringEventArgs, MonitoringEventKey } from '../../common';
 
 export interface MonitoringEventProps {
   readonly event: TMonitoringEvent;
+  readonly context: MonitoringContext;
   readonly sx?: SxProps;
   readonly unfocused?: boolean;
   readonly selected?: boolean;
@@ -24,6 +25,7 @@ export interface MonitoringEventProps {
 
 export default memo(function MonitoringEvent({
   event,
+  context,
   onKeyClick,
   onExpandToggle,
   unfocused = false,
@@ -32,10 +34,9 @@ export default memo(function MonitoringEvent({
 }: MonitoringEventProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const isFirstRender = useRef(true);
-  const { key, context, args } = event;
-  const [type] = getMonitoringEventKeyParts(key);
+  const [type] = getMonitoringEventKeyParts(event.key);
   const typeColor = TYPE_TO_COLOR_MAP[type];
-  const areArgsPresent = args.length > 0;
+  const areArgsPresent = event.args.length > 0;
 
   function handleExpandToggle() {
     setIsExpanded((prevState) => !prevState);
@@ -69,14 +70,15 @@ export default memo(function MonitoringEvent({
         label={
           <Box>
             <MonitoringEventKey
-              eventKey={event.key}
-              emittedAt={context.emittedAt}
+              Key={event.key}
+              context={context}
+              emittedAt={event.context.emittedAt}
               onExpandToggle={handleExpandToggle}
               onClick={onKeyClick}
               withArgs={areArgsPresent}
               expanded={isExpanded}
             />
-            {isExpanded && <MonitoringEventArgs args={args} />}
+            {isExpanded && <MonitoringEventArgs args={event.args} />}
           </Box>
         }
       />

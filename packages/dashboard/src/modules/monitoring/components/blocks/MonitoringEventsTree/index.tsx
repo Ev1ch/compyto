@@ -54,10 +54,11 @@ export default memo(function MonitoringEventsTree({
           }}
           spacing={1}
         >
-          {shownEvents.map((shownEvent) => (
+          {shownEvents.map(({ event, context }) => (
             <MonitoringEventNode
-              key={shownEvent.context.id}
-              event={shownEvent}
+              key={event.context.id}
+              event={event}
+              context={context}
             />
           ))}
         </Stack>
