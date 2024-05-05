@@ -6,6 +6,7 @@ export { default as omit } from 'lodash/omit.js';
 export { default as sample } from 'lodash/sample.js';
 export { default as uniq } from 'lodash/uniq.js';
 export { default as get } from 'lodash/get.js';
+export { default as random } from 'lodash/random.js';
 export { default as createEventsEmitter } from './createEventsEmitter';
 export { default as createId } from './createId';
 export { default as createQueue } from './createQueue';
