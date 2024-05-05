@@ -42,7 +42,7 @@ export default memo(function MonitoringEventNode({
   const nextPosition = useSelector((state) =>
     selectNextPosition(state, eventId),
   );
-  const position = useSelector((state) => selectPosition(state, eventId));
+  const storedPosition = useSelector((state) => selectPosition(state, eventId));
   const isUnfocused = useSelector((state) =>
     selectIsEventUnfocused(state, eventId),
   );
@@ -89,7 +89,7 @@ export default memo(function MonitoringEventNode({
   }, [isSelected, dispatch, handleMutation, eventId]);
 
   useEffect(() => {
-    if (!position) {
+    if (!storedPosition) {
       return;
     }
 
@@ -100,12 +100,18 @@ export default memo(function MonitoringEventNode({
     }
 
     if (
-      position.top !== currentPosition.top ||
-      position.height !== currentPosition.height
+      storedPosition.top !== currentPosition.top ||
+      storedPosition.height !== currentPosition.height
     ) {
       handleMutation();
     }
-  }, [previousPosition, position, nextPosition, handleMutation, getPosition]);
+  }, [
+    previousPosition,
+    storedPosition,
+    nextPosition,
+    handleMutation,
+    getPosition,
+  ]);
 
   return (
     <Box
