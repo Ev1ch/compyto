@@ -76,6 +76,7 @@ export default memo(function Sorts({ sx = EMPTY_OBJECT }: SortsProps) {
           left: 0,
           alignSelf: 'stretch',
           zIndex: 1,
+          boxShadow: 'none',
         }}
         component={Paper}
         direction="row"

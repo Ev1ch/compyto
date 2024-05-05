@@ -76,6 +76,7 @@ export default memo(function Filters({ sx = EMPTY_OBJECT }: FiltersProps) {
           alignSelf: 'stretch',
           zIndex: 1,
           minWidth: 101,
+          boxShadow: 'none',
         }}
         component={Paper}
         direction="row"

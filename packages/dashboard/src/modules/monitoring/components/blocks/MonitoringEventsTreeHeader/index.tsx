@@ -1,4 +1,4 @@
-import { Close, FileDownload, FileUpload } from '@mui/icons-material';
+import { Close, Delete, FileDownload, FileUpload } from '@mui/icons-material';
 import { Button, Chip, Stack, SxProps } from '@mui/material';
 import { memo, useCallback, useRef, useState } from 'react';
 
@@ -23,6 +23,7 @@ import { pluralize, readFile } from '@/utils';
 import {
   addProcess,
   addProcesses,
+  removeProcesses,
   selectEventsWithPreparers,
   selectMonitorings,
 } from '../../../store';
@@ -97,6 +98,10 @@ export default memo(function MonitoringEventsTreeHeader({
     handleImportFile();
   }, [handleImportFile]);
 
+  const handleDelete = useCallback(() => {
+    dispatch(removeProcesses());
+  }, [dispatch]);
+
   return (
     <Stack sx={[{ alignItems: 'center' }, ...getArrayedSx(sx)]} direction="row">
       <Stack sx={{ width: 'calc(100% - 184px)' }} direction="row">
@@ -116,7 +121,7 @@ export default memo(function MonitoringEventsTreeHeader({
         />
       </Stack>
 
-      <Stack direction="row">
+      <Stack spacing={1} direction="row">
         <Button
           sx={{ ml: 'auto' }}
           startIcon={<FileUpload />}
@@ -135,6 +140,14 @@ export default memo(function MonitoringEventsTreeHeader({
           disabled={!eventsNumber}
         >
           Export
+        </Button>
+        <Button
+          startIcon={<Delete />}
+          onClick={handleDelete}
+          sx={{ whiteSpace: 'nowrap' }}
+          disabled={!eventsNumber}
+        >
+          Clear events
         </Button>
       </Stack>
 

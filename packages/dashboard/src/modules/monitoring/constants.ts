@@ -8,7 +8,7 @@ export const COLOR_TO_STYLE_COLOR_MAP: Record<Color, string> = {
   [Color.BLUE]: 'info.main',
   [Color.MAGENTA]: 'secondary.main',
   [Color.WHITE]: 'background.default',
-  [Color.GRAY]: 'action.active',
+  [Color.GRAY]: 'text.secondary',
 
   [Color.CYAN]: 'cyan',
 };
