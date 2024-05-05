@@ -96,17 +96,14 @@ const slice = createSlice({
     addProcess: (state, { payload }: PayloadAction<MonitoringData>) => {
       const key = getProcessKeyByMonitoring(payload);
 
-      state.data[key] = {
-        ...payload,
-        // @ts-expect-error Redux can only store serializable data
-        events: payload.events.map((event) => ({
-          ...event,
-          context: {
-            ...event.context,
-            emittedAt: event.context.emittedAt.toString(),
-          },
-        })),
-      };
+      state.data[key] = payload;
+    },
+    addProcesses: (state, { payload }: PayloadAction<MonitoringData[]>) => {
+      payload.forEach((process) => {
+        const key = getProcessKeyByMonitoring(process);
+
+        state.data[key] = process;
+      });
     },
     removeProcesses: (state) => {
       state.data = {};
@@ -115,5 +112,5 @@ const slice = createSlice({
 });
 
 const { reducer, actions } = slice;
-export const { addProcess, removeProcesses } = actions;
+export const { addProcess, addProcesses, removeProcesses } = actions;
 export default reducer;
