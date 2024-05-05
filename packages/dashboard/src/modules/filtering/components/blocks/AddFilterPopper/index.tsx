@@ -114,7 +114,7 @@ export default forwardRef<HTMLDivElement, AddFilterPopperPopperProps>(
             </FormControl>
             <FormControl
               size="small"
-              disabled={!availableValues}
+              disabled={!availableValues || !availableValues.length}
               required
               fullWidth
             >
