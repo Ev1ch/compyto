@@ -10,7 +10,10 @@ import {
 import { EMPTY_OBJECT } from '@/constants';
 import { getArrayedSx } from '@/styles/logic';
 
-import { COLOR_TO_CHIP_COLOR_MAP } from '../../../constants';
+import {
+  COLOR_TO_CHIP_BACKGROUND_COLOR_MAP,
+  COLOR_TO_CHIP_COLOR_MAP,
+} from '../../../constants';
 import { MonitoringEventArgs, MonitoringEventKey } from '../../common';
 
 export interface MonitoringEventProps {
@@ -62,7 +65,11 @@ export default memo(function MonitoringEvent({
     >
       <Chip
         sx={[
-          { minHeight: 34, height: 'auto' },
+          {
+            minHeight: 34,
+            height: 'auto',
+            bgcolor: COLOR_TO_CHIP_BACKGROUND_COLOR_MAP[typeColor],
+          },
           selected && { bgcolor: 'grey.200' },
         ]}
         variant="outlined"
