@@ -1,4 +1,4 @@
-import { ContentCopy } from '@mui/icons-material';
+import { Check, ContentCopy } from '@mui/icons-material';
 import {
   IconButton,
   List,
@@ -6,24 +6,43 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
-import { memo } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 
 export interface MonitoringEventArgsProps {
   readonly args: unknown[];
 }
 
+const ICON_SX = { fontSize: 16 };
+
 export default memo(function MonitoringEventArgs({
   args,
 }: MonitoringEventArgsProps) {
-  const getCopyClickHandler = (content: string) => () => {
-    navigator.clipboard.writeText(content);
-  };
-
+  const [isCopied, setIsCopied] = useState(false);
+  const [version, setVersion] = useState(0);
   const divider = (
     <Typography sx={{ opacity: 0.5 }} component="span">
       &quot;
     </Typography>
   );
+
+  const getCopyClickHandler = useCallback(
+    (content: string) => () => {
+      navigator.clipboard.writeText(content);
+      setIsCopied(true);
+      setVersion((prevState) => prevState + 1);
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (isCopied) {
+      const timeout = setTimeout(() => {
+        setIsCopied(false);
+      }, 1000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isCopied, version]);
 
   return (
     <List dense disablePadding>
@@ -62,7 +81,7 @@ export default memo(function MonitoringEventArgs({
               sx={{ position: 'absolute', right: 0, top: 0 }}
               onClick={getCopyClickHandler(content)}
             >
-              <ContentCopy sx={{ fontSize: 16 }} />
+              {isCopied ? <Check sx={ICON_SX} /> : <ContentCopy sx={ICON_SX} />}
             </IconButton>
           </ListItem>
         );
