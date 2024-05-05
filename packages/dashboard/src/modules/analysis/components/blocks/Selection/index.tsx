@@ -2,7 +2,7 @@ import { Close } from '@mui/icons-material';
 import { Box, IconButton, Stack, Typography } from '@mui/material';
 
 import { getTimestamp } from '@compyto/logging';
-import { getDatesDifference } from '@compyto/utils';
+import { getTimestampDifference } from '@compyto/utils';
 import { selectPosition } from '@/modules/analysis/store';
 import { selectEventWithContext } from '@/modules/monitoring/store';
 import { getTopAndHeight } from '@/modules/monitoring/utils';
@@ -45,8 +45,8 @@ export default function Selection({
   const endEventEmittedAt = endEventWithCondition.event.context.emittedAt;
   const timestampDifference =
     endEventEmittedAt > startEventEmittedAt
-      ? getDatesDifference(endEventEmittedAt, startEventEmittedAt)
-      : getDatesDifference(startEventEmittedAt, endEventEmittedAt);
+      ? getTimestampDifference(endEventEmittedAt, startEventEmittedAt)
+      : getTimestampDifference(startEventEmittedAt, endEventEmittedAt);
 
   const handleRemove = () => {
     onRemove?.(startEventId, endEventId);

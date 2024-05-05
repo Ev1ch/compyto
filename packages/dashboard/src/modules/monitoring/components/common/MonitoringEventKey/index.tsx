@@ -17,7 +17,7 @@ import MonitoringContext from '../MonitoringContext';
 export interface MonitoringEventKeyProps {
   readonly context?: TMonitoringContext;
   readonly Key: MonitoringEventKey;
-  readonly emittedAt: Date;
+  readonly emittedAt: number;
   readonly withArgs?: boolean;
   readonly expanded?: boolean;
   onExpandToggle?: () => void;

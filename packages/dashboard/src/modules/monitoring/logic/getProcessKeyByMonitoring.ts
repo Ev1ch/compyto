@@ -1,8 +1,8 @@
-import type { BaseMonitoring } from '@compyto/monitoring';
+import type { MonitoringData } from '@compyto/monitoring';
 
 export default function getProcessKeyByMonitoring({
   context: { process },
-}: BaseMonitoring): string {
+}: MonitoringData): string {
   if (!process) {
     throw new Error('Monitoring context does not have process');
   }

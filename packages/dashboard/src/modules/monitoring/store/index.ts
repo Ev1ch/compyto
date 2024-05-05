@@ -38,13 +38,7 @@ export const selectEventWithContexts = createSelector(
     monitorings
       .map(({ events, context }) =>
         events.map((event) => ({
-          event: {
-            ...event,
-            context: {
-              ...event.context,
-              emittedAt: new Date(event.context.emittedAt),
-            },
-          },
+          event,
           context,
         })),
       )

@@ -92,10 +92,10 @@ export const addEventToPair = createAsyncThunk(
 
     const eventIds = [...pair.eventIds, event].sort((a, b) => {
       const aIndex = shownEvents.findIndex(
-        (shownEvent) => shownEvent.context.id === a,
+        ({ event }) => event.context.id === a,
       );
       const bIndex = shownEvents.findIndex(
-        (shownEvent) => shownEvent.context.id === b,
+        ({ event }) => event.context.id === b,
       );
 
       return aIndex - bIndex;
