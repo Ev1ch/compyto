@@ -6,11 +6,12 @@ import type MonitoringEventContext from './MonitoringEventContext';
 import type MonitoringEventKeys from './MonitoringEventKeys';
 import type MonitoringEventKeysMap from './MonitoringEventKeysMap';
 
-export default interface Monitoring {
-  readonly events: MonitoringEvent[];
+export interface MonitoringData {
+  events: MonitoringEvent[];
+  context: MonitoringContext;
+}
 
-  readonly context: MonitoringContext;
-
+export default interface Monitoring extends MonitoringData {
   start(): Promise<void>;
 
   on<TEventKey extends MonitoringEventKeys>(
