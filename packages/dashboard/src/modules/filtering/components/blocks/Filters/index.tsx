@@ -61,6 +61,7 @@ export default memo(function Filters({ sx = EMPTY_OBJECT }: FiltersProps) {
           alignItems: 'center',
           minHeight: 32,
           overflowX: 'auto',
+          minWidth: 101,
         },
         hideScrollbarSx,
         ...getArrayedSx(sx),
@@ -75,7 +76,6 @@ export default memo(function Filters({ sx = EMPTY_OBJECT }: FiltersProps) {
           left: 0,
           alignSelf: 'stretch',
           zIndex: 1,
-          minWidth: 101,
           boxShadow: 'none',
         }}
         component={Paper}
