@@ -1,9 +1,11 @@
 import type { AnalysisState } from '@/modules/analysis/store';
-import type { MonitoringState } from '@/modules/monitoring/store';
+import type { FilteringState } from '@/modules/filtering/store';
+import type { MonitoringsState } from '@/modules/monitoring/store';
+import type { SortingState } from '@/modules/sorting/store';
 
-type State = {
-  monitoring: MonitoringState;
+export default interface State {
+  monitorings: MonitoringsState;
   analysis: AnalysisState;
-};
-
-export default State;
+  sorting: SortingState;
+  filtering: FilteringState;
+}

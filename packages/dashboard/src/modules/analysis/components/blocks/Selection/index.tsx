@@ -4,7 +4,7 @@ import { Box, IconButton, Stack, Typography } from '@mui/material';
 import { getTimestamp } from '@compyto/logging';
 import { getDatesDifference } from '@compyto/utils';
 import { selectPosition } from '@/modules/analysis/store';
-import { selectEvent } from '@/modules/monitoring/store';
+import { selectEventWithContext } from '@/modules/monitoring/store';
 import { getTopAndHeight } from '@/modules/monitoring/utils';
 import { useSelector } from '@/store/hooks';
 
@@ -19,34 +19,34 @@ export default function Selection({
   endEventId,
   onRemove,
 }: SelectionProps) {
-  const startEvent = useSelector((state) => selectEvent(state, startEventId));
+  const startEventWithContext = useSelector((state) =>
+    selectEventWithContext(state, startEventId),
+  );
   const startEventPosition = useSelector((state) =>
     selectPosition(state, startEventId),
   );
-  const endEvent = useSelector((state) => selectEvent(state, endEventId));
+  const endEventWithCondition = useSelector((state) =>
+    selectEventWithContext(state, endEventId),
+  );
   const endEventPosition = useSelector((state) =>
     selectPosition(state, endEventId),
   );
 
-  if (!startEvent || !startEventPosition) {
+  if (!startEventWithContext || !startEventPosition) {
     return null;
   }
 
-  if (!endEvent || !endEventPosition) {
+  if (!endEventWithCondition || !endEventPosition) {
     return null;
   }
 
   const { top, height } = getTopAndHeight(startEventPosition, endEventPosition);
+  const startEventEmittedAt = startEventWithContext.event.context.emittedAt;
+  const endEventEmittedAt = endEventWithCondition.event.context.emittedAt;
   const timestampDifference =
-    endEvent.context.emittedAt > startEvent.context.emittedAt
-      ? getDatesDifference(
-          endEvent.context.emittedAt,
-          startEvent.context.emittedAt,
-        )
-      : getDatesDifference(
-          startEvent.context.emittedAt,
-          endEvent.context.emittedAt,
-        );
+    endEventEmittedAt > startEventEmittedAt
+      ? getDatesDifference(endEventEmittedAt, startEventEmittedAt)
+      : getDatesDifference(startEventEmittedAt, endEventEmittedAt);
 
   const handleRemove = () => {
     onRemove?.(startEventId, endEventId);
