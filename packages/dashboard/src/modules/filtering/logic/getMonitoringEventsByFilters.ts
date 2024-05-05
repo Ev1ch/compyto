@@ -14,19 +14,20 @@ export default function getMonitoringEventsByFilters(
       return filters.every((filter) => {
         const [type, scope] = getMonitoringEventKeyParts(key);
         const value = filter.value;
+        const code = process?.code;
 
         switch (filter.criteria) {
           case FilterCriteria.EVENT_TYPE:
-            return type === value;
+            return value.includes(type);
 
           case FilterCriteria.EVENT_SCOPE:
-            return scope === value;
+            return value.includes(scope);
 
           case FilterCriteria.CONTEXT_PROCESS_CODE:
-            return process?.code === value;
+            return code && value.includes(code);
 
           default:
-            return true;
+            return false;
         }
       });
     },

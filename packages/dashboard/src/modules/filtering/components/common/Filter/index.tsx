@@ -17,7 +17,7 @@ export default function Filter({ filter, onDelete }: FilterProps) {
       variant="outlined"
       label={
         <Typography>
-          {filter.criteria}: {filter.value}
+          {filter.criteria}: {filter.value.join(', ')}
         </Typography>
       }
       onDelete={handleDelete}

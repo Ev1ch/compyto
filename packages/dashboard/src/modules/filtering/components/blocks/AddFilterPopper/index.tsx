@@ -42,18 +42,21 @@ export default forwardRef<HTMLDivElement, AddFilterPopperPopperProps>(
       criteria ? selectValuesByCriteria(state, criteria) : [],
     );
     const availableCriterion = useSelector(selectAvailableCriterion);
-    const [value, setValue] = useState<string | ''>('');
+    const [value, setValue] = useState<string[]>([]);
     const availableValues = criteria ? uniq(values) : null;
-    const filter = criteria && value ? createFilter(criteria, value) : null;
+    const filter =
+      criteria && value.length > 0 ? createFilter(criteria, value) : null;
 
     function handleCriteriaChange({
-      target,
+      target: { value },
     }: SelectChangeEvent<FilterCriteria>) {
-      setCriteria(target.value as FilterCriteria);
+      setCriteria(value as FilterCriteria);
     }
 
-    function handleValueChange({ target }: SelectChangeEvent<string>) {
-      setValue(target.value);
+    function handleValueChange({
+      target: { value },
+    }: SelectChangeEvent<string[]>) {
+      setValue(value as string[]);
     }
 
     function handleAdd() {
@@ -93,7 +96,7 @@ export default forwardRef<HTMLDivElement, AddFilterPopperPopperProps>(
               </IconButton>
             </Box>
 
-            <FormControl size="small" fullWidth>
+            <FormControl size="small" required fullWidth>
               <InputLabel>Criteria</InputLabel>
               <Select
                 size="small"
@@ -110,12 +113,13 @@ export default forwardRef<HTMLDivElement, AddFilterPopperPopperProps>(
               </Select>
             </FormControl>
             {availableValues && (
-              <FormControl size="small" fullWidth>
+              <FormControl size="small" required fullWidth>
                 <InputLabel>Value</InputLabel>
                 <Select
                   label="Value"
                   value={value}
                   onChange={handleValueChange}
+                  multiple
                 >
                   {availableValues.map((value) => (
                     <MenuItem key={value} value={value}>

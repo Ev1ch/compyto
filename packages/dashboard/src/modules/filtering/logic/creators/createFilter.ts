@@ -4,7 +4,7 @@ import type { Filter, FilterCriteria } from '../../domain';
 
 export default function createFilter(
   criteria: FilterCriteria,
-  value: string,
+  value: string[],
 ): Filter {
   return {
     id: createId(),
