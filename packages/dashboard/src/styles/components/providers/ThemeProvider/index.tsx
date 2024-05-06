@@ -1,15 +1,11 @@
 import { ThemeProvider as MuiThemeProvider } from '@mui/material';
-import { type ReactNode } from 'react';
 
+import type { ProviderProps } from '@/components/providers';
 import { useSelector } from '@/store/hooks';
 import { MODE_TO_THEME_MAP } from '@/styles/constants';
 import { selectMode } from '@/styles/store';
 
-export interface ThemeProviderProps {
-  readonly children: ReactNode;
-}
-
-export default function ThemeProvider({ children }: ThemeProviderProps) {
+export default function ThemeProvider({ children }: ProviderProps) {
   const mode = useSelector(selectMode);
   const theme = MODE_TO_THEME_MAP[mode];
 

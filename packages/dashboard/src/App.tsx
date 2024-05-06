@@ -1,4 +1,5 @@
 import { Providers } from '@/components/blocks';
+import { ErrorBoundary } from '@/components/boundaries';
 import { Baseline } from '@/components/common';
 import { Dashboard } from '@/modules/monitoring/components/pages';
 
@@ -7,7 +8,9 @@ export default function App() {
     <>
       <Providers>
         <Baseline />
-        <Dashboard />
+        <ErrorBoundary>
+          <Dashboard />
+        </ErrorBoundary>
       </Providers>
     </>
   );
