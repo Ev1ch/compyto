@@ -1,5 +1,6 @@
 import { Close } from '@mui/icons-material';
 import { Box, IconButton, Stack, Typography } from '@mui/material';
+import { memo } from 'react';
 
 import { getTimestamp } from '@compyto/logging';
 import { getTimestampDifference } from '@compyto/utils';
@@ -14,7 +15,7 @@ export interface SelectionProps {
   readonly onRemove: (startEventId: string, endEventId: string) => void;
 }
 
-export default function Selection({
+export default memo(function Selection({
   startEventId,
   endEventId,
   onRemove,
@@ -57,7 +58,7 @@ export default function Selection({
       sx={{
         top,
         height,
-        borderLeft: '1px solid',
+        borderLeft: '2px solid',
         borderColor: 'divider',
         position: 'absolute',
         display: 'flex',
@@ -78,4 +79,4 @@ export default function Selection({
       </Stack>
     </Box>
   );
-}
+});

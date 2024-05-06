@@ -16,6 +16,7 @@ import {
   updatePosition,
 } from '@/modules/analysis/store';
 import { selectIsEventUnfocused } from '@/modules/monitoring/store';
+import { getPosition } from '@/modules/monitoring/utils';
 import { useDispatch, useSelector } from '@/store/hooks';
 
 import Connector from '../Connector';
@@ -26,7 +27,7 @@ export interface MonitoringEventNodeProps {
   readonly context: MonitoringContext;
 }
 
-const monitoringEventSx = {
+const MONITORING_EVENT_SX = {
   ml: 'auto',
 };
 
@@ -51,33 +52,24 @@ export default memo(function MonitoringEventNode({
   );
   const boxRef = useRef<HTMLDivElement | null>(null);
 
-  const getPosition = useCallback(() => {
-    const box = boxRef.current;
-
-    if (!box) {
-      return;
-    }
-
-    const { offsetTop, offsetHeight } = box;
-    return { top: offsetTop, height: offsetHeight };
-  }, []);
-
   const handleMutation = useCallback(() => {
-    if (!boxRef.current) {
-      return;
-    }
+    setTimeout(() => {
+      if (!boxRef.current) {
+        return;
+      }
 
-    const position = getPosition();
+      const position = getPosition(boxRef.current);
 
-    if (!position) {
-      return;
-    }
+      if (!position) {
+        return;
+      }
 
-    const { top, height } = position;
-    if (storedPosition?.height !== height || storedPosition?.top !== top) {
-      dispatch(updatePosition({ id: eventId, top, height }));
-    }
-  }, [dispatch, eventId, getPosition, storedPosition]);
+      const { top, height } = position;
+      if (storedPosition?.height !== height || storedPosition?.top !== top) {
+        dispatch(updatePosition({ id: eventId, top, height }));
+      }
+    }, 0);
+  }, [dispatch, eventId, storedPosition]);
 
   const handleKeyClick = useCallback(() => {
     if (isSelected) {
@@ -91,11 +83,11 @@ export default memo(function MonitoringEventNode({
   }, [isSelected, dispatch, handleMutation, eventId]);
 
   useEffect(() => {
-    if (!storedPosition) {
+    if (!storedPosition || !boxRef.current) {
       return;
     }
 
-    const currentPosition = getPosition();
+    const currentPosition = getPosition(boxRef.current);
 
     if (!currentPosition) {
       return;
@@ -107,7 +99,7 @@ export default memo(function MonitoringEventNode({
     ) {
       handleMutation();
     }
-  }, [previousPosition, nextPosition, getPosition]);
+  }, [previousPosition, nextPosition]);
 
   return (
     <Box
@@ -121,16 +113,16 @@ export default memo(function MonitoringEventNode({
     >
       {isSelected && (
         <Connector
-          sx={{ mt: 1.25, mb: 'auto' }}
+          sx={{ mt: 1.75, mb: 'auto' }}
           width="100%"
           direction="left"
-          thickness={1}
+          thickness={2}
           size={6}
           rounded
         />
       )}
       <MonitoringEvent
-        sx={monitoringEventSx}
+        sx={MONITORING_EVENT_SX}
         event={event}
         context={context}
         onKeyClick={handleKeyClick}
@@ -140,7 +132,7 @@ export default memo(function MonitoringEventNode({
       />
       <Connector
         sx={[
-          { mt: 1.25, mb: 'auto', flexShrink: 0 },
+          { mt: 1.75, mb: 'auto', flexShrink: 0 },
           isUnfocused && { opacity: 0.2 },
         ]}
         width="15%"

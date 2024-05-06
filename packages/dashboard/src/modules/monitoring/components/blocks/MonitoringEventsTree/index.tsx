@@ -15,7 +15,7 @@ export interface MonitoringEventsTreeProps {
 }
 
 const ROOT_SX = {
-  left: 2.5,
+  left: 2,
 };
 
 export default memo(function MonitoringEventsTree({
