@@ -154,6 +154,15 @@ export default interface Communicator {
     op: Operator,
     abort?: Abort,
   ): Promise<void>;
+  allToAll(
+    data: Data[],
+    sendStartIndex: number,
+    sendCount: number,
+    buf: Data[],
+    recvStartIndex: number,
+    recvCount: number,
+    abort?: Abort,
+  ): Promise<void>;
   /**
    * Finish the app. NOT WORKING RIGHT NOW, JUST DONT USE TO PREVENT ERRORS
    */
