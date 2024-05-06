@@ -1,10 +1,12 @@
-import { Server } from 'http';
-import path from 'path';
+#!/usr/bin/env node
+import type { Server } from 'node:http';
+import path from 'node:path';
 import express from 'express';
 import open from 'open';
 
 import { getStringURI } from '@compyto/connections';
-import { Settings } from '@compyto/settings';
+import { getSettings } from '@compyto/runner';
+import type { Settings } from '@compyto/settings';
 
 // @ts-expect-error Node modules versions differ
 const PUBLIC_PATH = path.resolve(import.meta.dirname, './client');
@@ -23,11 +25,9 @@ export function createDashboard(settings: Settings): Dashboard {
     throw new Error('Dashboard settings are required to start the dashboard.');
   }
 
-  if (!settings.monitoring) {
-    throw new Error('Monitoring settings are required to start the dashboard.');
-  }
-
-  const { dashboard, monitoring } = settings;
+  const {
+    dashboard: { uri },
+  } = settings;
   const app = express();
   let server: Server | null = null;
 
@@ -39,10 +39,8 @@ export function createDashboard(settings: Settings): Dashboard {
 
   function start() {
     return new Promise<void>((resolve) => {
-      const uri = `${getStringURI(dashboard.uri)}/?uri=${getStringURI(monitoring.uri)}&code=${dashboard.code}`;
-
-      server = app.listen(dashboard.uri.port, () => {
-        open(uri).then(() => resolve(undefined));
+      server = app.listen(uri.port, () => {
+        open(getStringURI(uri)).then(() => resolve(undefined));
       });
     });
   }
@@ -62,3 +60,9 @@ export function createDashboard(settings: Settings): Dashboard {
     stop,
   };
 }
+
+(async () => {
+  const settings = await getSettings();
+  const dashboard = createDashboard(settings);
+  await dashboard.start();
+})();

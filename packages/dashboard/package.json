@@ -11,9 +11,12 @@
   },
   "sideEffects": false,
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/bin.js"
   },
-  "main": "dist/index.js",
+  "main": "dist/bin.js",
+  "bin": {
+    "start": "dist/bin.js"
+  },
   "devDependencies": {
     "@types/react": "^18.2.70",
     "@types/react-dom": "^18.2.22",
