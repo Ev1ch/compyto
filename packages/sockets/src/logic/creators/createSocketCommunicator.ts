@@ -38,10 +38,10 @@ export default function createSocketCommunicator({
   uri: selfUri,
   clients,
   master,
-  rank,
+  rank: selfRank,
 }: Settings): Communicator {
   let selfIo: Socket | SocketsServer | null = null;
-  const selfProcess = createProcess(selfCode, rank);
+  const selfProcess = createProcess(selfCode, selfRank);
   const selfDevice = createDevice(selfUri, selfProcess);
   const selfGroup = createGroup();
   const selfConnections: SocketConnection[] = [];
@@ -555,11 +555,21 @@ export default function createSocketCommunicator({
     );
   }
 
+  function size() {
+    return selfGroup.processes.length + 1;
+  }
+
+  function rank() {
+    return selfProcess.rank;
+  }
+
   return {
     isMaster,
     process: selfProcess,
     group: selfGroup,
     start,
+    size,
+    rank,
     send,
     receive,
     scatterv,

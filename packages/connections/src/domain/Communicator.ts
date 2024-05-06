@@ -163,6 +163,9 @@ export default interface Communicator {
     recvCount: number,
     abort?: Abort,
   ): Promise<void>;
+
+  size(): number;
+  rank(): number;
   /**
    * Finish the app. NOT WORKING RIGHT NOW, JUST DONT USE TO PREVENT ERRORS
    */
