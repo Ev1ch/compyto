@@ -7,7 +7,10 @@ import {
 import type { MonitoringData } from '@compyto/monitoring';
 import type { FilterCriteria } from '@/modules/filtering/domain';
 import type { State } from '@/store/domain';
-import { getValuesByFilterCriteria } from '@/modules/filtering/logic';
+import {
+  getDefaultValuesByFilterCriteria,
+  getValuesByFilterCriteria,
+} from '@/modules/filtering/logic';
 import {
   selectFilters,
   selectSearch,
@@ -54,7 +57,9 @@ export const selectEventWithContext = createSelector(
 export const selectValuesByCriteria = createSelector(
   [selectEventWithContexts, (state, criteria: FilterCriteria) => criteria],
   (eventWithContexts, criteria) =>
-    getValuesByFilterCriteria(eventWithContexts, criteria),
+    eventWithContexts.length
+      ? getValuesByFilterCriteria(eventWithContexts, criteria)
+      : getDefaultValuesByFilterCriteria(criteria),
 );
 
 export const selectEventsWithPreparers = createSelector(

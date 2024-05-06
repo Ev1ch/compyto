@@ -147,7 +147,7 @@ export default memo(function MonitoringEventNode({
           { mt: 1.25, mb: 'auto', flexShrink: 0 },
           isUnfocused && { opacity: 0.2 },
         ]}
-        width={200}
+        width="15%"
       />
     </Box>
   );
