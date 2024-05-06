@@ -447,27 +447,27 @@ export default function createSocketCommunicator({
     const isMe = root === selfProcess.rank;
     const rootProcess = getProcessByRank(root);
     if (!isMe) {
-      await sliceAndSend(data, 0, sendCount, rootProcess, abort);
+      return sliceAndSend(data, 0, sendCount, rootProcess, abort);
     }
 
-    if (isMe) {
-      await Promise.all(
-        selfGroup.processes.map(async (process: Process) => {
-          const { rank } = process;
-          const count = recvCounts[rank];
-          const { data: received } = await _receiveArrayPart(0, count, abort);
+    await Promise.all(
+      selfGroup.processes.map(async () => {
+        const { data: received, process } = await _receive(abort);
+        const { rank } = process;
+        const count = recvCounts[rank];
+        if (!Array.isArray(received)) throw new Error('Received not array'); // not possible, only for TS
+        const arrayPart = received.slice(0, count);
 
-          writeToBufferByProcess(
-            process,
-            received,
-            buf,
-            recvCounts,
-            recvOffsets,
-          );
-        }),
-      );
-      writeToBufferByProcess(selfProcess, data, buf, recvCounts, recvOffsets);
-    }
+        writeToBufferByProcess(
+          process,
+          arrayPart,
+          buf,
+          recvCounts,
+          recvOffsets,
+        );
+      }),
+    );
+    writeToBufferByProcess(selfProcess, data, buf, recvCounts, recvOffsets);
   }
 
   async function allGather(
