@@ -61,9 +61,16 @@ export default class ErrorBoundary extends Component<
               <AlertTitle>
                 An unexpected application-level error occurred
               </AlertTitle>
-              <Typography sx={{ mb: 1 }}>
-                The error was raised with message: {this.state.error.message}
-              </Typography>
+              <Box sx={{ mb: 1 }}>
+                <Typography>The error was raised with message:</Typography>
+                <Typography sx={{ fontFamily: 'monospace' }}>
+                  &quot;
+                  <Typography component="span">
+                    {this.state.error.message}
+                  </Typography>
+                  &quot;
+                </Typography>
+              </Box>
               <Button
                 onClick={this.handleRefresh}
                 sx={{ mx: 'auto' }}
