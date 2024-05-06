@@ -74,8 +74,10 @@ export default memo(function MonitoringEventNode({
     }
 
     const { top, height } = position;
-    dispatch(updatePosition({ id: eventId, top, height }));
-  }, [dispatch, eventId, getPosition]);
+    if (storedPosition?.height !== height || storedPosition?.top !== top) {
+      dispatch(updatePosition({ id: eventId, top, height }));
+    }
+  }, [dispatch, eventId, getPosition, storedPosition]);
 
   const handleKeyClick = useCallback(() => {
     if (isSelected) {
@@ -105,13 +107,7 @@ export default memo(function MonitoringEventNode({
     ) {
       handleMutation();
     }
-  }, [
-    previousPosition,
-    storedPosition,
-    nextPosition,
-    handleMutation,
-    getPosition,
-  ]);
+  }, [previousPosition, nextPosition, getPosition]);
 
   return (
     <Box

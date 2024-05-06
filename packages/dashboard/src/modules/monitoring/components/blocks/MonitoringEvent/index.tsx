@@ -1,5 +1,5 @@
 import { Box, Chip, SxProps } from '@mui/material';
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 
 import { TYPE_TO_COLOR_MAP } from '@compyto/logging';
 import {
@@ -33,23 +33,14 @@ export default memo(function MonitoringEvent({
   sx = EMPTY_OBJECT,
 }: MonitoringEventProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const isFirstRender = useRef(true);
   const [type] = getMonitoringEventKeyParts(event.key);
   const typeColor = TYPE_TO_COLOR_MAP[type];
   const areArgsPresent = event.args.length > 0;
 
-  function handleExpandToggle() {
+  const handleExpandToggle = useCallback(() => {
     setIsExpanded((prevState) => !prevState);
-  }
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-
     onExpandToggle?.(event);
-  }, [isExpanded, onExpandToggle, event]);
+  }, [onExpandToggle, event]);
 
   return (
     <Box
