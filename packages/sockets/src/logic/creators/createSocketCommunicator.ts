@@ -303,6 +303,32 @@ export default function createSocketCommunicator({
     await receiveArrayPart(buf, 0, recvCount, abort);
   }
 
+  async function scatterv(
+    data: unknown[],
+    sendCounts: number[],
+    sendOffsets: number[],
+    buf: unknown[],
+    recvCount: number,
+    root: number,
+    abort?: Abort,
+  ) {
+    const isCalledByRoot = selfProcess.rank === root;
+    if (isCalledByRoot) {
+      await Promise.all(
+        [...selfGroup.processes, selfProcess].map((process) => {
+          const { rank } = process;
+          const sendCount = sendCounts[rank];
+          const sendOffset = sendOffsets[rank];
+          const sendData = data.slice(sendOffset, sendCount + sendOffset);
+
+          send(sendData, process, abort);
+        }),
+      );
+    }
+
+    await receiveArrayPart(buf, 0, recvCount, abort);
+  }
+
   async function reduce(
     data: unknown[],
     buf: Array<unknown>,
@@ -331,6 +357,32 @@ export default function createSocketCommunicator({
       const result = op.apply(received);
       writeToBuffer(buf, result);
     }
+  }
+
+  async function allReduce(
+    data: unknown[],
+    buf: Array<unknown>,
+    count: number,
+    op: Operator,
+    abort?: Abort,
+  ) {
+    const sliced = sliceSendData(data, 0, count);
+    const temp: unknown[] = [];
+    // send to all others
+    for (const process of selfGroup.processes) {
+      send(sliced, process, abort);
+    }
+    // myself data
+    addDataToBuffer(temp, sliced);
+    await Promise.all(
+      selfGroup.processes.map(async () => {
+        const { data } = await _receive(abort);
+        addDataToBuffer(temp, data);
+      }),
+    );
+
+    const result = op.apply(temp);
+    writeToBuffer(buf, result);
   }
 
   function placeDataInBufferByRankAndCount(
@@ -366,6 +418,47 @@ export default function createSocketCommunicator({
 
     if (isMe) {
       await gatherAsRoot(data, buf, 0, recvCount, abort);
+    }
+  }
+
+  async function gatherv(
+    data: unknown[],
+    sendCount: number,
+    buf: unknown[],
+    recvCounts: number[],
+    recvOffsets: number[],
+    root: number,
+    abort?: Abort,
+  ) {
+    const isMe = root === selfProcess.rank;
+    const rootProcess = getProcessByRank(root);
+    if (!isMe) {
+      await sliceAndSend(data, 0, sendCount, rootProcess, abort);
+    }
+
+    if (isMe) {
+      const writeToBufferByProcess = async (
+        process: Process,
+        received: unknown[],
+      ) => {
+        const { rank } = process;
+        const count = recvCounts[rank];
+        const offset = recvOffsets[rank];
+
+        for (let i = offset, j = 0; i < offset + count; i++, j++) {
+          buf[i] = received[j];
+        }
+      };
+      await Promise.all(
+        selfGroup.processes.map(async (process: Process) => {
+          const { rank } = process;
+          const count = recvCounts[rank];
+          const { data: received } = await _receiveArrayPart(0, count, abort);
+
+          writeToBufferByProcess(process, received);
+        }),
+      );
+      writeToBufferByProcess(selfProcess, data);
     }
   }
 
@@ -423,10 +516,13 @@ export default function createSocketCommunicator({
     start,
     send,
     receive,
+    scatterv,
     broadcast,
     scatter,
     gather,
+    gatherv,
     reduce,
+    allReduce,
     allGather,
     finalize,
   };
