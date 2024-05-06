@@ -52,6 +52,4 @@ export default interface Monitoring extends MonitoringData {
     event: TEventKey,
     ...args: MonitoringEventKeysMap[TEventKey]
   ): void;
-
-  waitForDashboard(): Promise<void>;
 }

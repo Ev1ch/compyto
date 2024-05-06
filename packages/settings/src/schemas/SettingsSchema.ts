@@ -1,4 +1,4 @@
-import { URISchema, type URI } from '@compyto/connections';
+import { URISchema } from '@compyto/connections';
 import { CodeSchema, ProcessSchema } from '@compyto/core';
 import validation from '@compyto/validation';
 
@@ -12,13 +12,8 @@ const SettingsSchema = validation
     uri: URISchema,
     monitoring: validation
       .object()
-      .shape({ uri: URISchema })
-      .strict()
-      .when('dashboard', {
-        is: (value?: { uri: URI }) => value !== undefined,
-        then: (schema) => schema.required(),
-        otherwise: (schema) => schema,
-      }),
+      .shape({ isEnabled: validation.boolean() })
+      .strict(),
     dashboard: validation.object().shape({ uri: URISchema }),
     isMaster: validation.boolean(),
     rank: validation.number().when('isMaster', {

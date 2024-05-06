@@ -1,9 +1,5 @@
 import 'dotenv/config';
 
-import fs from 'node:fs/promises';
-import path from 'node:path';
-
-import { createDashboard } from '@compyto/dashboard';
 import {
   createComposedLogger,
   createConsoleLogger,
@@ -11,47 +7,28 @@ import {
 } from '@compyto/logging';
 import { createMonitoring } from '@compyto/monitoring';
 import { runtime } from '@compyto/runtime';
-import { Settings, SettingsSchema } from '@compyto/settings';
 import { createSocketCommunicator } from '@compyto/sockets';
 
 import type { Runner } from '../domain';
-import { DEFAULT_SETTINGS_PATH } from '../constants';
+import getSettings from './getSettings';
 
 export default async function createRunner(): Promise<Runner> {
-  const settingsPath = path.resolve(
-    process.env.SETTINGS_PATH ?? DEFAULT_SETTINGS_PATH,
-  );
-  const string = (await fs.readFile(settingsPath)).toString();
-  const settings: Settings = JSON.parse(string);
-  await SettingsSchema.validate(settings);
+  const settings = await getSettings();
   runtime.settings = settings;
   const communicator = createSocketCommunicator(settings);
 
   if (settings.monitoring) {
-    runtime.monitoring = createMonitoring(settings);
-
+    const monitoring = createMonitoring(settings);
     const consoleLogger = createConsoleLogger();
     const fileLogger = createFileLogger();
+    const logger = createComposedLogger(consoleLogger, fileLogger);
+    monitoring.onAny(logger.logEvent);
+    monitoring.on('info:monitoring/context-set', logger.logContext);
 
-    runtime.logger = createComposedLogger(consoleLogger, fileLogger);
-    runtime.monitoring.onAny(runtime.logger!.logEvent);
-    runtime.monitoring.on(
-      'info:monitoring/context-set',
-      runtime.logger!.logContext,
-    );
-    await runtime.monitoring.start();
-  }
+    runtime.monitoring = monitoring;
+    runtime.logger = logger;
 
-  if (settings.dashboard) {
-    if (!runtime.monitoring) {
-      throw new Error(
-        'Monitoring settings are required to start the dashboard.',
-      );
-    }
-
-    runtime.dashboard = createDashboard(settings);
-    await runtime.dashboard.start();
-    await runtime.monitoring.waitForDashboard();
+    await monitoring.start();
   }
 
   return {

@@ -3,12 +3,11 @@ import type { Code, Process, Rank } from '@compyto/core';
 import type { Xor } from '@compyto/utils';
 
 export interface MonitoringSettings {
-  uri: URI;
+  isEnabled?: boolean;
 }
 
 export interface DashboardSettings {
   uri: URI;
-  code: string;
 }
 
 export interface BaseSettings {
