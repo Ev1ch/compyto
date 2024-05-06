@@ -120,6 +120,16 @@ export default interface Communicator {
     abort?: Abort,
   ): Promise<void>;
 
+  gatherv(
+    data: Data[],
+    sendCount: number,
+    buf: Data[],
+    recvCounts: number[],
+    recvOffsets: number[],
+    root: Rank,
+    abort?: Abort,
+  ): Promise<void>;
+
   allGather(
     data: Data[],
     sendStartIndex: number,
