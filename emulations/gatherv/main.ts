@@ -13,6 +13,8 @@ export default async function start() {
   } else {
     data.push(6);
   }
+  console.log(`Starting data: `, data);
+
   const counts = [1, 4, 1];
   const offsets = [0, 1, 5];
   const res = [];

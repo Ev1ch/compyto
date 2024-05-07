@@ -39,10 +39,10 @@ export default function createSocketCommunicator({
   uri: selfUri,
   clients,
   master,
-  rank,
+  rank: selfRank,
 }: Settings): Communicator {
   let selfIo: Socket | SocketsServer | null = null;
-  const selfProcess = createProcess(selfCode, rank);
+  const selfProcess = createProcess(selfCode, selfRank);
   const selfDevice = createDevice(selfUri, selfProcess);
   const selfGroup = createGroup();
   const selfConnections: SocketConnection[] = [];
@@ -429,7 +429,21 @@ export default function createSocketCommunicator({
       await gatherAsRoot(data, buf, 0, recvCount, abort);
     }
   }
+  const writeToBufferByProcess = async (
+    process: Process,
+    received: unknown[],
+    buf: unknown[],
+    recvCounts: number[],
+    recvOffsets: number[],
+  ) => {
+    const { rank } = process;
+    const count = recvCounts[rank];
+    const offset = recvOffsets[rank];
 
+    for (let i = offset, j = 0; i < offset + count; i++, j++) {
+      buf[i] = received[j];
+    }
+  };
   async function gatherv(
     data: unknown[],
     sendCount: number,
@@ -442,33 +456,27 @@ export default function createSocketCommunicator({
     const isMe = root === selfProcess.rank;
     const rootProcess = getProcessByRank(root);
     if (!isMe) {
-      await sliceAndSend(data, 0, sendCount, rootProcess, abort);
+      return sliceAndSend(data, 0, sendCount, rootProcess, abort);
     }
 
-    if (isMe) {
-      const writeToBufferByProcess = async (
-        process: Process,
-        received: unknown[],
-      ) => {
+    await Promise.all(
+      selfGroup.processes.map(async () => {
+        const { data: received, process } = await _receive(abort);
         const { rank } = process;
         const count = recvCounts[rank];
-        const offset = recvOffsets[rank];
+        if (!Array.isArray(received)) throw new Error('Received not array'); // not possible, only for TS
+        const arrayPart = received.slice(0, count);
 
-        for (let i = offset, j = 0; i < offset + count; i++, j++) {
-          buf[i] = received[j];
-        }
-      };
-      await Promise.all(
-        selfGroup.processes.map(async (process: Process) => {
-          const { rank } = process;
-          const count = recvCounts[rank];
-          const { data: received } = await _receiveArrayPart(0, count, abort);
-
-          writeToBufferByProcess(process, received);
-        }),
-      );
-      writeToBufferByProcess(selfProcess, data);
-    }
+        writeToBufferByProcess(
+          process,
+          arrayPart,
+          buf,
+          recvCounts,
+          recvOffsets,
+        );
+      }),
+    );
+    writeToBufferByProcess(selfProcess, data, buf, recvCounts, recvOffsets);
   }
 
   async function allGather(
@@ -518,11 +526,59 @@ export default function createSocketCommunicator({
     );
   }
 
+  async function allToAll(
+    data: unknown[],
+    sendStartIndex: number,
+    sendCount: number,
+    buf: unknown[],
+    recvStartIndex: number,
+    recvCount: number,
+    abort?: Abort,
+  ) {
+    const sliced = data.slice(
+      sendStartIndex,
+      (selfConnections.length + 1) * sendCount,
+    );
+    const splitted = chunk(sliced, sendCount);
+
+    selfGroup.processes.map((p) => {
+      send(splitted[p.rank], p, abort);
+    });
+
+    await Promise.all(
+      selfGroup.processes.map(async () => {
+        const { data, process } = await _receiveArrayPart(
+          recvStartIndex,
+          recvCount,
+          abort,
+        );
+
+        placeDataInBufferByRankAndCount(buf, data, process.rank, recvCount);
+      }),
+    );
+    placeDataInBufferByRankAndCount(
+      buf,
+      splitted[selfProcess.rank],
+      selfProcess.rank,
+      recvCount,
+    );
+  }
+
+  function size() {
+    return selfGroup.processes.length + 1;
+  }
+
+  function rank() {
+    return selfProcess.rank;
+  }
+
   return {
     isMaster,
     process: selfProcess,
     group: selfGroup,
     start,
+    size,
+    rank,
     send,
     receive,
     scatterv,
@@ -533,6 +589,7 @@ export default function createSocketCommunicator({
     reduce,
     allReduce,
     allGather,
+    allToAll,
     finalize,
   };
 }

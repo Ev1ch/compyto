@@ -7,6 +7,10 @@ export const MAX = createOperator(OperatorType.MAX, [
     worker: createWorker((a: number, b: number) => (a > b ? a : b)),
   },
 ]);
+
+/**
+ * Finds min value from all processes
+ */
 export const MIN = createOperator(OperatorType.MIN, [
   {
     type: Type.NUMBER,
