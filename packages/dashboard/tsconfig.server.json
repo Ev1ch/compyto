@@ -7,6 +7,12 @@
   "references": [
     {
       "path": "../connections"
+    },
+    {
+      "path": "../runner"
+    },
+    {
+      "path": "../settings"
     }
   ]
 }
