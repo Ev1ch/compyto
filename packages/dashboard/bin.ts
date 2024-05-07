@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 import type { Server } from 'node:http';
 import path from 'node:path';
-import express from 'express';
+import express, {
+  type NextFunction,
+  type Request,
+  type Response,
+} from 'express';
 import open from 'open';
 
 import { getStringURI } from '@compyto/connections';
@@ -20,6 +24,15 @@ export interface Dashboard {
   stop(): Promise<void>;
 }
 
+export function getFileRequestHandler(contentType: string) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    req.url += '.gz';
+    res.set('Content-Encoding', 'gzip');
+    res.set('Content-Type', contentType);
+    next();
+  };
+}
+
 export function createDashboard(settings: Settings): Dashboard {
   if (!settings.dashboard) {
     throw new Error('Dashboard settings are required to start the dashboard.');
@@ -30,6 +43,12 @@ export function createDashboard(settings: Settings): Dashboard {
   } = settings;
   const app = express();
   let server: Server | null = null;
+
+  app.get('*.html', getFileRequestHandler('text/html'));
+
+  app.get('*.js', getFileRequestHandler('text/javascript'));
+
+  app.get('*.json', getFileRequestHandler('application/json'));
 
   app.use(express.static(PUBLIC_PATH));
 
