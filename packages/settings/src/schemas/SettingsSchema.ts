@@ -10,7 +10,11 @@ const SettingsSchema = validation
   .shape({
     code: CodeSchema,
     uri: URISchema,
-    monitoring: validation.object().shape({ uri: URISchema }),
+    monitoring: validation
+      .object()
+      .shape({ isEnabled: validation.boolean() })
+      .strict(),
+    dashboard: validation.object().shape({ uri: URISchema }),
     isMaster: validation.boolean(),
     rank: validation.number().when('isMaster', {
       is: (value?: boolean) => value === true,
@@ -22,6 +26,7 @@ const SettingsSchema = validation
       .shape({
         uri: URISchema,
       })
+      .strict()
       .when('isMaster', {
         is: (value?: boolean) => value === false || value === undefined,
         then: (schema) => schema.required(),
@@ -29,6 +34,7 @@ const SettingsSchema = validation
       }),
     clients: validation
       .array()
+      .strict()
       .of(ProcessSchema)
       .min(1)
       .when('isMaster', {

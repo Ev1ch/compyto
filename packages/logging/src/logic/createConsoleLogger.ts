@@ -1,41 +1,18 @@
-import type { Process } from '@compyto/core';
-
-import type { Color, Logger, Print } from '../domain';
-import { COLOR_TO_PRINT_METHOD_MAP, TYPE_TO_COLOR_MAP } from '../constants';
+import type { Logger } from '../domain';
 import getColoredMonitoringContext from './getColoredMonitoringContext';
 import getColoredMonitoringEventKey from './getColoredMonitoringEventKey';
 import getLog from './getLog';
 
-export default function createConsoleLogger(process: Process): Logger {
-  function getColoredPrint(color: Color, method: Print) {
-    const getColoredArgs = COLOR_TO_PRINT_METHOD_MAP[color];
-    const coloredPrint: Print = (...args) => {
-      const log = getLog(getColoredArgs(...args));
-      method(...log);
-    };
+export default function createConsoleLogger(): Logger {
+  const logContext: Logger['logContext'] = (_, context) => {
+    const log = getLog(getColoredMonitoringContext(context));
 
-    return coloredPrint;
-  }
+    console.log(...log);
+  };
 
-  const info: Logger['info'] = getColoredPrint(
-    TYPE_TO_COLOR_MAP.info,
-    console.log,
-  );
-
-  const warn: Logger['warn'] = getColoredPrint(
-    TYPE_TO_COLOR_MAP.warning,
-    console.warn,
-  );
-
-  const error: Logger['error'] = getColoredPrint(
-    TYPE_TO_COLOR_MAP.error,
-    console.error,
-  );
-
-  const event: Logger['event'] = (event, context, ...args) => {
+  const logEvent: Logger['logEvent'] = (key, context, ...args) => {
     const log = getLog(
-      getColoredMonitoringContext(process),
-      getColoredMonitoringEventKey(event),
+      getColoredMonitoringEventKey(key),
       'with arguments:',
       args,
       'and context:',
@@ -46,9 +23,7 @@ export default function createConsoleLogger(process: Process): Logger {
   };
 
   return {
-    info,
-    warn,
-    error,
-    event,
+    logEvent,
+    logContext,
   };
 }

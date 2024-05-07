@@ -12,7 +12,7 @@ export const TYPE_TO_COLOR_MAP = {
 
 export const TIMESTAMP_COLOR = Color.CYAN;
 
-export const MONITORING_CONTEXT_COLOR = Color.WHITE;
+export const MONITORING_CONTEXT_COLOR = Color.BLACK;
 
 /**
  * Map of color to which allows to
@@ -24,17 +24,22 @@ export const COLOR_TO_PRINT_METHOD_MAP: Record<Color, Print> = {
   [Color.GREEN]: chalk.green.bold,
   [Color.YELLOW]: chalk.yellow.bold,
   [Color.CYAN]: chalk.cyan.bold,
-  [Color.WHITE]: chalk.white.bold,
+  [Color.BLACK]: chalk.black.bold,
 
   [Color.BLUE]: chalk.blue.bold,
   [Color.MAGENTA]: chalk.magenta.bold,
-  [Color.BLACK]: chalk.black.bold,
   [Color.GRAY]: chalk.gray.bold,
+  [Color.WHITE]: chalk.white.bold,
 };
 
 export const EVENT_SCOPE_TO_COLOR_MAP: Record<MonitoringEventKeyScope, Color> =
   {
     balancing: Color.BLUE,
     runner: Color.MAGENTA,
-    connections: Color.BLACK,
+    connections: Color.GRAY,
+    monitoring: MONITORING_CONTEXT_COLOR,
   };
+
+export const UNKNOWN_PROCESS_CODE = 'UNKNOWN';
+
+export const DEFAULT_LOGS_PATH = 'logs.json';

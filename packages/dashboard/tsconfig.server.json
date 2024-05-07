@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.common.json",
+  "compilerOptions": {
+    "outDir": "./dist"
+  },
+  "include": ["bin.ts"],
+  "references": [
+    {
+      "path": "../connections"
+    },
+    {
+      "path": "../runner"
+    },
+    {
+      "path": "../settings"
+    }
+  ]
+}

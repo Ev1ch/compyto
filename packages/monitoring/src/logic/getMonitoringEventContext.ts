@@ -5,6 +5,6 @@ import type { MonitoringEventContext } from '../domain';
 export default function getMonitoringEventContext(): MonitoringEventContext {
   return {
     id: createId(),
-    emittedAt: new Date(),
+    emittedAt: performance.now(),
   };
 }

@@ -1,15 +1,20 @@
-import type { MonitoringEvent } from '@compyto/monitoring';
+import type { MonitoringEventWithContext } from '@compyto/monitoring';
+import {
+  getMonitoringEventsByFilters,
+  getMonitoringEventsBySearch,
+} from '@/modules/filtering/logic';
+import { getMonitoringEventsWithSorts } from '@/modules/sorting/logic';
 
 import type { MonitoringEventsPreparers } from '../../domain';
-import getMonitoringEventsByFilters from './getMonitoringEventsByFilters';
-import getMonitoringEventsBySearch from './getMonitoringEventsBySearch';
-import getMonitoringEventsWithSorts from './getMonitoringEventsWithSorts';
 
 export default function getMonitoringEventsWithPreparers(
-  events: MonitoringEvent[],
+  eventWithContexts: MonitoringEventWithContext[],
   { search, filters, sorts }: MonitoringEventsPreparers,
 ) {
-  const filteredEvents = getMonitoringEventsByFilters(events, filters);
+  const filteredEvents = getMonitoringEventsByFilters(
+    eventWithContexts,
+    filters,
+  );
   const searchedEvents = getMonitoringEventsBySearch(filteredEvents, search);
   const sortedEvents = getMonitoringEventsWithSorts(searchedEvents, sorts);
 

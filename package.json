@@ -5,6 +5,7 @@
     "tests",
     "speedtest/*"
   ],
+  "type": "module",
   "license": "MIT",
   "repository": {
     "type": "git",

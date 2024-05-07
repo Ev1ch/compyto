@@ -9,6 +9,7 @@
     ".": "./dist/index.js",
     "./domain": "./dist/domain/index.js",
     "./logic": "./dist/logic/index.js",
+    "./schemas": "./dist/schemas/index.js",
     "./utils": "./dist/utils/index.js",
     "./constants": "./dist/constants.js"
   },
@@ -21,6 +22,6 @@
     "@compyto/core": "^0.0.1",
     "@compyto/settings": "^0.0.1",
     "@compyto/utils": "^0.0.1",
-    "socket.io": "^4.7.5"
+    "@compyto/validation": "^0.0.1"
   }
 }

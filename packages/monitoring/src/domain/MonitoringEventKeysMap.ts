@@ -1,12 +1,16 @@
 import type { Balance } from '@compyto/balancing';
 import type { Device } from '@compyto/connections';
 
+import MonitoringContext from './MonitoringContext';
+
 /**
  * The map which matches the full event
  * and its args type. The event must match
  * the {@link monitoring/src.MonitoringEventKey | format}.
  */
 type MonitoringEventKeysMap = {
+  'info:monitoring/context-set': [MonitoringContext];
+
   'info:connections/communicator-creation-started': [];
   'info:connections/communicator-creation-finished': [];
   'info:connections/main-person-identification-sent': [];

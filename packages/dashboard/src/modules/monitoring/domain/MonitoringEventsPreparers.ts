@@ -1,8 +1,8 @@
-import type MonitoringEventsFilter from './MonitoringEventsFilter';
-import type MonitoringEventsSort from './MonitoringEventsSort';
+import type { Filter } from '@/modules/filtering/domain';
+import type { Sort } from '@/modules/sorting/domain';
 
 export default interface MonitoringEventsPreparers {
   search: string;
-  filters: MonitoringEventsFilter[];
-  sorts: MonitoringEventsSort[];
+  filters: Filter[];
+  sorts: Sort[];
 }

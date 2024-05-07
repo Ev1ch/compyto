@@ -9,6 +9,7 @@ const URISchema = validation
     path: validation.string().required().strict(),
     port: validation.number().integer().required().strict(),
   })
-  .strict();
+  .strict()
+  .required();
 
 export default URISchema;

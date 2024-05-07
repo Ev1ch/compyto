@@ -2,13 +2,20 @@ import type { URI } from '@compyto/connections';
 import type { Code, Process, Rank } from '@compyto/core';
 import type { Xor } from '@compyto/utils';
 
-interface BaseSettings {
+export interface MonitoringSettings {
+  isEnabled?: boolean;
+}
+
+export interface DashboardSettings {
+  uri: URI;
+}
+
+export interface BaseSettings {
   rank: Rank;
   code: Code;
   uri: URI;
-  monitoring?: {
-    uri: URI;
-  };
+  monitoring?: MonitoringSettings;
+  dashboard?: DashboardSettings;
 }
 
 export interface ClientSettings extends BaseSettings {

@@ -25,6 +25,9 @@
     },
     {
       "path": "../utils"
+    },
+    {
+      "path": "../connections"
     }
   ]
 }

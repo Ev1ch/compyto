@@ -5,13 +5,14 @@ import {
   TYPE_DELIMITER,
   type MonitoringEvent,
 } from '@compyto/monitoring';
-import { lodash as _, createId } from '@compyto/utils';
+import { createId, random, sample } from '@compyto/utils';
 
 export default function getRandomEvent(): MonitoringEvent {
   return {
-    key: `${_.sample(MONITORING_EVENT_TYPES)}${TYPE_DELIMITER}${_.sample(MONITORING_EVENT_SCOPE)}${SCOPE_DELIMITER}${Math.random()}`,
+    key: `${sample(MONITORING_EVENT_TYPES)}${TYPE_DELIMITER}${sample(MONITORING_EVENT_SCOPE)}${SCOPE_DELIMITER}${Math.random()}`,
+    args: [],
     context: {
-      emittedAt: new Date(),
+      emittedAt: random(0, 10000),
       id: createId(),
     },
   };

@@ -10,6 +10,7 @@ const ProcessSchema = validation
   .shape({
     code: CodeSchema,
   })
-  .strict();
+  .strict()
+  .required();
 
 export default ProcessSchema;
