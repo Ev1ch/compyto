@@ -1,5 +1,5 @@
 find ./packages -type d -name "dist" -exec rm -r {} +
-find ./packages -name "*.tsbuildinfo" -type f -delete 
+find ./packages -name "*.tsbuildinfo" -type f -delete
 
 echo "@compyto/validation"
 yarn workspace @compyto/validation build
@@ -25,9 +25,6 @@ yarn workspace @compyto/monitoring build
 echo "@compyto/logging"
 yarn workspace @compyto/logging build
 
-echo "@compyto/dashboard"
-yarn workspace @compyto/dashboard build
-
 echo "@compyto/runtime"
 yarn workspace @compyto/runtime build
 
@@ -39,3 +36,6 @@ yarn workspace @compyto/serialization build
 
 echo "@compyto/runner"
 yarn workspace @compyto/runner build
+
+echo "@compyto/dashboard"
+yarn workspace @compyto/dashboard build
