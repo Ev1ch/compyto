@@ -24,11 +24,15 @@ export interface Dashboard {
   stop(): Promise<void>;
 }
 
+export function setFileRequestHeaders(contentType: string, res: Response) {
+  res.set('Content-Encoding', 'gzip');
+  res.set('Content-Type', contentType);
+}
+
 export function getFileRequestHandler(contentType: string) {
   return (req: Request, res: Response, next: NextFunction) => {
     req.url += '.gz';
-    res.set('Content-Encoding', 'gzip');
-    res.set('Content-Type', contentType);
+    setFileRequestHeaders(contentType, res);
     next();
   };
 }
@@ -53,6 +57,7 @@ export function createDashboard(settings: Settings): Dashboard {
   app.use(express.static(PUBLIC_PATH));
 
   app.get('/', (req, res) => {
+    setFileRequestHeaders('text/html', res);
     res.sendFile(path.join(PUBLIC_PATH, 'index.html'));
   });
 
