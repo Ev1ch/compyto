@@ -14,14 +14,7 @@ import {
 } from '@compyto/core';
 import { runtime } from '@compyto/runtime';
 import type { Settings } from '@compyto/settings';
-import {
-  chunk,
-  createQueue,
-  filter,
-  groupBy,
-  remove,
-  uniq,
-} from '@compyto/utils';
+import { chunk, createQueue, remove } from '@compyto/utils';
 
 import {
   SocketEvent,
@@ -51,24 +44,30 @@ export default function createSocketCommunicator({
 
   // Validate ranks for being unique
   function validateRanks(processes: Process[]) {
-    const ranks = processes.map((p) => p.rank);
-    const uniqueRanks = uniq(ranks);
-    const unique = uniqueRanks.length === processes.length;
-    if (!unique) {
-      const grouped = groupBy(ranks);
-      const dublicates = filter(grouped, (items) => items.length > 1).map(
-        (d) => d[0],
-      );
-      throw new Error(`Ranks must be unique. Dublicates: ${dublicates}`);
+    const ranks = [selfRank, ...processes.map(({ rank }) => rank)];
+    const sortedRanks = ranks.sort((a, b) => a - b);
+
+    if (!clients) {
+      throw new Error('Clients are not defined');
+    }
+
+    for (let i = 0; i <= clients.length; i++) {
+      const rank = sortedRanks[i];
+
+      if (rank !== i) {
+        throw new Error(
+          'Ranks must be unique and start from 0 to clients number',
+        );
+      }
     }
   }
 
   // write data to buffer 'buf'
   function writeToBuffer(buf: unknown[], data: unknown) {
     remove(buf);
-
     addDataToBuffer(buf, data);
   }
+
   function addDataToBuffer(buf: unknown[], data: unknown) {
     if (Array.isArray(data)) {
       buf.push(...data);
@@ -112,7 +111,6 @@ export default function createSocketCommunicator({
 
   function setConnections(connections: SocketConnection[]) {
     const processes = connections.map(({ device: { process } }) => process);
-    validateRanks(processes);
     selfConnections.push(...connections);
     selfGroup.add(...processes);
     setCommunicationHandlers(selfConnections, selfQueue);
@@ -132,8 +130,8 @@ export default function createSocketCommunicator({
         startMainPerson(clients!, selfUri, selfDevice, (io, connections) => {
           selfIo = io;
           setConnections(connections);
-          io.emit(SocketEvent.CONFIRMATION_RECEIVED);
           validateRanks(selfGroup.processes);
+          io.emit(SocketEvent.CONFIRMATION_RECEIVED);
 
           isStarted = true;
           resolve(undefined);
