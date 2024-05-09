@@ -51,6 +51,10 @@ export default function createSocketCommunicator({
       throw new Error('Clients are not defined');
     }
 
+    if (clients.length !== sortedRanks.length) {
+      throw new Error('Clients number must be equal to ranks number');
+    }
+
     for (let i = 0; i <= clients.length; i++) {
       const rank = sortedRanks[i];
 
