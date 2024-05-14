@@ -1,5 +1,6 @@
 import type { Balance } from '@compyto/balancing';
-import type { Device } from '@compyto/connections';
+import type { Data, Device } from '@compyto/connections';
+import { OperatorType, Rank } from '@compyto/core';
 
 import MonitoringContext from './MonitoringContext';
 
@@ -25,6 +26,33 @@ type MonitoringEventKeysMap = {
   'info:connections/person-as-server-got-client': [Device];
   'info:connections/person-as-server-identification-sent': [Device];
   'info:connections/person-started': [];
+
+  'info:communications/gather-started': [];
+  'info:communications/gather-finished': [];
+  'info:communications/gatherv-started': [];
+  'info:communications/gatherv-finished': [];
+  'info:communications/all-gather-started': [];
+  'info:communications/all-gather-finished': [];
+  'info:communications/sent-data': [Data, Rank];
+  'info:communications/received-data': [Data, Rank];
+  'info:communications/finalize': [Rank];
+  'info:communications/broadcast-started': [Data[], Rank];
+  'info:communications/broadcast-finished': [];
+  'info:communications/scatter-started-main': [Data[][], Rank];
+  'info:communications/scatter-started-person': [Rank];
+  'info:communications/scatter-finished': [Rank];
+  'info:communications/scatterv-started': [Data[], number[], number[], Rank];
+  'info:communications/scatterv-finished': [Rank];
+  'info:communications/reduce-started': [OperatorType, Rank];
+  'info:communications/reduce-all-data-receive': [Data[]];
+  'info:communications/reduce-calculated': [Data];
+  'info:communications/reduce-finished': [OperatorType, Rank];
+  'info:communications/all-reduce-started': [OperatorType];
+  'info:communications/all-reduce-all-data-receive': [Data[]];
+  'info:communications/all-reduce-calculated': [Data];
+  'info:communications/all-reduce-finished': [OperatorType];
+  'info:communications/all-to-all-started': [Data[]];
+  'info:communications/all-to-all-finished': [];
 };
 
 export default MonitoringEventKeysMap;

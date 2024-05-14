@@ -6,6 +6,7 @@ type MonitoringEventKeyScope =
   | 'balancing'
   | 'runner'
   | 'connections'
-  | 'monitoring';
+  | 'monitoring'
+  | 'communications';
 
 export default MonitoringEventKeyScope;

@@ -5,7 +5,7 @@ export default async function start() {
   await communicator.start();
   const MASTER = 0;
   console.log('Started the app');
-  const TOTAL = 100000;
+  const TOTAL = 10;
   const data = new Array(TOTAL).fill(1);
   const res = [];
 

@@ -3,17 +3,17 @@
   "events": [
     {
       "key": "info:monitoring/context-set",
-      "context": { "id": "089b36fdaa96f", "emittedAt": 1715715517613 },
+      "context": { "id": "75208328513c8", "emittedAt": 1715718519341 },
       "args": [{ "process": { "code": "master", "rank": 0 } }]
     },
     {
       "key": "info:connections/main-person-started",
-      "context": { "id": "59ddcd3bf7398", "emittedAt": 1715715517620 },
+      "context": { "id": "55078d7ee1f42", "emittedAt": 1715718519354 },
       "args": []
     },
     {
       "key": "info:connections/main-person-got-client",
-      "context": { "id": "8de521b947e59", "emittedAt": 1715715519309 },
+      "context": { "id": "faf25fb5aa83c", "emittedAt": 1715718520253 },
       "args": [
         {
           "uri": { "path": "http://localhost", "port": 3001 },
@@ -23,7 +23,7 @@
     },
     {
       "key": "info:connections/main-person-got-client",
-      "context": { "id": "25da63e3c5cab", "emittedAt": 1715715520158 },
+      "context": { "id": "cc85f6c6e0e79", "emittedAt": 1715718521415 },
       "args": [
         {
           "uri": { "path": "http://localhost", "port": 3002 },
@@ -33,12 +33,12 @@
     },
     {
       "key": "info:connections/main-person-identification-sent",
-      "context": { "id": "f5eb5ebba891e", "emittedAt": 1715715520160 },
+      "context": { "id": "0784a063e6243", "emittedAt": 1715718521416 },
       "args": []
     },
     {
       "key": "info:connections/main-person-balances-sent",
-      "context": { "id": "e63f0c6c1cb22", "emittedAt": 1715715520169 },
+      "context": { "id": "380f8fe61d798", "emittedAt": 1715718521416 },
       "args": [
         [
           {
@@ -56,12 +56,12 @@
     },
     {
       "key": "info:connections/main-person-identification-sent",
-      "context": { "id": "26e9aa6a7be2d", "emittedAt": 1715715520170 },
+      "context": { "id": "47d23cf0b2197", "emittedAt": 1715718521417 },
       "args": []
     },
     {
       "key": "info:connections/main-person-balances-sent",
-      "context": { "id": "fc094279bf083", "emittedAt": 1715715520171 },
+      "context": { "id": "c9f3c16c5c9b", "emittedAt": 1715718521418 },
       "args": [
         [
           {
@@ -79,7 +79,7 @@
     },
     {
       "key": "info:connections/main-person-confirmation-received",
-      "context": { "id": "7a0d8f41da143", "emittedAt": 1715715521556 },
+      "context": { "id": "93afac3b1c2d", "emittedAt": 1715718522720 },
       "args": [
         {
           "uri": { "path": "http://localhost", "port": 3002 },
@@ -89,13 +89,33 @@
     },
     {
       "key": "info:connections/main-person-confirmation-received",
-      "context": { "id": "f44bb8e49e6d8", "emittedAt": 1715715521560 },
+      "context": { "id": "860f79b8a673c", "emittedAt": 1715718522724 },
       "args": [
         {
           "uri": { "path": "http://localhost", "port": 3001 },
           "process": { "code": "pc-1", "rank": 1 }
         }
       ]
+    },
+    {
+      "key": "info:communications/gather-started",
+      "context": { "id": "cdf983b0b2b98", "emittedAt": 1715718522726 },
+      "args": []
+    },
+    {
+      "key": "info:communications/received-data",
+      "context": { "id": "03b2fa90884aa", "emittedAt": 1715718522728 },
+      "args": [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1], 2]
+    },
+    {
+      "key": "info:communications/received-data",
+      "context": { "id": "07f23993724f2", "emittedAt": 1715718522730 },
+      "args": [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1], 1]
+    },
+    {
+      "key": "info:communications/gather-finished",
+      "context": { "id": "23d48c4f289ad", "emittedAt": 1715718522731 },
+      "args": []
     }
   ]
 }

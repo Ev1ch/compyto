@@ -163,6 +163,7 @@ export default function createSocketCommunicator({
     // TODO:
     // if (pendingRequests) throw new Error('There are pending requests');
 
+    runtime.monitoring?.emit('info:communications/finalize', selfProcess.rank);
     return process.exit(0);
   }
 
@@ -175,6 +176,11 @@ export default function createSocketCommunicator({
       abort?.signal?.addEventListener('abort', handleAbort, { once: true });
 
       if (areProcessesEqual(process, selfProcess)) {
+        runtime.monitoring?.emit(
+          'info:communications/sent-data',
+          data,
+          selfProcess.rank,
+        );
         selfQueue.enqueue({
           data,
           process: selfProcess,
@@ -186,6 +192,11 @@ export default function createSocketCommunicator({
           throw new Error('Connection not found');
         }
 
+        runtime.monitoring?.emit(
+          'info:communications/sent-data',
+          data,
+          process.rank,
+        );
         connection.socket.emit(SocketEvent.SEND, data);
       }
 
@@ -246,6 +257,11 @@ export default function createSocketCommunicator({
         selfQueue.off('enqueue', handleEnqueue);
         abort?.signal.removeEventListener('abort', handleAbort);
         const data = selfQueue.dequeue();
+        runtime.monitoring?.emit(
+          'info:communications/received-data',
+          data.data,
+          data.process.rank,
+        );
         resolve(data);
       }
       // If error happens here maybe some VERY wrong parameters very passed in some function. Check your program
@@ -273,6 +289,12 @@ export default function createSocketCommunicator({
     abort?: Abort,
   ) {
     const sliced = sliceSendData(data, sendStartIndex, sendCount);
+
+    runtime.monitoring?.emit(
+      'info:communications/broadcast-started',
+      sliced,
+      root,
+    );
     const isMe = root === selfProcess.rank;
 
     if (isMe) {
@@ -285,6 +307,7 @@ export default function createSocketCommunicator({
     }
 
     await receive(data, abort);
+    runtime.monitoring?.emit('info:communications/broadcast-finished');
   }
 
   async function scatter(
@@ -301,13 +324,24 @@ export default function createSocketCommunicator({
       const sliced = data.slice(0, (selfConnections.length + 1) * sendCount);
       const splitted = chunk(sliced, sendCount);
 
+      runtime.monitoring?.emit(
+        'info:communications/scatter-started-main',
+        splitted,
+        root,
+      );
       await Promise.all(
         [...selfGroup.processes, selfProcess].map((process) =>
           send(splitted[process.rank] || [], process, abort),
         ),
       );
+    } else {
+      runtime.monitoring?.emit(
+        'info:communications/scatter-started-person',
+        root,
+      );
     }
     await receiveArrayPart(buf, 0, recvCount, abort);
+    runtime.monitoring?.emit('info:communications/scatter-finished', root);
   }
 
   async function scatterv(
@@ -320,6 +354,13 @@ export default function createSocketCommunicator({
     abort?: Abort,
   ) {
     const isCalledByRoot = selfProcess.rank === root;
+    runtime.monitoring?.emit(
+      'info:communications/scatterv-started',
+      data,
+      sendCounts,
+      sendOffsets,
+      root,
+    );
     if (isCalledByRoot) {
       await Promise.all(
         [...selfGroup.processes, selfProcess].map((process) => {
@@ -334,6 +375,7 @@ export default function createSocketCommunicator({
     }
 
     await receiveArrayPart(buf, 0, recvCount, abort);
+    runtime.monitoring?.emit('info:communications/scatterv-finished', root);
   }
 
   async function reduce(
@@ -344,6 +386,11 @@ export default function createSocketCommunicator({
     root: number,
     abort?: Abort,
   ) {
+    runtime.monitoring?.emit(
+      'info:communications/reduce-started',
+      op.type,
+      root,
+    );
     const isMe = root === selfProcess.rank;
     const rootProcess = getProcessByRank(root);
     const sliced = sliceSendData(data, 0, count);
@@ -361,9 +408,19 @@ export default function createSocketCommunicator({
       );
 
       addDataToBuffer(received, sliced);
+      runtime.monitoring?.emit(
+        'info:communications/reduce-all-data-receive',
+        received,
+      );
       const result = op.apply(received);
+      runtime.monitoring?.emit('info:communications/reduce-calculated', result);
       writeToBuffer(buf, result);
     }
+    runtime.monitoring?.emit(
+      'info:communications/reduce-finished',
+      op.type,
+      root,
+    );
   }
 
   async function allReduce(
@@ -373,6 +430,7 @@ export default function createSocketCommunicator({
     op: Operator,
     abort?: Abort,
   ) {
+    runtime.monitoring?.emit('info:communications/all-reduce-started', op.type);
     const sliced = sliceSendData(data, 0, count);
     const temp: unknown[] = [];
     // send to all others
@@ -387,9 +445,20 @@ export default function createSocketCommunicator({
         addDataToBuffer(temp, data);
       }),
     );
-
+    runtime.monitoring?.emit(
+      'info:communications/all-reduce-all-data-receive',
+      temp,
+    );
     const result = op.apply(temp);
+    runtime.monitoring?.emit(
+      'info:communications/all-reduce-calculated',
+      result,
+    );
     writeToBuffer(buf, result);
+    runtime.monitoring?.emit(
+      'info:communications/all-reduce-finished',
+      op.type,
+    );
   }
 
   function placeDataInBufferByRankAndCount(
@@ -415,17 +484,18 @@ export default function createSocketCommunicator({
     root: number,
     abort?: Abort,
   ) {
+    runtime.monitoring?.emit('info:communications/gather-started');
     const isMe = root === selfProcess.rank;
     const rootProcess = getProcessByRank(root);
     if (!isMe) {
       // send to root
       await sliceAndSend(data, 0, sendCount, rootProcess, abort);
-      return;
     }
 
     if (isMe) {
       await gatherAsRoot(data, buf, 0, recvCount, abort);
     }
+    runtime.monitoring?.emit('info:communications/gather-finished');
   }
   const writeToBufferByProcess = async (
     process: Process,
@@ -451,6 +521,7 @@ export default function createSocketCommunicator({
     root: number,
     abort?: Abort,
   ) {
+    runtime.monitoring?.emit('info:communications/gatherv-started');
     const isMe = root === selfProcess.rank;
     const rootProcess = getProcessByRank(root);
     if (!isMe) {
@@ -475,6 +546,7 @@ export default function createSocketCommunicator({
       }),
     );
     writeToBufferByProcess(selfProcess, data, buf, recvCounts, recvOffsets);
+    runtime.monitoring?.emit('info:communications/gatherv-finished');
   }
 
   async function allGather(
@@ -486,6 +558,7 @@ export default function createSocketCommunicator({
     recvCount: number,
     abort?: Abort,
   ) {
+    runtime.monitoring?.emit('info:communications/all-gather-started');
     Promise.all(
       selfGroup.processes.map((p) =>
         sliceAndSend(data, sendStartIndex, sendCount, p, abort),
@@ -493,6 +566,7 @@ export default function createSocketCommunicator({
     );
 
     await gatherAsRoot(data, buf, recvStartIndex, recvCount, abort);
+    runtime.monitoring?.emit('info:communications/all-gather-finished');
   }
 
   async function gatherAsRoot(
@@ -537,6 +611,7 @@ export default function createSocketCommunicator({
       sendStartIndex,
       (selfConnections.length + 1) * sendCount,
     );
+    runtime.monitoring?.emit('info:communications/all-to-all-started', sliced);
     const splitted = chunk(sliced, sendCount);
 
     selfGroup.processes.map((p) => {
@@ -560,6 +635,7 @@ export default function createSocketCommunicator({
       selfProcess.rank,
       recvCount,
     );
+    runtime.monitoring?.emit('info:communications/all-to-all-finished');
   }
 
   function size() {

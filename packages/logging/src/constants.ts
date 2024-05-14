@@ -38,6 +38,7 @@ export const EVENT_SCOPE_TO_COLOR_MAP: Record<MonitoringEventKeyScope, Color> =
     runner: Color.MAGENTA,
     connections: Color.GRAY,
     monitoring: MONITORING_CONTEXT_COLOR,
+    communications: Color.YELLOW,
   };
 
 export const UNKNOWN_PROCESS_CODE = 'UNKNOWN';
