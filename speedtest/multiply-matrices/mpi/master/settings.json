@@ -5,6 +5,12 @@
     "path": "http://localhost",
     "port": 3000
   },
+  "monitoring": {
+    "uri": {
+      "path": "http://localhost",
+      "port": 4001
+    }
+  },
   "code": "master",
   "clients": [
     {

@@ -18,9 +18,9 @@ import { chunk, createQueue, remove } from '@compyto/utils';
 
 import {
   SocketEvent,
-  // type Socket,
+  type Socket,
   type SocketConnection,
-  // type SocketsServer,
+  type SocketsServer,
 } from '../../domain';
 import setCommunicationHandlers from '../setCommunicationHandlers';
 import startMainPerson from '../startMainPerson';
@@ -34,7 +34,7 @@ export default function createSocketCommunicator({
   master,
   rank: selfRank,
 }: Settings): Communicator {
-  // let selfIo: Socket | SocketsServer | null = null;
+  let selfIo: Socket | SocketsServer | null = null;
   const selfProcess = createProcess(selfCode, selfRank);
   const selfDevice = createDevice(selfUri, selfProcess);
   const selfGroup = createGroup();
@@ -132,7 +132,7 @@ export default function createSocketCommunicator({
 
       if (isMaster) {
         startMainPerson(clients!, selfUri, selfDevice, (io, connections) => {
-          // selfIo = io;
+          selfIo = io;
           setConnections(connections);
           validateRanks(selfGroup.processes);
           io.emit(SocketEvent.CONFIRMATION_RECEIVED);
@@ -142,7 +142,7 @@ export default function createSocketCommunicator({
         });
       } else {
         startPerson(master!, selfDevice, (io, connections) => {
-          // selfIo = io;
+          selfIo = io;
           setConnections(connections);
           io.emit(SocketEvent.CONFIRMATION);
           io.on(SocketEvent.CONFIRMATION_RECEIVED, () => {
@@ -154,19 +154,20 @@ export default function createSocketCommunicator({
     });
   }
 
-  async function finalize(): Promise<never> {
+  async function finalize() {
     if (!isStarted) {
       throw new Error('Communicator is not started');
     }
 
-    if (selfQueue.length)
-      throw new Error('Cannot finalize, there are tasks in queue');
+    selfConnections.forEach(({ socket }) => {
+      socket.disconnect(true);
+    });
 
-    // TODO:
-    // if (pendingRequests) throw new Error('There are pending requests');
-
-    runtime.monitoring?.emit('info:communications/finalize', selfProcess.rank);
-    return process.exit(0);
+    if (isMaster) {
+      (selfIo as SocketsServer).close();
+    } else {
+      (selfIo as Socket).disconnect(true);
+    }
   }
 
   async function send(data: unknown, process: Process, abort?: Abort) {

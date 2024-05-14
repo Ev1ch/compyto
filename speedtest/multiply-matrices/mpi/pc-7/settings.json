@@ -5,6 +5,12 @@
     "port": 3007
   },
   "code": "pc-7",
+  "monitoring": {
+    "uri": {
+      "path": "http://localhost",
+      "port": 4000
+    }
+  },
   "master": {
     "uri": {
       "path": "http://localhost",
