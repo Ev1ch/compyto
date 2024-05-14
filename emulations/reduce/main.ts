@@ -18,5 +18,5 @@ export default async function start() {
     buf,
   );
 
-  // await communicator.finalize();
+  await communicator.finalize();
 }

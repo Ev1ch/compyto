@@ -16,6 +16,6 @@ export default async function start() {
 
   console.log(`Received: `, res);
 
-  // await communicator.finalize();
   assert.equal(res.length, 6);
+  await communicator.finalize();
 }

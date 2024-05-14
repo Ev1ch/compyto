@@ -22,4 +22,5 @@ export default async function start() {
   await communicator.gatherv(data, data.length, res, counts, offsets, MASTER);
 
   console.log(`Received: `, res);
+  await communicator.finalize();
 }

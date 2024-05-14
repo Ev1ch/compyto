@@ -17,10 +17,10 @@ export default async function start() {
   await communicator.broadcast(data, 1, 3, MASTER);
 
   console.log('Result', data);
-  // await communicator.finalize();
 
   assert.equal(data.length, 3);
   assert.equal(data[0], 2);
   assert.equal(data[1], 3);
   assert.equal(data[2], 4);
+  await communicator.finalize();
 }
