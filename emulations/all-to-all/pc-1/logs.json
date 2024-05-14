@@ -1,0 +1,58 @@
+{
+  "context": { "process": { "code": "pc-1", "rank": 1 } },
+  "events": [
+    {
+      "key": "info:monitoring/context-set",
+      "context": { "id": "d38011ab0840c", "emittedAt": 1715715342542 },
+      "args": [{ "process": { "code": "pc-1", "rank": 1 } }]
+    },
+    {
+      "key": "info:connections/person-started",
+      "context": { "id": "045742a7db44c", "emittedAt": 1715715342561 },
+      "args": []
+    },
+    {
+      "key": "info:connections/person-identification-received",
+      "context": { "id": "44f8eb265fa78", "emittedAt": 1715715343675 },
+      "args": [
+        {
+          "uri": { "path": "http://localhost", "port": 3000 },
+          "process": { "code": "master", "rank": 0 }
+        }
+      ]
+    },
+    {
+      "key": "info:connections/person-balances-received",
+      "context": { "id": "2c9c54d867ba3", "emittedAt": 1715715343678 },
+      "args": [
+        [
+          {
+            "client": {
+              "uri": { "path": "http://localhost", "port": 3001 },
+              "process": { "code": "pc-1", "rank": 1 }
+            },
+            "server": {
+              "uri": { "path": "http://localhost", "port": 3002 },
+              "process": { "code": "pc-2", "rank": 2 }
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "key": "info:connections/person-as-client-connecting-started",
+      "context": { "id": "429cbe55f06b2", "emittedAt": 1715715343679 },
+      "args": []
+    },
+    {
+      "key": "info:connections/person-as-client-connected",
+      "context": { "id": "6c2fb90cb86f8", "emittedAt": 1715715344380 },
+      "args": [
+        {
+          "uri": { "path": "http://localhost", "port": 3002 },
+          "process": { "code": "pc-2", "rank": 2 }
+        }
+      ]
+    }
+  ]
+}

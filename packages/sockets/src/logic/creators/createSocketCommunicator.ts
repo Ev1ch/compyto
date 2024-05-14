@@ -25,9 +25,9 @@ import {
 
 import {
   SocketEvent,
-  type Socket,
+  // type Socket,
   type SocketConnection,
-  type SocketsServer,
+  // type SocketsServer,
 } from '../../domain';
 import setCommunicationHandlers from '../setCommunicationHandlers';
 import startMainPerson from '../startMainPerson';
@@ -41,7 +41,7 @@ export default function createSocketCommunicator({
   master,
   rank: selfRank,
 }: Settings): Communicator {
-  let selfIo: Socket | SocketsServer | null = null;
+  // let selfIo: Socket | SocketsServer | null = null;
   const selfProcess = createProcess(selfCode, selfRank);
   const selfDevice = createDevice(selfUri, selfProcess);
   const selfGroup = createGroup();
@@ -130,7 +130,7 @@ export default function createSocketCommunicator({
 
       if (isMaster) {
         startMainPerson(clients!, selfUri, selfDevice, (io, connections) => {
-          selfIo = io;
+          // selfIo = io;
           setConnections(connections);
           io.emit(SocketEvent.CONFIRMATION_RECEIVED);
           validateRanks(selfGroup.processes);
@@ -140,7 +140,7 @@ export default function createSocketCommunicator({
         });
       } else {
         startPerson(master!, selfDevice, (io, connections) => {
-          selfIo = io;
+          // selfIo = io;
           setConnections(connections);
           io.emit(SocketEvent.CONFIRMATION);
           io.on(SocketEvent.CONFIRMATION_RECEIVED, () => {
@@ -152,20 +152,18 @@ export default function createSocketCommunicator({
     });
   }
 
-  async function finalize() {
+  async function finalize(): Promise<never> {
     if (!isStarted) {
       throw new Error('Communicator is not started');
     }
 
-    selfConnections.forEach(({ socket }) => {
-      socket.disconnect(true);
-    });
+    if (selfQueue.length)
+      throw new Error('Cannot finalize, there are tasks in queue');
 
-    if (isMaster) {
-      (selfIo as SocketsServer).close();
-    } else {
-      (selfIo as Socket).disconnect(true);
-    }
+    // TODO:
+    // if (pendingRequests) throw new Error('There are pending requests');
+
+    return process.exit(0);
   }
 
   async function send(data: unknown, process: Process, abort?: Abort) {

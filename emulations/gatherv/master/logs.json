@@ -1,0 +1,101 @@
+{
+  "context": { "process": { "code": "master", "rank": 0 } },
+  "events": [
+    {
+      "key": "info:monitoring/context-set",
+      "context": { "id": "e88898310db14", "emittedAt": 1715715394429 },
+      "args": [{ "process": { "code": "master", "rank": 0 } }]
+    },
+    {
+      "key": "info:connections/main-person-started",
+      "context": { "id": "21e6ef94ef501", "emittedAt": 1715715394435 },
+      "args": []
+    },
+    {
+      "key": "info:connections/main-person-got-client",
+      "context": { "id": "b9b378e1bad7f", "emittedAt": 1715715396466 },
+      "args": [
+        {
+          "uri": { "path": "http://localhost", "port": 3001 },
+          "process": { "code": "pc-1", "rank": 1 }
+        }
+      ]
+    },
+    {
+      "key": "info:connections/main-person-got-client",
+      "context": { "id": "6deb2beb7de13", "emittedAt": 1715715398493 },
+      "args": [
+        {
+          "uri": { "path": "http://localhost", "port": 3002 },
+          "process": { "code": "pc-2", "rank": 2 }
+        }
+      ]
+    },
+    {
+      "key": "info:connections/main-person-identification-sent",
+      "context": { "id": "f0d388491762e", "emittedAt": 1715715398495 },
+      "args": []
+    },
+    {
+      "key": "info:connections/main-person-balances-sent",
+      "context": { "id": "2aae5d6f2d60d", "emittedAt": 1715715398496 },
+      "args": [
+        [
+          {
+            "client": {
+              "uri": { "path": "http://localhost", "port": 3001 },
+              "process": { "code": "pc-1", "rank": 1 }
+            },
+            "server": {
+              "uri": { "path": "http://localhost", "port": 3002 },
+              "process": { "code": "pc-2", "rank": 2 }
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "key": "info:connections/main-person-identification-sent",
+      "context": { "id": "c0c3f6357c9c4", "emittedAt": 1715715398497 },
+      "args": []
+    },
+    {
+      "key": "info:connections/main-person-balances-sent",
+      "context": { "id": "13a289f39eaf5", "emittedAt": 1715715398498 },
+      "args": [
+        [
+          {
+            "client": {
+              "uri": { "path": "http://localhost", "port": 3001 },
+              "process": { "code": "pc-1", "rank": 1 }
+            },
+            "server": {
+              "uri": { "path": "http://localhost", "port": 3002 },
+              "process": { "code": "pc-2", "rank": 2 }
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "key": "info:connections/main-person-confirmation-received",
+      "context": { "id": "e13dc264b9a82", "emittedAt": 1715715399714 },
+      "args": [
+        {
+          "uri": { "path": "http://localhost", "port": 3002 },
+          "process": { "code": "pc-2", "rank": 2 }
+        }
+      ]
+    },
+    {
+      "key": "info:connections/main-person-confirmation-received",
+      "context": { "id": "6618b1290f079", "emittedAt": 1715715399719 },
+      "args": [
+        {
+          "uri": { "path": "http://localhost", "port": 3001 },
+          "process": { "code": "pc-1", "rank": 1 }
+        }
+      ]
+    }
+  ]
+}
