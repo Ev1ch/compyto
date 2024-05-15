@@ -25,7 +25,7 @@ import {
   addProcesses,
   removeProcesses,
   selectEventsWithPreparers,
-  selectMonitorings,
+  selectMonitoringsWithPreparers,
 } from '../../../store';
 import { parseJsonMonitoringData } from '../../../utils';
 
@@ -38,13 +38,13 @@ export default memo(function MonitoringEventsTreeHeader({
 }: MonitoringEventsTreeHeaderProps) {
   const dispatch = useDispatch();
   const eventsWithPreparers = useSelector(selectEventsWithPreparers);
-  const monitorings = useSelector(selectMonitorings);
+  const monitoringsWithPreparers = useSelector(selectMonitoringsWithPreparers);
   const isPairPresent = useSelector(selectIsPairPresent);
   const [isImportPopperOpen, setIsImportPopperOpen] = useState(false);
   const [importStatus, setImportStatus] = useState<TImportStatus | null>(null);
   const importButtonRef = useRef<HTMLButtonElement | null>(null);
   const { download } = useFileDownload(
-    JSON.stringify(monitorings),
+    JSON.stringify(monitoringsWithPreparers),
     EXPORT_EVENTS_FILE_NAME,
   );
   const { input } = useFileInput(IMPORT_FILE_OPTIONS);

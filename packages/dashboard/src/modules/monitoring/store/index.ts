@@ -5,6 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 
 import type { MonitoringData } from '@compyto/monitoring';
+import { groupBy } from '@compyto/utils';
 import type { FilterCriteria } from '@/modules/filtering/domain';
 import type { State } from '@/store/domain';
 import {
@@ -90,6 +91,31 @@ export const selectShownEvents = createSelector(
     showAll ? events : eventsWithPreparers,
 );
 
+export const selectMonitoringsWithPreparers = createSelector(
+  [selectMonitorings, selectEventsWithPreparers],
+  (monitorings, eventsWithPreparers) => {
+    const groupedEvents = groupBy(eventsWithPreparers, ({ context }) =>
+      getProcessKeyByMonitoring(context),
+    );
+
+    return Object.keys(groupedEvents).map((key) => {
+      const events = groupedEvents[key].map(({ event }) => event);
+      const monitoring = monitorings.find(
+        ({ context }) => getProcessKeyByMonitoring(context) === key,
+      );
+
+      if (!monitoring) {
+        throw new Error('Monitoring not found');
+      }
+
+      return {
+        ...monitoring,
+        events,
+      } as MonitoringData;
+    });
+  },
+);
+
 const initialState: MonitoringsState = {
   data: {},
 };
@@ -99,13 +125,13 @@ const slice = createSlice({
   initialState,
   reducers: {
     addProcess: (state, { payload }: PayloadAction<MonitoringData>) => {
-      const key = getProcessKeyByMonitoring(payload);
+      const key = getProcessKeyByMonitoring(payload.context);
 
       state.data[key] = payload;
     },
     addProcesses: (state, { payload }: PayloadAction<MonitoringData[]>) => {
       payload.forEach((process) => {
-        const key = getProcessKeyByMonitoring(process);
+        const key = getProcessKeyByMonitoring(process.context);
 
         state.data[key] = process;
       });
