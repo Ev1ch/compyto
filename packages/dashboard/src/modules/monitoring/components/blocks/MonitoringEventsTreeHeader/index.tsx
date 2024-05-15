@@ -84,6 +84,7 @@ export default memo(function MonitoringEventsTreeHeader({
 
       setImportStatus(TImportStatus.SUCCESS);
     } catch (error) {
+      console.error(error);
       setImportStatus(TImportStatus.ERROR);
     }
   }, [input, dispatch]);

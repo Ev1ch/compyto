@@ -11,7 +11,8 @@ export const MONITORING_EVENT_SCOPES = [
   'runner',
   'connections',
   'monitoring',
+  'communications',
 ] as const;
 
 export const MONITORING_EVENT_KEY_REGEX =
-  /(info|error|warning):(balancing|runner|connections|monitoring)\/.{1,}/;
+  /(info|error|warning):(balancing|runner|connections|monitoring|communications)\/.{1,}/;
