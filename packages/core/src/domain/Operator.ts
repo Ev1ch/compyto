@@ -13,6 +13,6 @@ export default interface Operator<
   readonly type: OperatorType;
   readonly allowedTypes: Type[];
   apply<TApplyArgs extends TArgs, TApplyValue extends TValue>(
-    args: TApplyArgs,
+    data: TApplyArgs[],
   ): TApplyValue;
 }

@@ -51,7 +51,7 @@ export default function createSocketCommunicator({
       throw new Error('Clients are not defined');
     }
 
-    if (clients.length !== sortedRanks.length) {
+    if (clients.length !== sortedRanks.length - 1) {
       throw new Error('Clients number must be equal to ranks number');
     }
 
@@ -96,8 +96,9 @@ export default function createSocketCommunicator({
     startIndex: number,
     sendCount: number,
   ) {
-    const sliced = data.slice(startIndex);
-    return sliced.slice(0, sendCount);
+    if (data.length < startIndex + sendCount) throw new Error('Wrong indexes');
+
+    return data.slice(startIndex).slice(0, sendCount);
   }
 
   // Applies slice for send data and sends it to another process
@@ -383,8 +384,9 @@ export default function createSocketCommunicator({
 
   async function reduce(
     data: unknown[],
-    buf: Array<unknown>,
-    count: number,
+    sendStartIndex: number,
+    buf: unknown[],
+    recvCount: number,
     op: Operator,
     root: number,
     abort?: Abort,
@@ -396,26 +398,27 @@ export default function createSocketCommunicator({
     );
     const isMe = root === selfProcess.rank;
     const rootProcess = getProcessByRank(root);
-    const sliced = sliceSendData(data, 0, count);
+    const slicedData = sliceSendData(data, sendStartIndex, recvCount);
     if (!isMe) {
       // Just send data to root
-      return send(sliced, rootProcess, abort);
+      return send(slicedData, rootProcess, abort);
     } else {
       // Collect all data
-      const received: unknown[] = [];
+      const received: unknown[][] = [slicedData];
       await Promise.all(
         selfGroup.processes.map(async () => {
           const { data } = await _receive(abort);
-          addDataToBuffer(received, data);
+          received.push(data as Array<unknown>);
         }),
       );
 
-      addDataToBuffer(received, sliced);
       runtime.monitoring?.emit(
         'info:communications/reduce-all-data-receive',
         received,
       );
-      const result = op.apply(received);
+
+      const result: unknown[] = op.apply(received);
+
       runtime.monitoring?.emit('info:communications/reduce-calculated', result);
       writeToBuffer(buf, result);
     }
@@ -428,24 +431,24 @@ export default function createSocketCommunicator({
 
   async function allReduce(
     data: unknown[],
+    sendStartIndex: number,
     buf: Array<unknown>,
     count: number,
     op: Operator,
     abort?: Abort,
   ) {
     runtime.monitoring?.emit('info:communications/all-reduce-started', op.type);
-    const sliced = sliceSendData(data, 0, count);
-    const temp: unknown[] = [];
+    const sliced = sliceSendData(data, sendStartIndex, count);
+    const temp: unknown[][] = [sliced];
     // send to all others
     for (const process of selfGroup.processes) {
       send(sliced, process, abort);
     }
     // myself data
-    addDataToBuffer(temp, sliced);
     await Promise.all(
       selfGroup.processes.map(async () => {
         const { data } = await _receive(abort);
-        addDataToBuffer(temp, data);
+        temp.push(data as Array<unknown>);
       }),
     );
     runtime.monitoring?.emit(

@@ -220,8 +220,9 @@ export default interface Communicator {
    */
   reduce(
     data: Data[],
+    sendStartIndex: number,
     buf: Data[],
-    count: number,
+    recvCount: number,
     op: Operator,
     root: Rank,
     abort?: Abort,
@@ -242,6 +243,7 @@ export default interface Communicator {
    */
   allReduce(
     data: Data[],
+    sendStartIndex: number,
     buf: Data[],
     count: number,
     op: Operator,

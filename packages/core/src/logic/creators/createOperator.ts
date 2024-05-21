@@ -22,9 +22,10 @@ export default function createOperator<
   return {
     type,
     allowedTypes,
-    apply(args: unknown[]) {
-      args.forEach((arg) => {
-        const argsType = typeof arg;
+    // an array from each process results in array of arrays
+    apply(data: unknown[][]) {
+      data.flat().forEach((arr) => {
+        const argsType = typeof arr;
 
         if (!allowedTypes.includes(argsType as Type))
           throw new Error(`Not allowed type for operator, ${type}`);
@@ -35,10 +36,19 @@ export default function createOperator<
       });
 
       const workerWithType = workerWithTypes.find(
-        (w) => w.type === typeof args[0],
+        (w) => w.type === typeof data[0][0], // we can take any here, as we validated types
       );
       const { worker } = workerWithType!;
-      const result = args.reduce(worker.perform);
+
+      const result = [...data[0]];
+
+      // Ensure offset and count are within bounds
+      // Iterate through each array and each element
+      for (let i = 1; i < data.length; i++) {
+        for (let j = 0; j < result.length; j++) {
+          result[j] = worker.perform(result[j], data[i][j]);
+        }
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return result as any;
     },
