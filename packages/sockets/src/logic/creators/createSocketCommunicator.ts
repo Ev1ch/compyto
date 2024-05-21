@@ -292,16 +292,23 @@ export default function createSocketCommunicator({
     root: number,
     abort?: Abort,
   ) {
-    const sliced = sliceSendData(data, sendStartIndex, sendCount);
-
-    runtime.monitoring?.emit(
-      'info:communications/broadcast-started',
-      sliced,
-      root,
-    );
     const isMe = root === selfProcess.rank;
+    if (!isMe) {
+      runtime.monitoring?.emit(
+        'info:communications/broadcast-started',
+        [],
+        root,
+      );
+    }
 
     if (isMe) {
+      const sliced = sliceSendData(data, sendStartIndex, sendCount);
+      runtime.monitoring?.emit(
+        'info:communications/broadcast-started',
+        sliced,
+        root,
+      );
+
       const processes = selfConnections.map(
         ({ device: { process } }) => process,
       );

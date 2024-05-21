@@ -5,6 +5,9 @@
     "port": 3004
   },
   "code": "pc-4",
+  "monitoring": {
+    "isEnabled": true
+  },
   "master": {
     "uri": {
       "path": "http://localhost",

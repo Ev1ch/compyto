@@ -6,10 +6,7 @@
   },
   "code": "pc-7",
   "monitoring": {
-    "uri": {
-      "path": "http://localhost",
-      "port": 4000
-    }
+    "isEnabled": true
   },
   "master": {
     "uri": {

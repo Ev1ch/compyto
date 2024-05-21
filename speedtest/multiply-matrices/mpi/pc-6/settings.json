@@ -5,6 +5,9 @@
     "port": 3006
   },
   "code": "pc-6",
+  "monitoring": {
+    "isEnabled": true
+  },
   "master": {
     "uri": {
       "path": "http://localhost",

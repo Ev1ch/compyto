@@ -5,6 +5,9 @@
     "port": 3003
   },
   "code": "pc-3",
+  "monitoring": {
+    "isEnabled": true
+  },
   "master": {
     "uri": {
       "path": "http://localhost",
