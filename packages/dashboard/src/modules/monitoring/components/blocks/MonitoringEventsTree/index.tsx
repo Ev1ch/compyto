@@ -1,5 +1,5 @@
 import { Box, Stack, type SxProps } from '@mui/material';
-import { memo } from 'react';
+import { memo, useRef } from 'react';
 
 import { EMPTY_OBJECT } from '@/constants';
 import { Selections } from '@/modules/analysis/components/blocks';
@@ -8,6 +8,7 @@ import { getArrayedSx } from '@/styles/logic';
 
 import { selectShownEvents } from '../../../store';
 import MonitoringEventNode from '../MonitoringEventNode';
+import MonitoringEventsTreeFooter from '../MonitoringEventsTreeFooter';
 import MonitoringEventsTreeHeader from '../MonitoringEventsTreeHeader';
 
 export interface MonitoringEventsTreeProps {
@@ -21,6 +22,7 @@ const ROOT_SX = {
 export default memo(function MonitoringEventsTree({
   sx = EMPTY_OBJECT,
 }: MonitoringEventsTreeProps) {
+  const treeRef = useRef<HTMLDivElement>(null);
   const shownEvents = useSelector(selectShownEvents);
 
   return (
@@ -32,6 +34,7 @@ export default memo(function MonitoringEventsTree({
         ...getArrayedSx(sx),
       ]}
       component="section"
+      ref={treeRef}
     >
       <Box
         sx={{
@@ -82,6 +85,11 @@ export default memo(function MonitoringEventsTree({
             }}
           />
         </Box>
+
+        <MonitoringEventsTreeFooter
+          sx={{ position: 'fixed', bottom: 40, right: 40, zIndex: 4 }}
+          treeRef={treeRef}
+        />
       </Box>
     </Box>
   );
