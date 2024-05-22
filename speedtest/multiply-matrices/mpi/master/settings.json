@@ -5,6 +5,12 @@
     "path": "http://localhost",
     "port": 3000
   },
+  "dashboard": {
+    "uri": {
+      "path": "http://localhost",
+      "port": 3010
+    }
+  },
   "monitoring": {
     "isEnabled": true
   },
