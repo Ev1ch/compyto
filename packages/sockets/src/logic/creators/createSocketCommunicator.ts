@@ -314,6 +314,7 @@ export default function createSocketCommunicator({
       );
       Promise.all(processes.map((process) => send(sliced, process, abort)));
       writeToBuffer(data, sliced);
+      runtime.monitoring?.emit('info:communications/broadcast-finished');
       return;
     }
 
@@ -538,6 +539,7 @@ export default function createSocketCommunicator({
     const isMe = root === selfProcess.rank;
     const rootProcess = getProcessByRank(root);
     if (!isMe) {
+      runtime.monitoring?.emit('info:communications/gatherv-finished');
       return sliceAndSend(data, 0, sendCount, rootProcess, abort);
     }
 
