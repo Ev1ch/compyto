@@ -24,7 +24,8 @@ import {
   addProcess,
   addProcesses,
   removeProcesses,
-  selectEventsWithPreparers,
+  selectAreEventsPresent,
+  selectEventsWithPreparersNumber,
   selectMonitoringsWithPreparers,
 } from '../../../store';
 import { parseJsonMonitoringData } from '../../../utils';
@@ -37,7 +38,10 @@ export default memo(function MonitoringEventsTreeHeader({
   sx = EMPTY_OBJECT,
 }: MonitoringEventsTreeHeaderProps) {
   const dispatch = useDispatch();
-  const eventsWithPreparers = useSelector(selectEventsWithPreparers);
+  const areEventsPresent = useSelector(selectAreEventsPresent);
+  const eventsWithPreparersNumber = useSelector(
+    selectEventsWithPreparersNumber,
+  );
   const monitoringsWithPreparers = useSelector(selectMonitoringsWithPreparers);
   const isPairPresent = useSelector(selectIsPairPresent);
   const [isImportPopperOpen, setIsImportPopperOpen] = useState(false);
@@ -48,7 +52,6 @@ export default memo(function MonitoringEventsTreeHeader({
     EXPORT_EVENTS_FILE_NAME,
   );
   const { input } = useFileInput(IMPORT_FILE_OPTIONS);
-  const eventsNumber = eventsWithPreparers.length;
 
   const handleDeselectClick = useCallback(() => {
     dispatch(removePair());
@@ -118,7 +121,7 @@ export default memo(function MonitoringEventsTreeHeader({
           sx={{
             mx: 'auto',
           }}
-          label={`${eventsNumber} ${pluralize('event', eventsNumber)}`}
+          label={`${eventsWithPreparersNumber} ${pluralize('event', eventsWithPreparersNumber)}`}
         />
       </Stack>
 
@@ -138,7 +141,7 @@ export default memo(function MonitoringEventsTreeHeader({
           sx={{ ml: 'auto' }}
           startIcon={<FileDownload />}
           onClick={download}
-          disabled={!eventsNumber}
+          disabled={!eventsWithPreparersNumber}
         >
           Export
         </Button>
@@ -146,7 +149,7 @@ export default memo(function MonitoringEventsTreeHeader({
           startIcon={<Delete />}
           onClick={handleDelete}
           sx={{ whiteSpace: 'nowrap' }}
-          disabled={!eventsNumber}
+          disabled={!areEventsPresent}
         >
           Clear events
         </Button>

@@ -49,6 +49,11 @@ export const selectEventWithContexts = createSelector(
       .flat(),
 );
 
+export const selectAreEventsPresent = createSelector(
+  [selectEventWithContexts],
+  (eventWithContexts) => eventWithContexts.length > 0,
+);
+
 export const selectEventWithContext = createSelector(
   [selectEventWithContexts, (state, id: string) => id],
   (eventWithContexts, id) =>
@@ -71,6 +76,11 @@ export const selectEventsWithPreparers = createSelector(
       filters,
       sorts,
     }),
+);
+
+export const selectEventsWithPreparersNumber = createSelector(
+  [selectEventsWithPreparers],
+  (eventsWithPreparers) => eventsWithPreparers.length,
 );
 
 export const selectEventsWithSorts = createSelector(
