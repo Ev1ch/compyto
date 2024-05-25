@@ -15,9 +15,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          always-auth: true
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: yarn install
@@ -27,3 +25,5 @@ jobs:
 
       - name: Publish packages
         run: yarn publish:all
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
