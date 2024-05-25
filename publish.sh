@@ -12,6 +12,6 @@ for package in ./packages/*; do
     echo "Publishing $PACKAGE_NAME@$PACKAGE_VERSION"
     yarn workspace $PACKAGE_NAME publish --access public
   else
-    echo "Skipping $PACKAGE_NAME@$PACKAGE_VERSION"
+    echo "Skipping $PACKAGE_NAME:$PACKAGE_VERSION"
   fi
 done
