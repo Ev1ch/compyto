@@ -4,7 +4,7 @@ for package in ./packages/*; do
   FOUND_VERSION=$(npm view $PACKAGE_NAME versions | grep -w $PACKAGE_VERSION)
   IS_NEW_VERSION=true
 
-  if $FOUND_VERSION; then
+  if [ "$FOUND_VERSION" ]; then
     IS_NEW_VERSION=false
   fi
 
