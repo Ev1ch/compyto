@@ -18,12 +18,7 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Build packages
-        run: yarn build:all
-
       - name: Publish packages
-        run: |
-          chmod +x ./publish.sh
-          ./publish.sh
+        run: yarn publish:all
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

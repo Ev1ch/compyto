@@ -16,6 +16,7 @@
   },
   "scripts": {
     "build:all": "sh build.sh",
+    "publish:all": "sh publish.sh",
     "build:docs": "typedoc",
     "format": "prettier --check .",
     "format:write": "prettier --write .",
