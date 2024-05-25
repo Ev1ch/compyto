@@ -17,8 +17,8 @@
     "build": "tsc && tsc-alias"
   },
   "dependencies": {
-    "@compyto/connections": "^0.0.1",
-    "@compyto/balancing": "^0.0.1",
-    "@compyto/runtime": "^0.0.1"
+    "@compyto/connections": "^0.0.2",
+    "@compyto/balancing": "^0.0.2",
+    "@compyto/runtime": "^0.0.2"
   }
 }

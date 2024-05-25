@@ -17,6 +17,6 @@
     "build": "tsc && tsc-alias"
   },
   "dependencies": {
-    "@compyto/core": "^0.0.1"
+    "@compyto/core": "^0.0.2"
   }
 }

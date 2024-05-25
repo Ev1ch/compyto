@@ -17,6 +17,6 @@
     "build": "tsc && tsc-alias"
   },
   "dependencies": {
-    "@compyto/connections": "^0.0.1"
+    "@compyto/connections": "^0.0.2"
   }
 }
