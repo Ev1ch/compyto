@@ -1,7 +1,10 @@
 {
   "name": "@compyto/serialization",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
+  "files": [
+    "dist/**"
+  ],
   "type": "module",
   "main": "dist/index.js",
   "sideEffects": false,
