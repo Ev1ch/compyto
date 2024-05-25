@@ -1,6 +1,6 @@
 {
   "name": "@compyto/dashboard",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "files": [
     "dist/**"
@@ -30,12 +30,12 @@
     "vite-tsconfig-paths": "^4.3.2"
   },
   "dependencies": {
-    "@compyto/connections": "^0.0.2",
-    "@compyto/logging": "^0.0.2",
-    "@compyto/monitoring": "^0.0.2",
-    "@compyto/runner": "^0.0.2",
-    "@compyto/settings": "^0.0.2",
-    "@compyto/utils": "^0.0.2",
+    "@compyto/connections": "^0.0.3",
+    "@compyto/logging": "^0.0.3",
+    "@compyto/monitoring": "^0.0.3",
+    "@compyto/runner": "^0.0.3",
+    "@compyto/settings": "^0.0.3",
+    "@compyto/utils": "^0.0.3",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.13",

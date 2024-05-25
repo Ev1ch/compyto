@@ -1,6 +1,6 @@
 {
   "name": "@compyto/runner",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "type": "module",
   "files": [
@@ -19,10 +19,10 @@
   },
   "dependencies": {
     "dotenv": "^16.4.5",
-    "@compyto/runtime": "0.0.1",
-    "@compyto/connections": "0.0.1",
-    "@compyto/core": "0.0.1",
-    "@compyto/validation": "0.0.1",
-    "@compyto/settings": "0.0.1"
+    "@compyto/runtime": "^0.0.3",
+    "@compyto/connections": "^0.0.3",
+    "@compyto/core": "^0.0.3",
+    "@compyto/validation": "^0.0.3",
+    "@compyto/settings": "^0.0.3"
   }
 }
