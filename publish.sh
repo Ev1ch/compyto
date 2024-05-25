@@ -9,7 +9,6 @@ for package in ./packages/*; do
 
   if $IS_NEW_VERSION; then
     echo "Publishing $PACKAGE_NAME@$PACKAGE_VERSION"
-    yarn workspace $PACKAGE_NAME build
     yarn workspace $PACKAGE_NAME publish
   else
     echo "Skipping $PACKAGE_NAME@$PACKAGE_VERSION"
