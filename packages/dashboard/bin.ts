@@ -63,9 +63,12 @@ export function createDashboard(settings: Settings): Dashboard {
 
   function start() {
     return new Promise<void>((resolve) => {
-      server = app.listen(uri.port, () => {
-        open(getStringURI(uri)).then(() => resolve(undefined));
-      });
+      const handleServerStart = () => {
+        const uriString = getStringURI(uri);
+        open(uriString).then(() => resolve());
+      };
+
+      server = app.listen(uri.port, handleServerStart);
     });
   }
 

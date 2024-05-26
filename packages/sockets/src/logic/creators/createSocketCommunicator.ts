@@ -146,10 +146,11 @@ export default function createSocketCommunicator({
           selfIo = io;
           setConnections(connections);
           io.emit(SocketEvent.CONFIRMATION);
-          io.on(SocketEvent.CONFIRMATION_RECEIVED, () => {
+          const onConfirmationReceived = () => {
             isStarted = true;
             resolve(undefined);
-          });
+          };
+          io.on(SocketEvent.CONFIRMATION_RECEIVED, onConfirmationReceived);
         });
       }
     });

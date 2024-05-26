@@ -50,7 +50,9 @@ export default function startMainPerson(
         );
         connection.state = State.CONFIRMED;
 
-        if (connections.every(({ state }) => state === State.CONFIRMED)) {
+        const allConfirmed = ({ state }: SocketConnection) =>
+          state === State.CONFIRMED;
+        if (connections.every(allConfirmed)) {
           callback(io, connections);
         }
       });
