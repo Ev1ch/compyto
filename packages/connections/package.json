@@ -1,6 +1,6 @@
 {
   "name": "@compyto/connections",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "type": "module",
   "files": [
@@ -20,10 +20,7 @@
     "build": "tsc && tsc-alias"
   },
   "dependencies": {
-    "socket.io": "^4.7.4",
-    "socket.io-client": "^4.7.4",
-    "@compyto/validation": "^0.0.3",
-    "@compyto/core": "^0.0.3",
-    "@compyto/utils": "^0.0.3"
+    "@compyto/validation": "^0.0.4",
+    "@compyto/core": "^0.0.4"
   }
 }

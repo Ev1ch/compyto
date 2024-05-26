@@ -4,5 +4,10 @@
     "baseUrl": "./src",
     "outDir": "./dist",
     "rootDir": "./src"
-  }
+  },
+  "references": [
+    {
+      "path": "../validation"
+    }
+  ]
 }

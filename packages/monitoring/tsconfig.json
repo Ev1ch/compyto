@@ -7,19 +7,19 @@
   },
   "references": [
     {
-      "path": "../utils"
-    },
-    {
-      "path": "../core"
-    },
-    {
       "path": "../balancing"
     },
     {
       "path": "../connections"
     },
     {
+      "path": "../core"
+    },
+    {
       "path": "../settings"
+    },
+    {
+      "path": "../utils"
     },
     {
       "path": "../validation"

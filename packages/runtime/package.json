@@ -1,6 +1,6 @@
 {
   "name": "@compyto/runtime",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "type": "module",
   "files": [
@@ -17,11 +17,8 @@
     "build": "tsc && tsc-alias"
   },
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "@compyto/settings": "^0.0.3",
-    "@compyto/monitoring": "^0.0.3",
-    "@compyto/logging": "^0.0.3",
-    "@compyto/utils": "^0.0.3",
-    "@compyto/dashboard": "^0.0.3"
+    "@compyto/settings": "^0.0.4",
+    "@compyto/monitoring": "^0.0.4",
+    "@compyto/logging": "^0.0.4"
   }
 }

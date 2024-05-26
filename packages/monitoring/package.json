@@ -1,6 +1,6 @@
 {
   "name": "@compyto/monitoring",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "type": "module",
   "files": [
@@ -20,11 +20,11 @@
     "build": "tsc && tsc-alias"
   },
   "dependencies": {
-    "@compyto/balancing": "^0.0.3",
-    "@compyto/connections": "^0.0.3",
-    "@compyto/core": "^0.0.3",
-    "@compyto/settings": "^0.0.3",
-    "@compyto/utils": "^0.0.3",
-    "@compyto/validation": "^0.0.3"
+    "@compyto/balancing": "^0.0.4",
+    "@compyto/connections": "^0.0.4",
+    "@compyto/core": "^0.0.4",
+    "@compyto/settings": "^0.0.4",
+    "@compyto/utils": "^0.0.4",
+    "@compyto/validation": "^0.0.4"
   }
 }

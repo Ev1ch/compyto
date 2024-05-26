@@ -1,6 +1,6 @@
 {
   "name": "@compyto/core",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "type": "module",
   "files": [
@@ -16,5 +16,8 @@
   },
   "scripts": {
     "build": "tsc && tsc-alias"
+  },
+  "dependencies": {
+    "@compyto/validation": "^0.0.4"
   }
 }

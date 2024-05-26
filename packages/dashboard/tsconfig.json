@@ -18,16 +18,25 @@
   "references": [
     { "path": "./tsconfig.node.json" },
     {
-      "path": "../monitoring"
+      "path": "../logging"
     },
     {
-      "path": "../logging"
+      "path": "../monitoring"
     },
     {
       "path": "../utils"
     },
     {
+      "path": "../core"
+    },
+    {
       "path": "../connections"
+    },
+    {
+      "path": "../runner"
+    },
+    {
+      "path": "../settings"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "@compyto/sockets",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "type": "module",
   "files": [
@@ -17,8 +17,13 @@
     "build": "tsc && tsc-alias"
   },
   "dependencies": {
-    "@compyto/connections": "^0.0.3",
-    "@compyto/balancing": "^0.0.3",
-    "@compyto/runtime": "^0.0.3"
+    "@compyto/balancing": "^0.0.4",
+    "@compyto/connections": "^0.0.4",
+    "@compyto/runtime": "^0.0.4",
+    "@compyto/settings": "^0.0.4",
+    "@compyto/core": "^0.0.4",
+    "@compyto/utils": "^0.0.4",
+    "socket.io-client": "^4.7.5",
+    "socket.ui": "^0.0.1-1"
   }
 }

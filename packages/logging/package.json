@@ -1,6 +1,6 @@
 {
   "name": "@compyto/logging",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "type": "module",
   "files": [
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "chalk": "^5.3.0",
-    "@compyto/monitoring": "^0.0.3",
-    "@compyto/core": "^0.0.3"
+    "@compyto/monitoring": "^0.0.4",
+    "@compyto/core": "^0.0.4"
   }
 }

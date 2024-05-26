@@ -1,6 +1,6 @@
 {
   "name": "@compyto/dashboard",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "files": [
     "dist/**"
@@ -30,12 +30,13 @@
     "vite-tsconfig-paths": "^4.3.2"
   },
   "dependencies": {
-    "@compyto/connections": "^0.0.3",
-    "@compyto/logging": "^0.0.3",
-    "@compyto/monitoring": "^0.0.3",
-    "@compyto/runner": "^0.0.3",
-    "@compyto/settings": "^0.0.3",
-    "@compyto/utils": "^0.0.3",
+    "@compyto/connections": "^0.0.4",
+    "@compyto/core": "^0.0.4",
+    "@compyto/logging": "^0.0.4",
+    "@compyto/monitoring": "^0.0.4",
+    "@compyto/runner": "^0.0.4",
+    "@compyto/settings": "^0.0.4",
+    "@compyto/utils": "^0.0.4",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.13",
@@ -47,7 +48,6 @@
     "open": "^10.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^9.1.1",
-    "socket.io-client": "^4.7.5"
+    "react-redux": "^9.1.1"
   }
 }

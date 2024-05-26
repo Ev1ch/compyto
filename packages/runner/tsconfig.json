@@ -25,6 +25,9 @@
       "path": "../sockets"
     },
     {
+      "path": "../logging"
+    },
+    {
       "path": "../runtime"
     }
   ]
