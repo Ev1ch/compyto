@@ -1,6 +1,6 @@
 {
   "name": "@compyto/dashboard",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
   "files": [
     "dist/**"
@@ -21,33 +21,33 @@
     "start": "dist/bin.js"
   },
   "devDependencies": {
+    "@types/express": "^4.17.21",
     "@types/react": "^18.2.70",
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.2.1",
     "vite": "^5.2.6",
     "vite-plugin-compression2": "^1.1.0",
     "vite-plugin-node-polyfills": "^0.21.0",
-    "vite-tsconfig-paths": "^4.3.2"
-  },
-  "dependencies": {
-    "@compyto/connections": "^0.0.4",
+    "vite-tsconfig-paths": "^4.3.2",
+    "@fontsource/roboto": "^5.0.13",
     "@compyto/core": "^0.0.4",
     "@compyto/logging": "^0.0.4",
     "@compyto/monitoring": "^0.0.4",
-    "@compyto/runner": "^0.0.4",
-    "@compyto/settings": "^0.0.4",
     "@compyto/utils": "^0.0.4",
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.0",
-    "@fontsource/roboto": "^5.0.13",
-    "@mui/icons-material": "^5.15.14",
-    "@mui/material": "^5.15.14",
-    "@reduxjs/toolkit": "^2.2.3",
-    "@types/express": "^4.17.21",
-    "express": "^4.19.2",
-    "open": "^10.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^9.1.1"
+    "react-redux": "^9.1.1",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.14",
+    "@mui/material": "^5.15.14",
+    "@reduxjs/toolkit": "^2.2.3"
+  },
+  "dependencies": {
+    "@compyto/connections": "^0.0.4",
+    "@compyto/runner": "^0.0.4",
+    "@compyto/settings": "^0.0.4",
+    "express": "^4.19.2",
+    "open": "^10.1.0"
   }
 }
