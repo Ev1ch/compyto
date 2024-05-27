@@ -1,0 +1,53 @@
+name: PR verification
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch ✔️
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: SonarCloud Scan 🚦
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch ✔️
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 🛠️
+        uses: actions/setup-node@v4
+
+      - name: Install dependencies 📦
+        run: yarn install
+
+      - name: Run ESLint 🚦
+        run: yarn lint
+
+  prettier:
+    name: Prettier
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch ✔️
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 🛠️
+        uses: actions/setup-node@v4
+
+      - name: Install dependencies 📦
+        run: yarn install
+
+      - name: Run Prettier 🚦
+        run: yarn format
