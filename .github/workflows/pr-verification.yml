@@ -2,7 +2,8 @@ name: PR verification
 
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   intellectual-analysis:
