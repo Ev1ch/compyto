@@ -2,7 +2,8 @@ name: PR verification
 
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   intellectual-analysis:
@@ -64,6 +65,9 @@ jobs:
 
       - name: Install dependencies 📦
         run: yarn install
+
+      - name: Build packages 🧱
+        run: yarn build:all
 
       - name: Build documentation 📄
         run: yarn build:docs
