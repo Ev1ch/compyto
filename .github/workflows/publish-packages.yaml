@@ -6,7 +6,8 @@ on:
       - main
 
 jobs:
-  build:
+  publish-packages:
+    name: Publish packages
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch ✔️

@@ -6,7 +6,8 @@ on:
       - main
 
 jobs:
-  build:
+  build-documentation:
+    name: Build documentation
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch ✔️
@@ -30,17 +31,15 @@ jobs:
           name: github-pages
           path: docs
 
-  deploy:
+  deploy-documentation:
+    name: Deploy documentation
     needs: build
-
     permissions:
       pages: write
       id-token: write
-
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
     runs-on: ubuntu-latest
     steps:
       - name: Deploy documentation 🚊
