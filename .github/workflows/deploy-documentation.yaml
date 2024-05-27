@@ -19,9 +19,6 @@ jobs:
       - name: Install dependencies 📦
         run: yarn install
 
-      - name: Build packages 🧱
-        run: yarn build:all
-
       - name: Build documentation 📄
         run: yarn build:docs
 

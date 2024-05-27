@@ -15,7 +15,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: SonarCloud Scan 🚦
+      - name: Run SonarCloud 🚦
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
@@ -65,9 +65,6 @@ jobs:
 
       - name: Install dependencies 📦
         run: yarn install
-
-      - name: Build packages 🧱
-        run: yarn build:all
 
       - name: Build documentation 📄
         run: yarn build:docs
