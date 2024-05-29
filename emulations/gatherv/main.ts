@@ -1,10 +1,9 @@
 import { createRunner } from '@compyto/runner';
 
-export default async function start() {
-  const { communicator } = await createRunner();
+export default async function start(settingsPath?: string) {
+  const { communicator } = await createRunner(settingsPath);
   await communicator.start();
   const MASTER = 0;
-  console.log('Started the app');
   const data = [];
   if (communicator.process.rank === 0) {
     data.push(1);
@@ -13,7 +12,6 @@ export default async function start() {
   } else {
     data.push(6);
   }
-  console.log(`Starting data: `, data);
 
   const counts = [1, 4, 1];
   const offsets = [0, 1, 5];
@@ -21,6 +19,6 @@ export default async function start() {
 
   await communicator.gatherv(data, data.length, res, counts, offsets, MASTER);
 
-  console.log(`Received: `, res);
-  await communicator.finalize();
+  // await communicator.finalize();
+  return res;
 }

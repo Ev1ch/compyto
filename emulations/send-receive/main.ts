@@ -1,30 +1,18 @@
 import { createRunner } from '@compyto/runner';
 
-export default async function start() {
-  const { communicator } = await createRunner();
+export default async function start(settingsPath?: string) {
+  const { communicator } = await createRunner(settingsPath);
   await communicator.start();
-  const data = new Array(999).fill(1);
-  const scatterRes = [];
-  const gatherRes = [];
-  const total = communicator.group.processes.length + 1;
-  await communicator.scatter(
-    data,
-    data.length / total,
-    scatterRes,
-    data.length / total,
-    0,
-  );
-  console.log(scatterRes.length);
+  const data1: number[] = [];
+  const data2: number[] = [];
+  for (const process of communicator.group.processes) {
+    communicator.send(communicator.process.rank, process);
+  }
 
-  await communicator.gather(
-    scatterRes,
-    data.length / total,
-    gatherRes,
-    data.length / total,
-    0,
-  );
+  await communicator.receive(data1);
+  await communicator.receive(data2);
 
-  console.log(gatherRes.length);
+  // await communicator.finalize();
 
-  await communicator.finalize();
+  return [data1[0], data2[0]].sort((a, b) => a - b);
 }

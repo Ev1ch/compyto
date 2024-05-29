@@ -9,41 +9,40 @@ const __dirname = path.dirname(__filename);
 const code = process.argv.slice(2)[0];
 if (!code) throw new Error('Provide code');
 
+const testMethod = async (method: string) => {
+  const mainFilePath = path.resolve(__dirname, `${method}/${code}/main.ts`);
+
+  const module = await import(mainFilePath);
+  if (typeof module.default !== 'function') {
+    throw new Error(`No start function found in ${mainFilePath}`);
+  }
+
+  await module.default();
+};
+
 test('Autotest for each method', async (t) => {
+  await t.test('One to one methods', async (t) => {
+    await t.test('Send + Receive', async () => testMethod('send-receive'));
+  });
+
   await t.test('One to many methods', async (t) => {
-    await t.test('Broadcast', async () => {
-      const mainFilePath = path.resolve(__dirname, `broadcast/${code}/main.ts`);
-
-      const module = await import(mainFilePath);
-      if (typeof module.default !== 'function') {
-        throw new Error(`No start function found in ${mainFilePath}`);
-      }
-
-      await module.default();
-    });
-
-    await t.test('Scatter', async () => {
-      const mainFilePath = path.resolve(__dirname, `scatter/${code}/main.ts`);
-
-      const module = await import(mainFilePath);
-      if (typeof module.default !== 'function') {
-        throw new Error(`No start function found in ${mainFilePath}`);
-      }
-
-      await module.default();
-    });
+    const methods = ['broadcast', 'scatter', 'scatterv'];
+    for (const method of methods) {
+      await t.test(method, async () => testMethod(method));
+    }
   });
 
   await t.test('Many to one methods', async (t) => {
-    await t.test('Gather', async () => {
-      const mainFilePath = path.resolve(__dirname, `gather/${code}/main.ts`);
+    const methods = ['gather', 'gatherv', 'reduce'];
+    for (const method of methods) {
+      await t.test(method, async () => testMethod(method));
+    }
+  });
 
-      const module = await import(mainFilePath);
-      if (typeof module.default !== 'function') {
-        throw new Error(`No start function found in ${mainFilePath}`);
-      }
-
-      await module.default();
-    });
+  await t.test('Many to many methods', async (t) => {
+    const methods = ['all-gather', 'all-reduce', 'all-to-all'];
+    for (const method of methods) {
+      await t.test(method, async () => testMethod(method));
+    }
   });
 });

@@ -1,11 +1,8 @@
 import { createRunner } from '@compyto/runner';
 
-import assert = require('assert');
-
-export default async function start() {
-  const { communicator } = await createRunner();
+export default async function start(settingsPath?: string) {
+  const { communicator } = await createRunner(settingsPath);
   await communicator.start();
-  console.log('Started the app');
   const data = [
     communicator.process.rank * 10,
     communicator.process.rank * 100,
@@ -14,8 +11,7 @@ export default async function start() {
 
   await communicator.allGather(data, 0, 2, res, 0, 2);
 
-  console.log(`Received: `, res);
+  // await communicator.finalize();
 
-  assert.equal(res.length, 6);
-  await communicator.finalize();
+  return res.sort((a, b) => a - b);
 }

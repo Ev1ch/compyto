@@ -12,7 +12,7 @@ export default async function start(settingsPath?: string) {
 
   await communicator.broadcast(data, 0, 5, MASTER);
 
-  await communicator.finalize();
+  // await communicator.finalize();
 
   return data;
 }

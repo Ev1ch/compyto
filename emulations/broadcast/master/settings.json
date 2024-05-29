@@ -3,7 +3,7 @@
   "rank": 0,
   "uri": {
     "path": "http://localhost",
-    "port": 3000
+    "port": 3009
   },
   "code": "master",
   "clients": [

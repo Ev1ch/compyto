@@ -2,19 +2,13 @@
   "rank": 2,
   "uri": {
     "path": "http://localhost",
-    "port": 3002
-  },
-  "monitoring": {
-    "uri": {
-      "path": "http://localhost",
-      "port": 3012
-    }
+    "port": 3005
   },
   "code": "pc-2",
   "master": {
     "uri": {
       "path": "http://localhost",
-      "port": 3000
+      "port": 3003
     }
   }
 }

@@ -161,7 +161,6 @@ export default function createSocketCommunicator({
       throw new Error('Communicator is not started');
     }
 
-    process.exit(0);
     selfConnections.forEach(({ socket }) => {
       socket.disconnect(true);
     });
