@@ -10,8 +10,10 @@ import { createSocketCommunicator } from '@compyto/sockets';
 import type { Runner } from '../domain';
 import getSettings from './getSettings';
 
-export default async function createRunner(): Promise<Runner> {
-  const settings = await getSettings();
+export default async function createRunner(
+  settingsPath?: string,
+): Promise<Runner> {
+  const settings = await getSettings(settingsPath);
   runtime.settings = settings;
   const communicator = createSocketCommunicator(settings);
 
