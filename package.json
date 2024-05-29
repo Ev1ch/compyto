@@ -18,10 +18,10 @@
     "build:all": "sh build.sh",
     "publish:all": "sh publish.sh",
     "build:docs": "typedoc",
-    "format": "prettier --check .",
-    "format:write": "prettier --write .",
-    "lint": "eslint . --ext .ts",
-    "lint:write": "eslint . --ext .ts --fix",
+    "format": "prettier --check ./packages",
+    "format:write": "prettier --write ./packages",
+    "lint": "eslint ./packages --ext .ts,.tsx",
+    "lint:write": "eslint ./packages --ext .ts,.tsx --fix",
     "prepare": "husky"
   },
   "devDependencies": {
