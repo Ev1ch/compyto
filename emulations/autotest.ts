@@ -21,6 +21,17 @@ test('Autotest for each method', async (t) => {
 
       await module.default();
     });
+
+    await t.test('Scatter', async () => {
+      const mainFilePath = path.resolve(__dirname, `scatter/${code}/main.ts`);
+
+      const module = await import(mainFilePath);
+      if (typeof module.default !== 'function') {
+        throw new Error(`No start function found in ${mainFilePath}`);
+      }
+
+      await module.default();
+    });
   });
 
   await t.test('Many to one methods', async (t) => {
