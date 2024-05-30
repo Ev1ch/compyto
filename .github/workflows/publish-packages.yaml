@@ -24,6 +24,9 @@ jobs:
       - name: Build packages 🧱
         run: yarn build:all
 
+      - name: Prepare packages 🍔
+        run: yarn prepare:all
+
       - name: Publish packages 🚊
         run: yarn publish:all
         env:
