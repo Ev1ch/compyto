@@ -19,6 +19,7 @@ export default async function getRandomCommunicators(
       getRandomClientSettings(
         masterSettings.uri,
         masterSettings.clients[index].code,
+        index + 1,
       ),
     ),
   ]);
