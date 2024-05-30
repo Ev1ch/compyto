@@ -1,7 +1,7 @@
-import { generateRandomMatrix, multiplyMatrices, printMatrix } from './common';
+import { generateRandomMatrix, multiplyMatrices, printMatrix } from './common.js';
 
 (() => {
-  const TOTAL_RUNS = 20;
+  const TOTAL_RUNS = 10;
   const MATRIX_SIZE = 2500; // Change N to whatever size you want
   const MIN_NUMBER = 1; // Lower bound for random integers
   const MAX_NUMBER = 1; // Upper bound for random integers
