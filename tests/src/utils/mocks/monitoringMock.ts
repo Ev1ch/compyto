@@ -10,7 +10,7 @@ const monitoringMock: Monitoring = {
   offAny: mock.fn(),
   emit: mock.fn(),
   start: mock.fn(() => Promise.resolve()),
-  waitForDashboard: mock.fn(() => Promise.resolve()),
+  context: {},
 };
 
 export default monitoringMock;

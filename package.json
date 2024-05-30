@@ -45,5 +45,6 @@
     "typedoc": "^0.25.12",
     "typedoc-material-theme": "^1.0.2",
     "typescript": "^5.4.2"
-  }
+  },
+  "dependencies": {}
 }

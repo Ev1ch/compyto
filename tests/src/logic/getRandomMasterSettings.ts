@@ -7,11 +7,12 @@ export default async function getRandomMasterSettings(
 ): Promise<MasterSettings> {
   return {
     isMaster: true,
+    rank: 0,
     uri: await getRandomFreeURI(),
     monitoring: {
-      uri: await getRandomFreeURI(),
+      isEnabled: true,
     },
     code: getRandomCode(),
-    clients: Array.from({ length: clients }, getRandomClient),
+    clients: Array.from({ length: clients }, () => getRandomClient(0)),
   };
 }

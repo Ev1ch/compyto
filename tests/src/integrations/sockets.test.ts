@@ -12,17 +12,22 @@ beforeAll(async () => {
 });
 
 test('start', async () => {
+  console.log('Start method called');
+
   await Promise.all(communicators.map((communicator) => communicator.start()));
 });
 
 test('send', async () => {
+  console.log('Communication started');
+
   await Promise.all(
     communicators.map((communicator) => {
       const { process: selfProcess } = communicator;
       const { processes } = communicator.group;
 
+      console.log('Data was sent');
       return processes.map((process) =>
-        communicator.send(selfProcess.code, [process]),
+        communicator.send(selfProcess.code, process),
       );
     }),
   );
@@ -33,18 +38,20 @@ test('receive', async () => {
     communicators.map(async (communicator) => {
       const { processes, size } = communicator.group;
 
-      const receives = await Promise.all(
-        Array.from({ length: size }, () => communicator.receive()),
-      );
+      const buffers = Array.from({ length: size }, () => []);
+      await Promise.all(buffers.map((buffer) => communicator.receive(buffer)));
 
-      receives.forEach(({ data }, index) => {
+      buffers.forEach(([data], index) => {
         expect(data).toBe(processes[index].code);
       });
+      console.log('Data was received');
     }),
   );
 });
 
 test('finalize', async () => {
+  console.log('Communication finished, finalize called.');
+
   await Promise.all(
     communicators.map((communicator) => communicator.finalize()),
   );
