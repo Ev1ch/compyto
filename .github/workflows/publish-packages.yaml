@@ -6,7 +6,8 @@ on:
       - main
 
 jobs:
-  build:
+  publish-packages:
+    name: Publish packages
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch ✔️
@@ -22,6 +23,9 @@ jobs:
 
       - name: Build packages 🧱
         run: yarn build:all
+
+      - name: Prepare packages 🍔
+        run: yarn prepare:all
 
       - name: Publish packages 🚊
         run: yarn publish:all

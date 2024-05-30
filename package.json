@@ -17,6 +17,7 @@
   "scripts": {
     "build:all": "sh build.sh",
     "publish:all": "sh publish.sh",
+    "prepare:all": "sh prepare.sh",
     "build:docs": "typedoc",
     "format": "prettier --check ./packages",
     "format:write": "prettier --write ./packages",

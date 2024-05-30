@@ -2,11 +2,12 @@ name: PR verification
 
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  sonarcloud:
-    name: SonarCloud
+  intellectual-analysis:
+    name: Intellectual analysis
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch ✔️
@@ -14,14 +15,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: SonarCloud Scan 🚦
+      - name: Run SonarCloud 🚦
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  eslint:
-    name: ESLint
+  static-analysis:
+    name: Static analysis
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch ✔️
@@ -36,8 +37,8 @@ jobs:
       - name: Run ESLint 🚦
         run: yarn lint
 
-  prettier:
-    name: Prettier
+  formatting-analysis:
+    name: Formatting analysis
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch ✔️
@@ -51,3 +52,22 @@ jobs:
 
       - name: Run Prettier 🚦
         run: yarn format
+
+  documentation-analysis:
+    name: Documentation analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch ✔️
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 🛠️
+        uses: actions/setup-node@v4
+
+      - name: Install dependencies 📦
+        run: yarn install
+
+      - name: Build packages 🧱
+        run: yarn build:all
+
+      - name: Build documentation 📄
+        run: yarn build:docs
