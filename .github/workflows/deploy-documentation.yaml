@@ -33,7 +33,7 @@ jobs:
 
   deploy-documentation:
     name: Deploy documentation
-    needs: build
+    needs: build-documentation
     permissions:
       pages: write
       id-token: write
