@@ -1,6 +1,6 @@
 {
   "name": "@compyto/dashboard",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "MIT",
   "files": [
     "dist/**"
@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@compyto/connections": "^0.0.6",
-    "@compyto/runner": "^0.0.6",
+    "@compyto/runner": "^0.0.7",
     "@compyto/settings": "^0.0.6",
     "express": "^4.19.2",
     "open": "^10.1.0"

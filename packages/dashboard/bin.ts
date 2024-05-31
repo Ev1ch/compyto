@@ -9,7 +9,7 @@ import express, {
 import open from 'open';
 
 import { getStringURI } from '@compyto/connections';
-import { getSettings } from '@compyto/runner';
+import { getSettings, getSettingsPath } from '@compyto/runner';
 import type { Settings } from '@compyto/settings';
 
 // @ts-expect-error Node modules versions differ
@@ -89,7 +89,8 @@ export function createDashboard(settings: Settings): Dashboard {
 }
 
 (async () => {
-  const settings = await getSettings();
+  const settingsPath = getSettingsPath();
+  const settings = await getSettings(settingsPath);
   const dashboard = createDashboard(settings);
   await dashboard.start();
 })();
