@@ -1,7 +1,7 @@
 import Rank from './Rank';
 
 /**
- * Needed for Communicator.reduce method for MINLOC and MAXLOC operators.
+ * Needed for {@link connections/src.Communicator.reduce} method for MINLOC and MAXLOC operators.
  */
 export default interface LocationOperatorArg {
   rank: Rank;

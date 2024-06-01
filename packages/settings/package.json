@@ -1,6 +1,6 @@
 {
   "name": "@compyto/settings",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "license": "MIT",
   "type": "module",
   "files": [
@@ -17,9 +17,9 @@
     "build": "tsc && tsc-alias"
   },
   "dependencies": {
-    "@compyto/connections": "^0.0.6",
-    "@compyto/core": "^0.0.6",
-    "@compyto/utils": "^0.0.6",
-    "@compyto/validation": "^0.0.6"
+    "@compyto/connections": "^0.0.8",
+    "@compyto/core": "^0.0.8",
+    "@compyto/utils": "^0.0.8",
+    "@compyto/validation": "^0.0.8"
   }
 }

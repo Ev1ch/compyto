@@ -1,6 +1,6 @@
 {
   "name": "@compyto/balancing",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "license": "MIT",
   "type": "module",
   "files": [
@@ -17,6 +17,6 @@
     "build": "tsc && tsc-alias"
   },
   "dependencies": {
-    "@compyto/connections": "^0.0.6"
+    "@compyto/connections": "^0.0.8"
   }
 }

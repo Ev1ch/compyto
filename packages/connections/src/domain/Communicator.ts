@@ -281,7 +281,7 @@ export default interface Communicator {
    */
   rank(): number;
   /**
-   * Finish the app. NOT WORKING RIGHT NOW, JUST DONT USE TO PREVENT ERRORS
+   * Finish the app. This method should be called at the end of the app.
    */
   finalize(): Promise<void>;
 }

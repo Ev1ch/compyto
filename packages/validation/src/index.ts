@@ -2,6 +2,10 @@ import * as yup from 'yup';
 
 import { ISO_DATE_REGEX } from './constants';
 
+/**
+ * Method for checking if a field
+ * is not present in the parent object
+ */
 yup.addMethod(yup.Schema, 'notPresent', function (message) {
   return this.test('notPresent', message, function () {
     const { path, createError } = this;
@@ -18,6 +22,10 @@ yup.addMethod(yup.Schema, 'notPresent', function (message) {
   });
 });
 
+/**
+ * Method for checking if a field
+ * is an ISO 8601 date
+ */
 yup.addMethod(yup.StringSchema, 'iso', function (message) {
   return this.test('iso', message, function (value) {
     const { path, createError } = this;

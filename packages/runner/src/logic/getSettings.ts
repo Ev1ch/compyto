@@ -2,6 +2,10 @@ import fs from 'node:fs/promises';
 
 import { Settings, SettingsSchema } from '@compyto/settings';
 
+/**
+ * Function for getting the settings from the file,
+ * validating and returning them.
+ */
 export default async function getSettings(
   settingsPath: string,
 ): Promise<Settings> {
