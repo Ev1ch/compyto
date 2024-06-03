@@ -4,6 +4,7 @@ import type { Xor } from '@compyto/utils';
 
 export interface MonitoringSettings {
   isEnabled?: boolean;
+  filename: string;
 }
 
 export interface DashboardSettings {

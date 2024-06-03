@@ -12,7 +12,7 @@ const SettingsSchema = validation
     uri: URISchema,
     monitoring: validation
       .object()
-      .shape({ isEnabled: validation.boolean() })
+      .shape({ isEnabled: validation.boolean(), filename: validation.string() })
       .strict(),
     dashboard: validation.object().shape({ uri: URISchema }),
     isMaster: validation.boolean(),
