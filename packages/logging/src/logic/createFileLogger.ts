@@ -11,9 +11,9 @@ interface Logs {
   events?: MonitoringEvent[];
 }
 
-export default function createFileLogger(): Logger {
+export default function createFileLogger(filename?: string): Logger {
   const logs: Logs = {};
-  const logsPath = path.resolve(DEFAULT_LOGS_PATH);
+  const logsPath = path.resolve(filename || DEFAULT_LOGS_PATH);
 
   const writeLogs = () => {
     fs.writeFileSync(logsPath, JSON.stringify(logs));

@@ -22,7 +22,7 @@ export default async function createRunner(
   if (settings.monitoring) {
     const monitoring = createMonitoring(settings);
     const consoleLogger = createConsoleLogger();
-    const fileLogger = createFileLogger();
+    const fileLogger = createFileLogger(settings.monitoring?.filename);
     const logger = createComposedLogger(consoleLogger, fileLogger);
     monitoring.onAny(logger.logEvent);
     monitoring.on('info:monitoring/context-set', logger.logContext);
