@@ -1,6 +1,6 @@
 {
   "name": "@compyto/utils",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -17,7 +17,7 @@
     "build": "tsc && tsc-alias"
   },
   "dependencies": {
-    "@compyto/core": "^0.0.8",
+    "@compyto/core": "^0.0.9",
     "lodash": "^4.17.21"
   }
 }
